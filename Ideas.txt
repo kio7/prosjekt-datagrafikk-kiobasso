@@ -1,0 +1,53 @@
+Step 1: Start Button
+    The machine is initiated by pressing a start button or lever.
+
+Step 2: Release the Pendulum
+    The start button releases a swinging pendulum.
+
+Step 3: Pendulum Strikes Dominos
+    The swinging pendulum strikes a row of dominos, causing them to fall.
+
+Step 4: Dominos Knock Over a Ball
+    The falling dominos push a ball down a ramp.
+
+Step 5: Rolling Ball Hits a Seesaw
+    The rolling ball hits a seesaw, causing it to tilt.
+
+Step 6: Seesaw Activates Conveyor Belt
+    As the seesaw tilts, it triggers a conveyor belt to start moving.
+
+Step 7: Conveyor Belt Moves an Object
+    The conveyor belt moves an object to a designated location.
+
+Step 8: Object Drops Onto a Spring
+    The object on the conveyor belt drops onto a spring.
+
+Step 9: Spring Compresses and Releases
+    The spring compresses as the object lands on it and then releases, launching the object into the air.
+
+Step 10: Object Strikes Rotating Gears
+    The launched object hits a set of rotating gears.
+
+Step 11: Rotating Gears Transfer Motion
+    The rotating gears transfer motion to a connected platform or lever.
+
+Step 12: Platform Moves, Activating a Lever
+    The platform or lever is pushed or pulled by the rotating gears, causing it to move.
+
+Step 13: Lever Activates a Switch
+    The moving lever activates a switch, completing an electrical circuit.
+
+Step 14: Electromagnet is Energized
+    The completed circuit energizes an electromagnet.
+
+Step 15: Electromagnet Releases a Trap Door
+    The energized electromagnet releases a trap door.
+
+Step 16: Trap Door Drops an Object
+    The trap door drops an object onto a final path.
+
+Step 17: Object Rolls Toward a Target
+    The object rolls down the final path towards a target.
+
+Step 18: Object Strikes the End Goal
+    The object strikes a target or trigger, indicating the successful completion of the Rube Goldberg machine.
