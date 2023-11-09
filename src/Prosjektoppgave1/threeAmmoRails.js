@@ -3,7 +3,7 @@ import {addMeshToScene} from "./myThreeHelper.js";
 import {createAmmoRigidBody, phy} from "./myAmmoHelper.js";
 import {createTriangleShapeAddToCompound} from "./triangleMeshHelpers.js";
 
-import {COLLISION_GROUP_PLANE, COLLISION_GROUP_SPHERE, COLLISION_GROUP_MOVEABLE, COLLISION_GROUP_BOX} from "./myAmmoHelper.js"
+import {COLLISION_GROUP_PLANE, COLLISION_GROUP_SPHERE, COLLISION_GROUP_MOVEABLE, COLLISION_GROUP_BOX, COLLISION_GROUP_SEESAW} from "./myAmmoHelper.js"
 
 class CustomSinCurve extends THREE.Curve {
 
@@ -17,18 +17,19 @@ class CustomSinCurve extends THREE.Curve {
 	}
 }
 
-export function createRails() {
+export function createRails(position={x:0, y:0, z:0}, rotation=0) {
     const mass = 0;
-    const position = {x:-15, y:0.5, z:0};
+    // const position = {x:-15, y:0.5, z:0};
 
     // AMMO-container
     let compoundShape = new Ammo.btCompoundShape();
     // THREE-container
     let railGroupMesh = new THREE.Group();
     railGroupMesh.position.set(position.x, position.y, position.z);
+    railGroupMesh.rotateY(rotation);
 
     createRailMesh(railGroupMesh, compoundShape)
-
+    
     let rigidRailBody = createAmmoRigidBody(compoundShape, railGroupMesh, 0.4, 0.0, position, mass);
     railGroupMesh.userData.physicsBody = rigidRailBody;
     
@@ -36,7 +37,7 @@ export function createRails() {
     phy.ammoPhysicsWorld.addRigidBody(
         rigidRailBody,
         COLLISION_GROUP_BOX,
-        COLLISION_GROUP_BOX | COLLISION_GROUP_SPHERE | COLLISION_GROUP_MOVEABLE | COLLISION_GROUP_PLANE
+        COLLISION_GROUP_BOX | COLLISION_GROUP_SPHERE | COLLISION_GROUP_MOVEABLE | COLLISION_GROUP_PLANE | COLLISION_GROUP_SEESAW
     );
     addMeshToScene(railGroupMesh);
     phy.rigidBodies.push(railGroupMesh);

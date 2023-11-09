@@ -20,6 +20,9 @@ import {createAmmoXZPlane,} from "./threeAmmoShapes.js";
 import { createAmmoMarble } from './threeAmmoMarbles.js';
 import { createAmmoCanon } from "./threeAmmoCanon.js";
 import { createRails } from './threeAmmoRails.js';
+import { createAmmoFunnel } from './threeAmmoFunnel.js';
+import { createAmmoDomino } from './threeAmmoDomino.js';
+import { createAmmoSeesaw } from './threeAmmoSeesaw.js';
 
 
 //Globale variabler:
@@ -36,7 +39,7 @@ export const ri = {
 	activator: 0
 };
 
-export const XZPLANE_SIDELENGTH = 100;
+export const XZPLANE_SIDELENGTH = 500;
 
 
 export function main() {
@@ -81,11 +84,16 @@ function handleKeyDown(event) {
 
 function addAmmoSceneObjects() {
 
-	createAmmoMarble();
-	createAmmoMarble(0.7, 1, 0xF9F9F9, {x:-0.5, y:5.2, z:0}, 0.5, 0.5);
 	createAmmoXZPlane();
-	createAmmoCanon();
-	createRails();
+	// createAmmoMarble();
+	// createAmmoMarble(0.7, 1, 0xF9F9F9, {x:-0.5, y:5.2, z:0}, 0.5, 0.5);
+	// createAmmoCanon();
+	createRails({x:-15, y:0.5, z:15}, Math.PI/2);
+	createAmmoSeesaw();
+	createAmmoFunnel(0, 0x0000FF, {x:7, y:5, z:0});
+	createAmmoDomino();
+	
+
 
 	animate(0);
 }

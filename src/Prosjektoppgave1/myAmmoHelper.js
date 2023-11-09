@@ -2,6 +2,7 @@ export const COLLISION_GROUP_PLANE = 1;
 export const COLLISION_GROUP_SPHERE = 2;
 export const COLLISION_GROUP_MOVEABLE = 4;
 export const COLLISION_GROUP_BOX = 8;       //..osv. legg til etter behov.
+export const COLLISION_GROUP_SEESAW = 16;
 
 export const IMPULSE_FORCE = 10;
 
