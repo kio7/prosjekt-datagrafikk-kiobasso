@@ -16,13 +16,16 @@ import {
 	updatePhysics
 } from "./myAmmoHelper.js";
 
-import {createAmmoXZPlane,} from "./threeAmmoShapes.js";
+import { createAmmoXZPlane } from "./threeAmmoShapes.js";
+import { createAmmoSeeSaw } from './threeAmmoSeeSaw.js';
+import { createBucket } from './threeAmmoSeeSawObj.js';	
+import { createCounterWeight } from './threeAmmoSeeSawObj.js';	
 import { createAmmoMarble } from './threeAmmoMarbles.js';
 import { createAmmoCanon } from "./threeAmmoCanon.js";
 import { createRails } from './threeAmmoRails.js';
 import { createAmmoFunnel } from './threeAmmoFunnel.js';
 import { createAmmoDomino } from './threeAmmoDomino.js';
-import { createAmmoSeesaw } from './threeAmmoSeesaw.js';
+
 
 
 //Globale variabler:
@@ -85,13 +88,21 @@ function handleKeyDown(event) {
 function addAmmoSceneObjects() {
 
 	createAmmoXZPlane();
+	createAmmoSeeSaw(5, {x:0, y:0, z:0});
+	createBucket({x:4, y:5, z:0});
+	createCounterWeight({x:-4, y:5, z:0});
+	
+	
+	createAmmoCanon({x:18, y:0, z:-12});
+	createAmmoMarble(0.2, 1, 0xF9F9F9, {x:18, y:0.2, z:-12}, 0.5, 0.5, "marble"); // Canonball
+	
+	createAmmoFunnel(0, 0x0000FF, {x:4, y:6.5, z:0});
+	
+	createRails({x:-4, y:0.2, z:15}, Math.PI/2);
+	createAmmoMarble(0.58, 1.5, 0xF9F9F9, {x:-5, y:6, z:-2}, 0.5, 0.5); // Rolling ball
+	
 	// createAmmoMarble();
-	// createAmmoMarble(0.7, 1, 0xF9F9F9, {x:-0.5, y:5.2, z:0}, 0.5, 0.5);
-	// createAmmoCanon();
-	createRails({x:-15, y:0.5, z:15}, Math.PI/2);
-	createAmmoSeesaw();
-	createAmmoFunnel(0, 0x0000FF, {x:7, y:5, z:0});
-	createAmmoDomino();
+	createAmmoDomino({x:-3, y:0, z:16});
 	
 
 

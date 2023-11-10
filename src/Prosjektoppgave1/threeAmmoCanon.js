@@ -4,9 +4,9 @@ import {createAmmoRigidBody, phy} from "./myAmmoHelper.js";
 
 import {COLLISION_GROUP_PLANE, COLLISION_GROUP_SPHERE, COLLISION_GROUP_MOVEABLE, COLLISION_GROUP_BOX} from "./myAmmoHelper.js"
 
-export function createAmmoCanon() {
+export function createAmmoCanon(position = {x:0, y:0, z:0}, rotateY = Math.PI/4) {
     const mass = 0;
-    const position = {x:0, y:0.5, z:0};
+    const canonPosition = {x: position.x, y: position.y + 0.5, z: position.z};
     const segments = 50; 
 
     // // AMMO-container
@@ -14,18 +14,16 @@ export function createAmmoCanon() {
     // THREE-container
     let canonGroupMesh = new THREE.Group();
     // Lag cylinder
-    canonGroupMesh.position.set(position.x, position.y, position.z);
 
     createAmmoCanonMesh(canonGroupMesh, compoundShape ,segments)
     
-    canonGroupMesh.rotateZ(Math.PI/4);
+    canonGroupMesh.rotateY(rotateY);
+    canonGroupMesh.rotateZ(Math.PI/6);
 
     // AMMO
-    let rigidCanonBody = createAmmoRigidBody(compoundShape, canonGroupMesh, 0.7, 0.8, position, mass);
+    let rigidCanonBody = createAmmoRigidBody(compoundShape, canonGroupMesh, 0.7, 0.8, canonPosition, mass);
     canonGroupMesh.userData.physicsBody = rigidCanonBody;
-    // canonGroupMesh.physicsBody = rigidCanonBody;
-    
-    
+        
     // Legger til  i physics world:
     phy.ammoPhysicsWorld.addRigidBody(
         rigidCanonBody,

@@ -5,213 +5,119 @@ import {addToCompound} from "./triangleMeshHelpers.js";
 import {COLLISION_GROUP_SEESAW, COLLISION_GROUP_BOX, COLLISION_GROUP_PLANE, COLLISION_GROUP_SPHERE, COLLISION_GROUP_MOVEABLE} from "./myAmmoHelper.js";
 
 
-export function createAmmoSeesaw(mass = 20, position={x:0, y:0, z:0}, rotation=0) {
-    const scale = 1.0;
-    
-    const seesawBaseMesh = new THREE.Group();
-    const seesawPlankMesh = new THREE.Group();
-    seesawBaseMesh.position.set(position.x, position.y, position.z);
-    seesawBaseMesh.rotateY(rotation);
+export function createAmmoSeeSaw ( sessawHeight = 4, position = {x:0, y:0, z:0}) {
+    const mass = 10;
+    const color = 0x00FF00;
 
-    seesawPlankMesh.position.set(position.x, position.y, position.z);
-    seesawPlankMesh.rotateY(rotation);
+    const rigidBodyPlank = createPlank(sessawHeight, position);
+    const rigidBodyAnchor = createAnchor(sessawHeight, position);
+    // const rigidBodyBase = createBase();
 
-    let baseCompoundShape = new Ammo.btCompoundShape();
-    let seesawCompoundShape = new Ammo.btCompoundShape();
-    
-    // Create Mesh
-    createBaseMesh(seesawBaseMesh, scale, baseCompoundShape)
-    createPlankMesh(seesawPlankMesh, scale, seesawCompoundShape)
+    const plankLength = rigidBodyPlank.threeMesh.geometry.parameters.width;
+    const anchorPivot = new Ammo.btVector3(0, 0.5 * sessawHeight, 0);
+    const anchorAxis = new Ammo.btVector3(0, 0, 1);
+    const plankPivot = new Ammo.btVector3(0, 0, 0);
+    const plankAxis = new Ammo.btVector3(0, 0, 1);
 
-    // Base
-    let baseRigidBody = createAmmoRigidBody(baseCompoundShape, seesawBaseMesh, 0.7, 0.8, position, 0);
-    seesawBaseMesh.userData.physicsBody = baseRigidBody;
-    baseRigidBody.threeMesh = seesawBaseMesh;
-
-    phy.ammoPhysicsWorld.addRigidBody(
-        baseRigidBody,
-        COLLISION_GROUP_SEESAW,
-        COLLISION_GROUP_SEESAW | COLLISION_GROUP_BOX | COLLISION_GROUP_SPHERE | COLLISION_GROUP_MOVEABLE | COLLISION_GROUP_PLANE
+    const hingeConstraint = new Ammo.btHingeConstraint(
+        rigidBodyAnchor,
+        rigidBodyPlank,
+        anchorPivot,
+        plankPivot,
+        anchorAxis,
+        plankAxis,
+        false
     );
-    addMeshToScene(seesawBaseMesh);
-    phy.rigidBodies.push(seesawBaseMesh);
 
+    const lowerLimit = -Math.PI/12;
+    const upperLimit = Math.PI/12;
+    const softness = 0.9;
+    const biasFactor = 0.3;
+    const relaxationFactor = 1.0;
+    hingeConstraint.setLimit( lowerLimit, upperLimit, softness, biasFactor, relaxationFactor);
+    hingeConstraint.enableAngularMotor(true, 0, 0.5);
 
-    // Plank
-    let plankRigidBody = createAmmoRigidBody(seesawCompoundShape, seesawPlankMesh, 0.7, 0.8, position, mass);
-    seesawPlankMesh.userData.physicsBody = plankRigidBody;
-    plankRigidBody.threeMesh = seesawPlankMesh;
-
-    phy.ammoPhysicsWorld.addRigidBody(
-        plankRigidBody,
-        COLLISION_GROUP_SEESAW,
-        COLLISION_GROUP_SEESAW | COLLISION_GROUP_BOX | COLLISION_GROUP_SPHERE | COLLISION_GROUP_MOVEABLE | COLLISION_GROUP_PLANE
-    );
-    addMeshToScene(seesawPlankMesh);
-    phy.rigidBodies.push(seesawPlankMesh);
-
-
-    // Constraint
-    // Constants for pivot points
-    let height = scale*2.5;
-    let depth = scale*0.8;
-
-    // Pivot point 1
-    let pivotPoint1 = new Ammo.btVector3(0, height, depth);
-    let p2pConstraint1 = new Ammo.btPoint2PointConstraint(plankRigidBody, baseRigidBody, pivotPoint1, pivotPoint1);
-    phy.ammoPhysicsWorld.addConstraint(p2pConstraint1, true);
-
-    // Pivot point 2
-    let pivotPoint2 = new Ammo.btVector3(0, height, -depth);
-    let p2pConstraint2 = new Ammo.btPoint2PointConstraint(plankRigidBody, baseRigidBody, pivotPoint2, pivotPoint2);
-    phy.ammoPhysicsWorld.addConstraint(p2pConstraint2, true);
+    phy.ammoPhysicsWorld.addConstraint(hingeConstraint, false)
 }
 
+function createPlank(sessawHeight, position) {
+    const mass = 10;
+    const color = 0x00FF00;
+    const width=10, height=0.2, depth=1;
+    const plankPosition = {x:position.x, y: position.y + sessawHeight, z: position.z};
+    //THREE
+    const mesh = new THREE.Mesh(
+        new THREE.BoxGeometry(width, height, depth, 1, 1),
+        new THREE.MeshStandardMaterial({color: color}));
 
-function createBaseMesh(seesawGroupMesh, scale, baseCompoundShape) {
-    const seesawColor = 0x5FD85F;
-
-    const sideLength = scale;
-    const basePos = {x: 0, y: sideLength, z: 0};
-
-    // Base box
-    // THREE
-    let lowerBoxMesh = new THREE.Mesh(
-    	new THREE.BoxGeometry(sideLength, sideLength*2, sideLength, 1, 1),
-    	new THREE.MeshStandardMaterial({color: seesawColor})
-    );
-    lowerBoxMesh.position.set(basePos.x, basePos.y, basePos.z);
-    lowerBoxMesh.receiveShadow = true;
-    lowerBoxMesh.castShadow = true;
-    seesawGroupMesh.add(lowerBoxMesh);
-    
-    let width = lowerBoxMesh.geometry.parameters.width;
-    let height = lowerBoxMesh.geometry.parameters.height;
-    let depth = lowerBoxMesh.geometry.parameters.depth;
-
-    let lowerBoxShape = new Ammo.btBoxShape( new Ammo.btVector3(width/2, height/2, depth/2) );
-    
-    addToCompound(baseCompoundShape, lowerBoxMesh, lowerBoxShape);
-    
-    // sideBox 1
-    // Three
-    let sideBoxMesh = new THREE.Mesh(
-        new THREE.BoxGeometry(sideLength, sideLength/2, sideLength/10, 1, 1),
-        new THREE.MeshStandardMaterial({color: seesawColor})
-    );
-    sideBoxMesh.position.set(0, sideLength*1.25, sideLength/2 - sideLength/20);
-    sideBoxMesh.castShadow = true;
-    sideBoxMesh.receiveShadow = true;
-    lowerBoxMesh.add(sideBoxMesh);
-
-    // Ammo
-    width = sideBoxMesh.geometry.parameters.width;
-    height = sideBoxMesh.geometry.parameters.height;
-    depth = sideBoxMesh.geometry.parameters.depth;
-    
-    let sideBoxShape1 = new Ammo.btBoxShape( new Ammo.btVector3( width/2, height/2, depth/2) );
-    addToCompound(baseCompoundShape, sideBoxMesh, sideBoxShape1);
-    
-    // sideBox 2
-    // Three
-    let sideBoxMesh2 = sideBoxMesh.clone();
-    sideBoxMesh2.position.set(0, sideLength*1.25, sideLength/20 - sideLength/2);
-    // sideBox2Mesh.castShadow = true;
-    // sideBox2Mesh.receiveShadow = true;
-    lowerBoxMesh.add(sideBoxMesh2);
-    
-    // Ammo
-    width = sideBoxMesh2.geometry.parameters.width;
-    height = sideBoxMesh2.geometry.parameters.height;
-    depth = sideBoxMesh2.geometry.parameters.depth;
-
-    let sideBoxShape2 = new Ammo.btBoxShape( new Ammo.btVector3( width/2, height/2, depth/2) );
-    addToCompound(baseCompoundShape, sideBoxMesh2, sideBoxShape2);
-}
-
-
-function createPlankMesh(seesawPlankMesh, scale, seesawCompoundShape) {
-    const seesawColor = 0x5FD85F
-    const bucketColor = 0xFF0000
-    const boxColor = 0xA7ABBF
-    const sideLength = scale
-    
-
-    // Plank
-    // THREE
-    let plankMesh = new THREE.Mesh(
-        new THREE.BoxGeometry(sideLength*15, sideLength/4, sideLength*0.8, 1, 1),
-        new THREE.MeshStandardMaterial({color: seesawColor})
-    );
-    plankMesh.position.set(0, sideLength * 2.5, 0);
-    plankMesh.castShadow = true;
-    plankMesh.receiveShadow = true;
-    seesawPlankMesh.add(plankMesh);
+    mesh.name = 'plank'
+    // mesh.position.set(position.x, position.y, position.z);
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
 
     // AMMO
-    let plankShape = new Ammo.btBoxShape(new Ammo.btVector3(sideLength*7.5, sideLength/8, sideLength/2));
-    addToCompound(seesawCompoundShape, plankMesh, plankShape);
+    const mesh_width = mesh.geometry.parameters.width;
+	const mesh_height = mesh.geometry.parameters.height;
+	const mesh_depth = mesh.geometry.parameters.depth;
 
+	const shape = new Ammo.btBoxShape( new Ammo.btVector3( mesh_width/2, mesh_height/2, mesh_depth/2) );
+	shape.setMargin( 0.05 );
+	const rigidBody = createAmmoRigidBody(shape, mesh, 0.3, 1.8, plankPosition, mass);
+	rigidBody.setDamping(0.1, 0.5);
+	rigidBody.setActivationState(4);
+	mesh.userData.physicsBody = rigidBody;
 
-    // Bucket on the right side of the board.
+    // Legg til i physics world
+    phy.ammoPhysicsWorld.addRigidBody(
+        rigidBody,        
+        COLLISION_GROUP_SEESAW, 
+        COLLISION_GROUP_BOX | COLLISION_GROUP_PLANE | COLLISION_GROUP_SPHERE | COLLISION_GROUP_MOVEABLE
+        )
+
+    addMeshToScene(mesh);
+    phy.rigidBodies.push(mesh);
+    rigidBody.threeMesh = mesh;
+
+    return rigidBody;
+    
+};
+
+function createAnchor(sessawHeight, position) {
+    const radius = 0.2;
+    const anchorPosition = {x: position.x, y:position.y + (0.5 * sessawHeight), z: position.z};
+    const mass = 0
+
     // THREE
-    const bucketPosition = {x: sideLength * 7, y: sideLength/8, z: 0}
-    const segments = 200;
-    let bucketGroup = new THREE.Group();
-    bucketGroup.position.set(bucketPosition.x, bucketPosition.y, bucketPosition.z)
-
-    let bucketMaterial = new THREE.MeshStandardMaterial({color: bucketColor});
-
-    // Bottom circle
-    let radius = sideLength * 0.4;
-    let bottomGeometry = new THREE.CylinderGeometry(radius, radius, radius/10, segments);
-	let bottomMesh = new THREE.Mesh( bottomGeometry, bucketMaterial );
-    bottomMesh.receiveShadow = true;
-    bottomMesh.castShadow = true;
-	bucketGroup.add(bottomMesh);
-
-    let shape = new Ammo.btCylinderShape(new Ammo.btVector3(radius, radius/10, radius));
-	addToCompound(seesawCompoundShape, bottomMesh, shape);
-
-    // Sides
-    for (let i = 0; i < segments; i++) {
-        let angle = (i / segments) * Math.PI * 2;
-        let x = Math.cos(angle) * radius;
-        let z = Math.sin(angle) * radius;
-        // THREE
-        let sideMesh = new THREE.Mesh(
-            new THREE.BoxGeometry(radius / 4, sideLength, radius / 4, 1, 1),
-            new THREE.MeshStandardMaterial({color: bucketColor})
-        );
-        sideMesh.position.set(x, sideLength/2, z);
-        sideMesh.rotation.y = Math.PI/2 - angle;
-        sideMesh.castShadow = true;
-        sideMesh.receiveShadow = true;
-
-        // AMMO
-        let width = sideMesh.geometry.parameters.width;
-        let height = sideMesh.geometry.parameters.height;
-        let depth = sideMesh.geometry.parameters.depth;
-
-        bucketGroup.add(sideMesh);
-        let sideShape = new Ammo.btBoxShape(new Ammo.btVector3(width / 2, height / 2, depth / 2));
-        addToCompound(seesawCompoundShape, sideMesh, sideShape);
-    }
-    plankMesh.add(bucketGroup);
-
-
-    // CounterWeight
-    // THREE
-    let counterWeightMesh = new THREE.Mesh(
-        new THREE.BoxGeometry(sideLength*0.7, sideLength*0.7, sideLength*0.7, 1, 1),
-        new THREE.MeshStandardMaterial({color: boxColor})
+    const mesh = new THREE.Mesh(
+        new THREE.CylinderGeometry(radius, radius, 1 * sessawHeight, 32, 32),
+        new THREE.MeshStandardMaterial({color: 0xFF0000})
     );
-    counterWeightMesh.position.set(-sideLength * 7, sideLength/2, 0);
-    counterWeightMesh.castShadow = true;
-    counterWeightMesh.receiveShadow = true;
-    plankMesh.add(counterWeightMesh);
+    mesh.name = 'anchor';
+    mesh.position.set(position.x, position.y, position.z);
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
 
     // AMMO
-    let counterWeightShape = new Ammo.btBoxShape(new Ammo.btVector3(sideLength*0.35, sideLength*0.35, sideLength*0.35));
-    addToCompound(seesawCompoundShape, counterWeightMesh, counterWeightShape);
+    const shape = new Ammo.btCylinderShape(new Ammo.btVector3(radius, 0.15, radius));
+    shape.setMargin(0.05);
+    const rigidBody = createAmmoRigidBody(shape, mesh, 0.3, 0.0, anchorPosition, mass);
+    mesh.userData.physicsBody = rigidBody;
+    phy.ammoPhysicsWorld.addRigidBody(
+        rigidBody,
+        COLLISION_GROUP_SEESAW,
+        COLLISION_GROUP_BOX | COLLISION_GROUP_PLANE | COLLISION_GROUP_SPHERE | COLLISION_GROUP_MOVEABLE
+    );
+
+    addMeshToScene(mesh);
+    phy.rigidBodies.push(mesh);
+    rigidBody.threeMesh = mesh;
+
+    return rigidBody
+};
+
+
+
+function createBase() {
+
 }
+

@@ -5,7 +5,7 @@ import {COLLISION_GROUP_SEESAW as COLLISION_GROUP_SEESAW, COLLISION_GROUP_PLANE,
 import {addToCompound} from "./triangleMeshHelpers.js";
 
 export function createAmmoFunnel(mass=0, color=0x0000FF, position={x:7, y:7, z:0}) {
-    const segments = 175;
+    const segments = 200;
     const funnelHeight = 4;
 
     let funnelGroup = new THREE.Group();
@@ -21,6 +21,7 @@ export function createAmmoFunnel(mass=0, color=0x0000FF, position={x:7, y:7, z:0
         let z = Math.sin(angle) * radius;
         // THREE
         let sideMesh = new THREE.Mesh(new THREE.BoxGeometry(radius/15, funnelHeight, radius/20, 1, 1), material);
+        
         sideMesh.rotateY(Math.PI/2 - angle);
         sideMesh.rotateX(Math.PI/3.5);
         sideMesh.position.set(x, position.y / 5.5, z);
@@ -38,7 +39,7 @@ export function createAmmoFunnel(mass=0, color=0x0000FF, position={x:7, y:7, z:0
     }
 
     // Group
-    let rightBody = createAmmoRigidBody(compoundShape, funnelGroup, 0.7, 0.8, position, mass);
+    let rightBody = createAmmoRigidBody(compoundShape, funnelGroup, 0.5, 0.8, position, mass);
     funnelGroup.userData.physicsBody = rightBody;
     phy.ammoPhysicsWorld.addRigidBody(
         rightBody,

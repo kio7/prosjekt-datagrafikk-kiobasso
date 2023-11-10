@@ -30,9 +30,9 @@ export function createThreeScene() {
 
 	// Kamera:
 	ri.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
-	ri.camera.position.x = -42;
-	ri.camera.position.y = 10;
-	ri.camera.position.z = 0;
+	ri.camera.position.x = 10;
+	ri.camera.position.y = 9;
+	ri.camera.position.z = 20;
 
 	// Controls:
 	ri.controls = new OrbitControls(ri.camera, ri.renderer.domElement);
@@ -88,9 +88,9 @@ export function handleKeys(delta) {
 
 	const activator = ri.scene.getObjectByName("marble"); //S
 
-	if (ri.currentlyPressedKeys['KeyS'] && ri.activator < 4) {
+	if (ri.currentlyPressedKeys['KeyS'] && ri.activator < 6) {
 		ri.activator += 1	//S
-		activator.userData.physicsBody.applyCentralImpulse(new Ammo.btVector3(-2, 2, 0));
+		activator.userData.physicsBody.applyCentralImpulse(new Ammo.btVector3(-1.5, 2.1, 1.5));
 	}
 
 	// if (ri.currentlyPressedKeys['KeyH']) {	//H
