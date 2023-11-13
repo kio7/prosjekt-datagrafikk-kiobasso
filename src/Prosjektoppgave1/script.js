@@ -26,6 +26,7 @@ import { createAmmoCanon } from "./threeAmmoCanon.js";
 import { createRails } from './threeAmmoRails.js';
 import { createAmmoFunnel } from './threeAmmoFunnel.js';
 import { createAmmoDomino } from './threeAmmoDomino.js';
+import { createWorld } from './threeWorld.js';
 
 //Globale variabler:
 //MERK: Denne brukes også i myThreeHelper:
@@ -85,6 +86,8 @@ function handleKeyDown(event) {
 
 
 function addAmmoSceneObjects() {
+
+	createWorld();
 
 	createAmmoXZPlane(10, 10, {x:0, y:0, z:0});
 	

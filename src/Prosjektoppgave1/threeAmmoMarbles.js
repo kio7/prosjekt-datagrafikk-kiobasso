@@ -8,7 +8,6 @@ import {
 	COLLISION_GROUP_MOVEABLE, 
 	COLLISION_GROUP_BOX, 
 	COLLISION_GROUP_SEESAW,
-	COLLISION_GROUP_TABLE,
 } from "./myAmmoHelper.js"
 
 export let sphereCount = 0;
@@ -44,7 +43,6 @@ export function createAmmoMarble(
 	phy.ammoPhysicsWorld.addRigidBody(
 		rigidBody,
 		COLLISION_GROUP_SPHERE,
-		COLLISION_GROUP_TABLE |
 		COLLISION_GROUP_SPHERE | 
 		COLLISION_GROUP_BOX | 
 		COLLISION_GROUP_MOVEABLE | 
