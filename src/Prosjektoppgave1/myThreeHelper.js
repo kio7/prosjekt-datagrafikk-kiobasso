@@ -1,8 +1,5 @@
 import * as THREE from "three";
 import GUI from "lil-gui";
-import {applyImpulse, moveRigidBody} from "./myAmmoHelper.js";
-import {createRandomSpheres} from "./threeAmmoShapes.js";
-import {TrackballControls} from "three/examples/jsm/controls/TrackballControls";
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 import {ri} from "./script.js";
 
@@ -34,7 +31,7 @@ export function createThreeScene() {
 	ri.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
 	ri.camera.position.x = 10;
 	ri.camera.position.y = 9;
-	ri.camera.position.z = 55;
+	ri.camera.position.z = 65;
 
 	// Controls:
 	ri.controls = new OrbitControls(ri.camera, ri.renderer.domElement);
@@ -91,11 +88,13 @@ export function handleKeys(delta) {
 
 	const activator = ri.scene.getObjectByName("marble"); //S
 
-	if (ri.currentlyPressedKeys['KeyS'] && ri.activator < 6) {
-		ri.activator += 1	//S
-		activator.userData.physicsBody.applyCentralImpulse(new Ammo.btVector3(-1.5, 2.1, 1.5));
+	// if (ri.currentlyPressedKeys['KeyS'] && ri.activator < 6) {
+	// 	ri.activator += 1	//S
+	// 	activator.userData.physicsBody.applyCentralImpulse(new Ammo.btVector3(-1.5, 2.1, 1.5));
+	// }
+	if (ri.currentlyPressedKeys['KeyS']) {
+		ri.activator = true
 	}
-
 	// if (ri.currentlyPressedKeys['KeyH']) {	//H
 	// 	createRandomSpheres(200);
 	// }

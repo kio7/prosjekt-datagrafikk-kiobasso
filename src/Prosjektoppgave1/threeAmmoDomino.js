@@ -21,6 +21,7 @@ export function createAmmoDomino(
         size = size + 0.25 * i; // update size
         mass = mass + 1.33 * i; // update mass
         pos.z += size - size * 0.2; // update pos
+        
 
         let mesh = new THREE.Mesh(new THREE.BoxGeometry(size, 2*size, size/3), material);
 

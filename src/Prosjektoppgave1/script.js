@@ -16,8 +16,7 @@ import {
 	updatePhysics
 } from "./myAmmoHelper.js";
 
-// import { createAmmoXZPlane } from "./threeAmmoShapes.js";
-import { createAmmoXZPlane } from './ammoThreeXZPlane.js';
+import { createAmmoXZPlane } from "./ammoThreeXZPlane.js";
 import { createAmmoSeeSaw } from './threeAmmoSeeSaw.js';
 import { createBucket } from './threeAmmoSeeSawObj.js';	
 import { createCounterWeight } from './threeAmmoSeeSawObj.js';	
@@ -27,6 +26,7 @@ import { createRails } from './threeAmmoRails.js';
 import { createAmmoFunnel } from './threeAmmoFunnel.js';
 import { createAmmoDomino } from './threeAmmoDomino.js';
 import { createWorld } from './threeWorld.js';
+import { createAmmoPendulum} from './threeAmmoPendulum.js';
 
 //Globale variabler:
 //MERK: Denne brukes også i myThreeHelper:
@@ -39,7 +39,8 @@ export const ri = {
 	controls: undefined,
 	lilGui: undefined,
 	stats: undefined,
-	activator: 0
+	activator: false,
+	num: 0
 };
 
 export const XZPLANE_SIDELENGTH = 500;
@@ -137,13 +138,19 @@ function createScene(textureObjects) {
 	// createTable({x:8, y:0, z:-9});
 	// createTable({x:0, y:0, z:0});
 	// createAmmoMarble();
+	// createAmmoDomino({x:-3, y:0, z:16});
+	
 	// createAmmoMarble(0.58, 1.5, 0xF9F9F9, {x:0, y:7, z:0}, 0.5, 0.5);
 
+
+	// createAmmoPendulum(1, 0xFF0000, {x:-3, y:16.5, z:30});
+	createAmmoPendulum(5, 0xFF0000, {x:5, y:23.5, z:30});
 
 	animate(0);
 
 
 }
+
 
 function animate(currentTime, myThreeScene, myAmmoPhysicsWorld) {
 	window.requestAnimationFrame((currentTime) => {
@@ -152,6 +159,12 @@ function animate(currentTime, myThreeScene, myAmmoPhysicsWorld) {
 	let deltaTime = ri.clock.getDelta();
 
 	ri.stats.begin();
+	
+	if (ri.activator == true && ri.num < 6) {
+		const activator = ri.scene.getObjectByName("marble");
+		activator.userData.physicsBody.applyCentralImpulse(new Ammo.btVector3(-1.5, 2.1, 1.5));
+		ri.num += 1;
+	}
 	
 	//Oppdaterer grafikken:
 	updateThree(deltaTime);
@@ -163,10 +176,3 @@ function animate(currentTime, myThreeScene, myAmmoPhysicsWorld) {
 	renderScene();
 	ri.stats.end();
 }
-
-
-// Starter scriptet, gjør at man slipper å legge dette inn i html-fila.
-// Ammo().then(async function (AmmoLib) {
-//     Ammo = AmmoLib;
-//     main();
-// });
