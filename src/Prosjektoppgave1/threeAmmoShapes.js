@@ -7,12 +7,12 @@ import {COLLISION_GROUP_PLANE, COLLISION_GROUP_SPHERE, COLLISION_GROUP_BOX, COLL
 
 export let sphereCount = 0;
 
-export function createAmmoXZPlane() {
+export function createAmmoXZPlane(width = 10, depth = 10, position = {x: 0, y: 0, z: 0}) {
 	const mass=0;
-	const position = {x: 0, y: 0, z: 0};
+	// const position = {x: 0, y: 0, z: 0};
 
 	// THREE:
-	let geometry = new THREE.PlaneGeometry( XZPLANE_SIDELENGTH, XZPLANE_SIDELENGTH, 1, 1 );
+	let geometry = new THREE.PlaneGeometry( width, depth, 1, 1 );
 	geometry.rotateX( -Math.PI / 2 );
 	let material = new THREE.MeshStandardMaterial( { color: 0xA8A8F8, side: THREE.DoubleSide } );
 	let mesh = new THREE.Mesh(geometry, material);
@@ -20,8 +20,8 @@ export function createAmmoXZPlane() {
 	mesh.name = 'xzplane';
 
 	// AMMO:
-	let shape = new Ammo.btBoxShape(new Ammo.btVector3(XZPLANE_SIDELENGTH/2, 0, XZPLANE_SIDELENGTH/2));
-	//shape.setMargin( 0.05 );
+	let shape = new Ammo.btBoxShape(new Ammo.btVector3(width/2, 0, depth/2));
+	shape.setMargin( 0.0 );
 	let rigidBody = createAmmoRigidBody(shape, mesh, 0.7, 0.8, position, mass);
 
 	mesh.userData.physicsBody = rigidBody;

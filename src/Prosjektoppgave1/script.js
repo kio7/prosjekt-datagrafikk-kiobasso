@@ -16,7 +16,8 @@ import {
 	updatePhysics
 } from "./myAmmoHelper.js";
 
-import { createAmmoXZPlane } from "./threeAmmoShapes.js";
+// import { createAmmoXZPlane } from "./threeAmmoShapes.js";
+import { createAmmoXZPlane } from './ammoThreeXZPlane.js';
 import { createAmmoSeeSaw } from './threeAmmoSeeSaw.js';
 import { createBucket } from './threeAmmoSeeSawObj.js';	
 import { createCounterWeight } from './threeAmmoSeeSawObj.js';	
@@ -25,8 +26,6 @@ import { createAmmoCanon } from "./threeAmmoCanon.js";
 import { createRails } from './threeAmmoRails.js';
 import { createAmmoFunnel } from './threeAmmoFunnel.js';
 import { createAmmoDomino } from './threeAmmoDomino.js';
-
-
 
 //Globale variabler:
 //MERK: Denne brukes også i myThreeHelper:
@@ -87,23 +86,32 @@ function handleKeyDown(event) {
 
 function addAmmoSceneObjects() {
 
-	createAmmoXZPlane();
+	createAmmoXZPlane(10, 10, {x:0, y:0, z:0});
+	
 	createAmmoSeeSaw(5, {x:0, y:0, z:0});
 	createBucket({x:4, y:5, z:0});
 	createCounterWeight({x:-4, y:5, z:0});
 	
 	
+	createAmmoXZPlane(5, 5, {x:18, y:0, z:-12});
 	createAmmoCanon({x:18, y:0, z:-12});
 	createAmmoMarble(0.2, 1, 0xF9F9F9, {x:18, y:0.2, z:-12}, 0.5, 0.5, "marble"); // Canonball
 	
-	createAmmoFunnel(0, 0x0000FF, {x:4, y:6.5, z:0});
+	createAmmoFunnel(0, 0x0000FF, {x:4, y:7.2, z:0},3.5 , 0.4, 1.7);
 	
 	createRails({x:-4, y:0.2, z:15}, Math.PI/2);
-	createAmmoMarble(0.58, 1.5, 0xF9F9F9, {x:-5, y:6, z:-2}, 0.5, 0.5); // Rolling ball
+	createAmmoMarble(0.58, 2.5, 0xFEFEFE, {x:-5, y:6, z:-2}, 0.1, 0.9); // Rolling ball
 	
+
+	createAmmoXZPlane(15, 25, {x:-3, y:0, z:25});
+	createAmmoDomino({x:-3, y:0, z:16}, 0.5, 7);
+
+	
+
+	// createTable({x:8, y:0, z:-9});
+	// createTable({x:0, y:0, z:0});
 	// createAmmoMarble();
-	createAmmoDomino({x:-3, y:0, z:16});
-	
+	// createAmmoMarble(0.58, 1.5, 0xF9F9F9, {x:0, y:7, z:0}, 0.5, 0.5);
 
 
 	animate(0);

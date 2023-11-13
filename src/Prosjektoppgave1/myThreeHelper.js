@@ -32,7 +32,7 @@ export function createThreeScene() {
 	ri.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
 	ri.camera.position.x = 10;
 	ri.camera.position.y = 9;
-	ri.camera.position.z = 20;
+	ri.camera.position.z = 55;
 
 	// Controls:
 	ri.controls = new OrbitControls(ri.camera, ri.renderer.domElement);
@@ -54,7 +54,7 @@ export function addLights() {
 	//** RETNINGSORIENTERT LYS (som gir skygge):
 	let directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
 	directionalLight.visible = true;
-	directionalLight.position.set(0, 105, 0);
+	directionalLight.position.set(15, 50, 50);
 
 	// Viser lyskilden:
 	const directionalLightHelper = new THREE.DirectionalLightHelper( directionalLight, 10, 0xff0000);
@@ -76,11 +76,11 @@ export function addLights() {
 	directionalLightCameraHelper.visible = false;
 	ri.scene.add(directionalLightCameraHelper);
 
-	//lil-gui:
-	// const directionalFolder = ri.lilGui.addFolder( 'Directional Light' );
-	// directionalFolder.add(directionalLight, 'visible').name("On/Off");
-	// directionalFolder.add(directionalLight, 'intensity').min(0).max(1).step(0.01).name("Intensity");
-	// directionalFolder.addColor(directionalLight, 'color').name("Color");
+	// lil-gui:
+	const directionalFolder = ri.lilGui.addFolder( 'Directional Light' );
+	directionalFolder.add(directionalLight, 'visible').name("On/Off");
+	directionalFolder.add(directionalLight, 'intensity').min(0).max(1).step(0.01).name("Intensity");
+	directionalFolder.addColor(directionalLight, 'color').name("Color");
 }
 
 //Sjekker tastaturet:

@@ -1,51 +1,40 @@
 import * as THREE from "three";
 import {addMeshToScene} from "./myThreeHelper.js";
 import {createAmmoRigidBody, phy} from "./myAmmoHelper.js";
-import {COLLISION_GROUP_SEESAW as COLLISION_GROUP_SEESAW, COLLISION_GROUP_PLANE, COLLISION_GROUP_SPHERE, COLLISION_GROUP_MOVEABLE} from "./myAmmoHelper.js";
-import {addToCompound} from "./triangleMeshHelpers.js";
+import { generateTriangleShape } from "./triangleMeshHelpers.js";
 
-export function createAmmoFunnel(mass=0, color=0x0000FF, position={x:7, y:7, z:0}) {
-    const segments = 200;
-    const funnelHeight = 4;
+import {COLLISION_GROUP_SEESAW, COLLISION_GROUP_PLANE, COLLISION_GROUP_SPHERE, COLLISION_GROUP_MOVEABLE} from "./myAmmoHelper.js";
+import {ri} from "./script.js";
 
-    let funnelGroup = new THREE.Group();
-    funnelGroup.position.set(position.x, position.y, position.z)
-    let radius = funnelHeight / 2;
-    let material = new THREE.MeshStandardMaterial({color: color});
-    let compoundShape = new Ammo.btCompoundShape();
+export function createAmmoFunnel(
+    mass=0, 
+    color=0xF3F3F3, 
+    position={ x:7, y:7, z:0 },
+    topRadius=5,
+    bottomRadius=0.4,
+    height=3,
+    ) {
+    let geometry = new THREE.CylinderGeometry(topRadius, bottomRadius, height, 60, 60, true);
+    let material = new THREE.MeshStandardMaterial({ color:color, side: THREE.DoubleSide });
+    let funnelMesh = new THREE.Mesh(geometry, material);
+    funnelMesh.position.set(position.x, position.y, position.z);
+    funnelMesh.userData.tag = "funnel";
+    funnelMesh.receiveShadow = true;
+    funnelMesh.castShadow = true;
 
-    // Sides
-    for (let i = 0; i < segments; i++) {
-        let angle = (i / segments) * Math.PI * 2;
-        let x = Math.cos(angle) * radius;
-        let z = Math.sin(angle) * radius;
-        // THREE
-        let sideMesh = new THREE.Mesh(new THREE.BoxGeometry(radius/15, funnelHeight, radius/20, 1, 1), material);
-        
-        sideMesh.rotateY(Math.PI/2 - angle);
-        sideMesh.rotateX(Math.PI/3.5);
-        sideMesh.position.set(x, position.y / 5.5, z);
-        sideMesh.castShadow = true;
-        sideMesh.receiveShadow = true;
-
-        // AMMO
-        let width = sideMesh.geometry.parameters.width;
-        let height = sideMesh.geometry.parameters.height;
-        let depth = sideMesh.geometry.parameters.depth;
-
-        funnelGroup.add(sideMesh);
-        let sideShape = new Ammo.btBoxShape(new Ammo.btVector3(width / 2, height / 2, depth / 2));
-        addToCompound(compoundShape, sideMesh, sideShape);
-    }
-
-    // Group
-    let rightBody = createAmmoRigidBody(compoundShape, funnelGroup, 0.5, 0.8, position, mass);
-    funnelGroup.userData.physicsBody = rightBody;
+    
+    let shape = generateTriangleShape(funnelMesh, false);
+    let rigidBody = createAmmoRigidBody(shape, funnelMesh, 0.3, 0.2, position, mass);
+    funnelMesh.userData.physicsBody = rigidBody;
     phy.ammoPhysicsWorld.addRigidBody(
-        rightBody,
+        rigidBody,
         COLLISION_GROUP_SEESAW,
         COLLISION_GROUP_SEESAW | COLLISION_GROUP_SPHERE | COLLISION_GROUP_MOVEABLE | COLLISION_GROUP_PLANE
-    );
-    addMeshToScene(funnelGroup);
-    rightBody.threeMesh = funnelGroup;
+        );
+        
+        
+    addMeshToScene(funnelMesh);
+    phy.rigidBodies.push(funnelMesh);
+    rigidBody.threeMesh = funnelMesh;
+
 }
