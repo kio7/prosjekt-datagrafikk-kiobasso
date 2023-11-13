@@ -3,21 +3,29 @@ import { addMeshToScene } from './myThreeHelper';
 import { createAmmoRigidBody, phy } from './myAmmoHelper';
 import { COLLISION_GROUP_PLANE, COLLISION_GROUP_SPHERE, COLLISION_GROUP_MOVEABLE, COLLISION_GROUP_SEESAW } from './myAmmoHelper';
 
-export function createAmmoDomino(pos={x:-10, y:0, z:10}, size=0.51, dominoCount = 7) {
+export function createAmmoDomino(
+    pos={x:-10, y:0, z:10}, 
+    size=0.51, 
+    dominoCount = 7,
+    textureObject    
+    ) {
     let mass=1.5;
-    const color=0xF5F5F5; 
-    const material = new THREE.MeshStandardMaterial({ color: color });
+    const color=0xFFFFFF; 
+    const material = new THREE.MeshStandardMaterial({ 
+        map: textureObject,
+        color: color,
+        side: THREE.DoubleSide, 
+    });
 
     for (let i = 0; i < dominoCount; i++) {;
         size = size + 0.25 * i; // update size
         mass = mass + 1.33 * i; // update mass
         pos.z += size - size * 0.2; // update pos
 
-        console.log(pos.y)
-
         let mesh = new THREE.Mesh(new THREE.BoxGeometry(size, 2*size, size/3), material);
-        mesh.castShadow = true;
+
         mesh.receiveShadow = true;
+        mesh.castShadow = true;
 
         // AMMO:
         let width = mesh.geometry.parameters.width;

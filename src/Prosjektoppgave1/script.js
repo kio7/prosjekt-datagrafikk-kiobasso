@@ -87,27 +87,50 @@ function handleKeyDown(event) {
 
 function addAmmoSceneObjects() {
 
-	createWorld();
+	const loadingManager = new THREE.LoadingManager();
+	const textureLoader = new THREE.TextureLoader(loadingManager);
+	const textureObjects = [];
+	textureObjects[0] = textureLoader.load('textures/galaxy.jpeg');
+	textureObjects[1] = textureLoader.load('textures/glass.jpg');
+	textureObjects[2] = textureLoader.load('textures/wood.jpg');
 
-	createAmmoXZPlane(10, 10, {x:0, y:0, z:0});
+	// Implementer dette i forbindelse med loading screen?!?!?
+
+	// loadingManager.onStart = (url, itemsLoaded, itemsTotal) => {
+	// 	console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+	// };
+	// loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
+	// 	console.log( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+	// };
+	// loadingManager.onError = (url) => {
+	// 	console.log( 'There was an error loading ' + url );
+	// };
+	
+	loadingManager.onLoad = () => {
+		createScene(textureObjects);
+	}
+}
+
+function createScene(textureObjects) {
+
+	createWorld(textureObjects[0]);
 	
 	createAmmoSeeSaw(5, {x:0, y:0, z:0});
 	createBucket({x:4, y:5, z:0});
 	createCounterWeight({x:-4, y:5, z:0});
-	
-	
-	createAmmoXZPlane(5, 5, {x:18, y:0, z:-12});
+	createAmmoXZPlane(10, 10, {x:0, y:0, z:0}, textureObjects[1], 0x96f1ff);
+		
 	createAmmoCanon({x:18, y:0, z:-12});
 	createAmmoMarble(0.2, 1, 0xF9F9F9, {x:18, y:0.2, z:-12}, 0.5, 0.5, "marble"); // Canonball
+	createAmmoXZPlane(5, 5, {x:18, y:0, z:-12}, textureObjects[1], 0x96f1ff);
 	
-	createAmmoFunnel(0, 0x0000FF, {x:4, y:7.2, z:0},3.5 , 0.4, 1.7);
+	createAmmoFunnel(0, 0x00F3F3, {x:4, y:7.2, z:0}, 3, 0.4, 1.7, textureObjects[1]);
 	
 	createRails({x:-4, y:0.2, z:15}, Math.PI/2);
 	createAmmoMarble(0.58, 2.5, 0xFEFEFE, {x:-5, y:6, z:-2}, 0.1, 0.9); // Rolling ball
 	
-
-	createAmmoXZPlane(15, 25, {x:-3, y:0, z:25});
-	createAmmoDomino({x:-3, y:0, z:16}, 0.5, 7);
+	createAmmoDomino({x:-3, y:0, z:16}, 0.5, 7, textureObjects[2]);
+	createAmmoXZPlane(15, 25, {x:-3, y:0, z:25}, textureObjects[1], 0x96f1ff);
 
 	
 
@@ -118,6 +141,8 @@ function addAmmoSceneObjects() {
 
 
 	animate(0);
+
+
 }
 
 function animate(currentTime, myThreeScene, myAmmoPhysicsWorld) {

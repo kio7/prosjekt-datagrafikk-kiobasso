@@ -13,12 +13,24 @@ export function createAmmoFunnel(
     topRadius=5,
     bottomRadius=0.4,
     height=3,
+    textureObject,
     ) {
     let geometry = new THREE.CylinderGeometry(topRadius, bottomRadius, height, 60, 60, true);
-    let material = new THREE.MeshStandardMaterial({ color:color, side: THREE.DoubleSide });
+    
+    // let material = new THREE.MeshStandardMaterial({ 
+    let material = new THREE.MeshPhongMaterial({ 
+        map: textureObject,
+        color:color, 
+        side: THREE.DoubleSide,
+        transparent: true,
+        depthWrite: true,
+        opacity: 0.4,
+    });
     let funnelMesh = new THREE.Mesh(geometry, material);
+    
     funnelMesh.position.set(position.x, position.y, position.z);
     funnelMesh.userData.tag = "funnel";
+    funnelMesh.renderOrder = 2;
     funnelMesh.receiveShadow = true;
     funnelMesh.castShadow = true;
 

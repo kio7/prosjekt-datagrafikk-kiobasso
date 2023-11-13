@@ -13,14 +13,16 @@ export function createThreeScene() {
 	// Renderer:
 	ri.renderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true});
 	ri.renderer.setSize(window.innerWidth, window.innerHeight);
-	ri.renderer.setClearColor(0xBFD104, 0xff);  //farge, alphaverdi.
+	ri.renderer.setClearColor(0x000000, 0xFF);  //farge, alphaverdi.
 	ri.renderer.shadowMap.enabled = true; //NB!
 	ri.renderer.shadowMapSoft = true;
 	ri.renderer.shadowMap.type = THREE.PCFSoftShadowMap; //THREE.BasicShadowMap;
+	// ri.renderer.shadowMap.type = THREE.VSMShadowMap;
+	// ri.renderer.shadowMap.type = THREE.BasicShadowMap;
 
 	// Scene
 	ri.scene = new THREE.Scene();
-	ri.scene.background = new THREE.Color( 0xdddddd );
+	ri.scene.background = new THREE.Color( 0x000000 );
 
 	// lil-gui kontroller:
 	ri.lilGui = new GUI();
@@ -52,7 +54,7 @@ export function addLights() {
 
 
 	//** RETNINGSORIENTERT LYS (som gir skygge):
-	let directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+	let directionalLight = new THREE.DirectionalLight(0xffffff, 1);
 	directionalLight.visible = true;
 	directionalLight.position.set(15, 50, 50);
 
@@ -69,6 +71,7 @@ export function addLights() {
 	directionalLight.shadow.camera.right = 50;
 	directionalLight.shadow.camera.top = 50;
 	directionalLight.shadow.camera.bottom = -50;
+	directionalLight.shadow.bias = -0.005;  //NB! Viktig for å unngå artefakter pga. "Peter Panning"
 	ri.scene.add(directionalLight);
 
 	// Viser lyskildekamera (hva lyskilden "ser")
