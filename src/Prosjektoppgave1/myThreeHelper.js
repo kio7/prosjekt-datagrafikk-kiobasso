@@ -164,11 +164,13 @@ export function handleKeys(delta) {
 	const activator = ri.scene.getObjectByName("marble");
 	printCameraPosition();
 
-	if (ri.currentlyPressedKeys['KeyS'] && ri.activator < 6) {
-		ri.activator += 1	//S
-		activator.userData.physicsBody.applyCentralImpulse(new Ammo.btVector3(-1.5, 2.1, 1.5));
+	// if (ri.currentlyPressedKeys['KeyS'] && ri.activator < 6) {
+	// 	ri.activator += 1	//S
+	// 	activator.userData.physicsBody.applyCentralImpulse(new Ammo.btVector3(-1.5, 2.1, 1.5));
+	// }
+	if (ri.currentlyPressedKeys['KeyS']) {
+		ri.activator = true
 	}
-
 	// if (ri.currentlyPressedKeys['KeyH']) {	//H
 	// 	createRandomSpheres(200);
 	// }
