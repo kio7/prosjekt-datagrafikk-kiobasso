@@ -2,7 +2,7 @@ import * as THREE from "three";
 import {addMeshToScene} from "./myThreeHelper.js";
 import {createAmmoRigidBody, phy} from "./myAmmoHelper.js";
 
-import {COLLISION_GROUP_PLANE, COLLISION_GROUP_SPHERE, COLLISION_GROUP_BOX, COLLISION_GROUP_SEESAW} from "./myAmmoHelper.js"
+import {COLLISION_GROUP_PLANE, COLLISION_GROUP_SPHERE, COLLISION_GROUP_SEESAW, COLLISION_GROUP_DOMINO} from "./myAmmoHelper.js"
 
 export let sphereCount = 0;
 
@@ -47,7 +47,7 @@ export function createAmmoXZPlane(
 	phy.ammoPhysicsWorld.addRigidBody(
 		rigidBody,
 		COLLISION_GROUP_PLANE,
-		COLLISION_GROUP_SPHERE | COLLISION_GROUP_BOX | COLLISION_GROUP_SEESAW);
+		COLLISION_GROUP_SPHERE | COLLISION_GROUP_SEESAW | COLLISION_GROUP_DOMINO);
 
 	addMeshToScene(mesh);
 	phy.rigidBodies.push(mesh);

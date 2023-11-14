@@ -2,7 +2,7 @@ import * as THREE from "three";
 import {addMeshToScene} from "./myThreeHelper.js";
 import {createAmmoRigidBody, phy} from "./myAmmoHelper.js";
 
-import {COLLISION_GROUP_PLANE, COLLISION_GROUP_SPHERE, COLLISION_GROUP_MOVEABLE, COLLISION_GROUP_BOX} from "./myAmmoHelper.js"
+import {COLLISION_GROUP_SPHERE, COLLISION_GROUP_CANON} from "./myAmmoHelper.js"
 
 export function createAmmoCanon(position = {x:0, y:0, z:0}, rotateY = Math.PI/4) {
     const mass = 0;
@@ -20,6 +20,8 @@ export function createAmmoCanon(position = {x:0, y:0, z:0}, rotateY = Math.PI/4)
     canonGroupMesh.rotateY(rotateY);
     canonGroupMesh.rotateZ(Math.PI/6);
 
+    canonGroupMesh.name = 'canon';
+
     // AMMO
     let rigidCanonBody = createAmmoRigidBody(compoundShape, canonGroupMesh, 0.7, 0.8, canonPosition, mass);
     canonGroupMesh.userData.physicsBody = rigidCanonBody;
@@ -27,8 +29,8 @@ export function createAmmoCanon(position = {x:0, y:0, z:0}, rotateY = Math.PI/4)
     // Legger til  i physics world:
     phy.ammoPhysicsWorld.addRigidBody(
         rigidCanonBody,
-        COLLISION_GROUP_BOX,
-        COLLISION_GROUP_BOX | COLLISION_GROUP_SPHERE | COLLISION_GROUP_MOVEABLE | COLLISION_GROUP_PLANE
+        COLLISION_GROUP_CANON,
+        COLLISION_GROUP_SPHERE
     );
 
     addMeshToScene(canonGroupMesh);

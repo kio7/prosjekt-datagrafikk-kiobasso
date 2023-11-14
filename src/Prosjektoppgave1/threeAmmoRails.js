@@ -3,7 +3,7 @@ import {addMeshToScene} from "./myThreeHelper.js";
 import {createAmmoRigidBody, phy} from "./myAmmoHelper.js";
 import {createTriangleShapeAddToCompound} from "./triangleMeshHelpers.js";
 
-import {COLLISION_GROUP_PLANE, COLLISION_GROUP_SPHERE, COLLISION_GROUP_MOVEABLE, COLLISION_GROUP_BOX, COLLISION_GROUP_SEESAW} from "./myAmmoHelper.js"
+import {COLLISION_GROUP_SPHERE, COLLISION_GROUP_SEESAW, COLLISION_GROUP_RAILS} from "./myAmmoHelper.js"
 
 class CustomSinCurve extends THREE.Curve {
 
@@ -25,8 +25,9 @@ export function createRails(position={x:0, y:0, z:0}, rotation=0) {
     let compoundShape = new Ammo.btCompoundShape();
     // THREE-container
     let railGroupMesh = new THREE.Group();
-    railGroupMesh.position.set(position.x, position.y, position.z);
+    // railGroupMesh.position.set(position.x, position.y, position.z);
     railGroupMesh.rotateY(rotation);
+    railGroupMesh.name = "rails";
 
     createRailMesh(railGroupMesh, compoundShape)
     
@@ -36,8 +37,8 @@ export function createRails(position={x:0, y:0, z:0}, rotation=0) {
     // Legger til  i physics world:
     phy.ammoPhysicsWorld.addRigidBody(
         rigidRailBody,
-        COLLISION_GROUP_BOX,
-        COLLISION_GROUP_BOX | COLLISION_GROUP_SPHERE | COLLISION_GROUP_MOVEABLE | COLLISION_GROUP_PLANE | COLLISION_GROUP_SEESAW
+        COLLISION_GROUP_RAILS,
+        COLLISION_GROUP_RAILS | COLLISION_GROUP_SPHERE | COLLISION_GROUP_SEESAW
     );
     addMeshToScene(railGroupMesh);
     phy.rigidBodies.push(railGroupMesh);
@@ -51,7 +52,7 @@ export function createRailMesh(railGroupMesh, compoundShape) {
     const tilt = 0.09;
     const tubularSegments = 160
     const radialSegments = 100;
-    const railOffset = 0.4;
+    const railOffset = 0.5;
     const color = 0xF00FE0;
 
         // THREE - Rail 1
@@ -61,6 +62,7 @@ export function createRailMesh(railGroupMesh, compoundShape) {
         const railOneMesh = new THREE.Mesh( geometry, material );
         railOneMesh.castShadow = true;
         railOneMesh.receiveShadow = true;
+        railOneMesh.name = 'rail1';
         
         railOneMesh.rotateX(Math.PI/2);
         railOneMesh.rotateY(Math.PI * tilt);
@@ -78,6 +80,7 @@ export function createRailMesh(railGroupMesh, compoundShape) {
         const railTwoMesh = new THREE.Mesh( geometry2, material2 );
         railTwoMesh.castShadow = true;
         railTwoMesh.receiveShadow = true;
+        railTwoMesh.name = 'rail2';
 
         railTwoMesh.rotateX(Math.PI/2);
         railTwoMesh.rotateY(Math.PI * tilt);

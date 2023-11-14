@@ -1,10 +1,9 @@
 import * as THREE from "three";
 import GUI from "lil-gui";
 import {applyImpulse, moveRigidBody} from "./myAmmoHelper.js";
-import {createRandomSpheres} from "./threeAmmoShapes.js";
-import {TrackballControls} from "three/examples/jsm/controls/TrackballControls";
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 import {ri} from "./script.js";
+import {gsap} from "gsap";
 
 export function createThreeScene() {
 	const canvas = document.createElement('canvas');
@@ -32,13 +31,86 @@ export function createThreeScene() {
 
 	// Kamera:
 	ri.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
-	ri.camera.position.x = 10;
-	ri.camera.position.y = 9;
-	ri.camera.position.z = 55;
+	ri.camera.position.x = -240;
+	ri.camera.position.y = 75;
+	ri.camera.position.z = -190;
+
+	// Create the camera positions timeline
+	const cameraPositions = [
+		{ x: 290, y: 90, z: 80 },
+		// Add more camera positions as needed
+	];
+
+	const cameraTimeline = gsap.timeline();
+
+	cameraPositions.forEach((position, index) => {
+		cameraTimeline.to(ri.camera.position, {
+		duration: 50, // Duration of the animation in seconds
+		x: position.x,
+		y: position.y,
+		z: position.z,
+		ease: 'power1.inOut', // Easing function
+		onStart: () => {
+			// This function will be called when the animation starts for each position
+			console.log(`Animating to camera position ${index + 1}`);
+		},
+		onComplete: () => {
+			// This function will be called when the animation completes for each position
+			console.log(`Animation to camera position ${index + 1} complete`);
+		},
+		});
+	});
+
+	// Start the camera positions timeline
+  	cameraTimeline.play();
+
+
+
+    // Create a div element to display the coordinates on the canvas
+    const coordinatesDiv = document.createElement('div');
+	coordinatesDiv.id = 'coordinatesText';
+    coordinatesDiv.style.position = 'absolute';
+    coordinatesDiv.style.top = '10px';
+    coordinatesDiv.style.left = '10px';
+    coordinatesDiv.style.color = 'white';
+    coordinatesDiv.style.fontFamily = 'Arial';
+    coordinatesDiv.style.fontSize = '16px';
+    // Append the div to the canvas
+    document.body.appendChild(coordinatesDiv);
+
+	// Audio
+	const listener = new THREE.AudioListener();
+	ri.camera.add( listener );
+	const sound = new THREE.Audio( listener );
+	const audioLoader = new THREE.AudioLoader();
+	audioLoader.load( './sounds/wandering.mp3', function( buffer ) {
+		sound.setBuffer( buffer );
+		sound.setLoop( true );
+		sound.setVolume( 0.5 );
+		sound.play()
+		});
+
+	const soundFolder = ri.lilGui.addFolder({title: 'Sound', open: false});
+	soundFolder.add(sound, 'play').name("Play");
+	soundFolder.add(sound, 'pause').name("Pause");
 
 	// Controls:
 	ri.controls = new OrbitControls(ri.camera, ri.renderer.domElement);
 	ri.controls.addEventListener( 'change', renderScene);
+}
+
+export function playAudioOnce(audioFile, setVolume=0.5, pitch=1) {
+	const listener = new THREE.AudioListener();
+	ri.camera.add( listener );
+	const sound = new THREE.Audio( listener );
+	const audioLoader = new THREE.AudioLoader();
+	audioLoader.load( audioFile, function( buffer ) {
+		sound.setBuffer( buffer );
+		sound.setLoop( false );
+		sound.setVolume( setVolume );
+		sound.setPlaybackRate(pitch);
+		sound.play()
+	});
 }
 
 export function addLights() {
@@ -89,7 +161,8 @@ export function addLights() {
 //Sjekker tastaturet:
 export function handleKeys(delta) {
 
-	const activator = ri.scene.getObjectByName("marble"); //S
+	const activator = ri.scene.getObjectByName("marble");
+	printCameraPosition();
 
 	if (ri.currentlyPressedKeys['KeyS'] && ri.activator < 6) {
 		ri.activator += 1	//S
@@ -147,4 +220,10 @@ export function getRigidBodyFromMesh(meshName) {
 		return mesh.userData.physicsBody;
 	else
 		return null;
+}
+
+export function printCameraPosition() {
+    const cameraPosition = ri.camera.position;
+    const coordinatesText = `Camera Position: x: ${cameraPosition.x.toFixed(2)}, y: ${cameraPosition.y.toFixed(2)}, z: ${cameraPosition.z.toFixed(2)}`;
+    document.getElementById('coordinatesText').textContent = coordinatesText;
 }

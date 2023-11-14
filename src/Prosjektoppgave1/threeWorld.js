@@ -10,6 +10,7 @@ export function createWorld(textureObject) {
             transparent: true,
             opacity: 0.7,
         })
-    )
+        )
+    world.name = "world";
     addMeshToScene(world);
 }

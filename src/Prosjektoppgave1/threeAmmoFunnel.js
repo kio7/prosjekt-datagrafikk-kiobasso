@@ -3,7 +3,12 @@ import {addMeshToScene} from "./myThreeHelper.js";
 import {createAmmoRigidBody, phy} from "./myAmmoHelper.js";
 import { generateTriangleShape } from "./triangleMeshHelpers.js";
 
-import {COLLISION_GROUP_SEESAW, COLLISION_GROUP_PLANE, COLLISION_GROUP_SPHERE, COLLISION_GROUP_MOVEABLE} from "./myAmmoHelper.js";
+import {
+    COLLISION_GROUP_SPHERE, 
+    COLLISION_GROUP_FUNNEL,
+    COLLISION_GROUP_SEESAWOBJ
+} from "./myAmmoHelper.js";
+
 import {ri} from "./script.js";
 
 export function createAmmoFunnel(
@@ -30,18 +35,20 @@ export function createAmmoFunnel(
     
     funnelMesh.position.set(position.x, position.y, position.z);
     funnelMesh.userData.tag = "funnel";
+    funnelMesh.name = "funnel";
     funnelMesh.renderOrder = 2;
     funnelMesh.receiveShadow = true;
     funnelMesh.castShadow = true;
 
     
     let shape = generateTriangleShape(funnelMesh, false);
-    let rigidBody = createAmmoRigidBody(shape, funnelMesh, 0.3, 0.2, position, mass);
+    let rigidBody = createAmmoRigidBody(shape, funnelMesh, 0.1, 0.2, position, mass);
     funnelMesh.userData.physicsBody = rigidBody;
     phy.ammoPhysicsWorld.addRigidBody(
         rigidBody,
-        COLLISION_GROUP_SEESAW,
-        COLLISION_GROUP_SEESAW | COLLISION_GROUP_SPHERE | COLLISION_GROUP_MOVEABLE | COLLISION_GROUP_PLANE
+        COLLISION_GROUP_FUNNEL,
+        COLLISION_GROUP_SPHERE |
+        COLLISION_GROUP_SEESAWOBJ
         );
         
         

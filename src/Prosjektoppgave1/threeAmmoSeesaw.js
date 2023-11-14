@@ -2,7 +2,13 @@ import * as THREE from "three";
 import {addMeshToScene} from "./myThreeHelper.js";
 import {createAmmoRigidBody, phy} from "./myAmmoHelper.js";
 import {addToCompound} from "./triangleMeshHelpers.js";
-import {COLLISION_GROUP_SEESAW, COLLISION_GROUP_BOX, COLLISION_GROUP_PLANE, COLLISION_GROUP_SPHERE, COLLISION_GROUP_MOVEABLE} from "./myAmmoHelper.js";
+import {
+    COLLISION_GROUP_SEESAW, 
+    COLLISION_GROUP_SEESAWOBJ,
+    COLLISION_GROUP_PLANE, 
+    COLLISION_GROUP_SPHERE,
+    COLLISION_GROUP_RAILS
+    } from "./myAmmoHelper.js";
 
 
 export function createAmmoSeeSaw ( sessawHeight = 4, position = {x:0, y:0, z:0}) {
@@ -71,8 +77,10 @@ function createPlank(sessawHeight, position) {
     phy.ammoPhysicsWorld.addRigidBody(
         rigidBody,        
         COLLISION_GROUP_SEESAW, 
-        COLLISION_GROUP_BOX | COLLISION_GROUP_PLANE | COLLISION_GROUP_SPHERE | COLLISION_GROUP_MOVEABLE
-        )
+        COLLISION_GROUP_RAILS | 
+        COLLISION_GROUP_SEESAWOBJ |
+        COLLISION_GROUP_SPHERE
+        );
 
     addMeshToScene(mesh);
     phy.rigidBodies.push(mesh);
@@ -105,7 +113,10 @@ function createAnchor(sessawHeight, position) {
     phy.ammoPhysicsWorld.addRigidBody(
         rigidBody,
         COLLISION_GROUP_SEESAW,
-        COLLISION_GROUP_BOX | COLLISION_GROUP_PLANE | COLLISION_GROUP_SPHERE | COLLISION_GROUP_MOVEABLE
+        COLLISION_GROUP_SEESAW | 
+        COLLISION_GROUP_SEESAWOBJ |
+        COLLISION_GROUP_PLANE | 
+        COLLISION_GROUP_SPHERE 
     );
 
     addMeshToScene(mesh);

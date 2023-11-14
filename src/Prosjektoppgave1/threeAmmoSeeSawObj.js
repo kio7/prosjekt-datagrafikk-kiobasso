@@ -2,7 +2,14 @@ import * as THREE from "three";
 import {addMeshToScene} from "./myThreeHelper.js";
 import {createAmmoRigidBody, phy} from "./myAmmoHelper.js";
 import {addToCompound} from "./triangleMeshHelpers.js";
-import {COLLISION_GROUP_SEESAW, COLLISION_GROUP_BOX, COLLISION_GROUP_PLANE, COLLISION_GROUP_SPHERE, COLLISION_GROUP_MOVEABLE} from "./myAmmoHelper.js";
+import {
+    COLLISION_GROUP_SEESAW, 
+    COLLISION_GROUP_RAILS, 
+    COLLISION_GROUP_PLANE, 
+    COLLISION_GROUP_SPHERE,
+    COLLISION_GROUP_SEESAWOBJ,
+    COLLISION_GROUP_FUNNEL
+    } from "./myAmmoHelper.js";
 
 export function createBucket(position = {x:4 ,y:2, z:0}) {
 
@@ -21,6 +28,7 @@ export function createBucket(position = {x:4 ,y:2, z:0}) {
     bottomMesh.receiveShadow = true;
     bottomMesh.castShadow = true;
     bucketGroupMesh.add(bottomMesh);
+    bucketGroupMesh.name = "bucket";
 
     // AMMO
     let bucketCompoundShape = new Ammo.btCompoundShape();
@@ -57,8 +65,12 @@ export function createBucket(position = {x:4 ,y:2, z:0}) {
 
     phy.ammoPhysicsWorld.addRigidBody(
         rigidBody,
-        COLLISION_GROUP_BOX,
-        COLLISION_GROUP_BOX | COLLISION_GROUP_SPHERE | COLLISION_GROUP_MOVEABLE | COLLISION_GROUP_PLANE | COLLISION_GROUP_SEESAW
+        COLLISION_GROUP_SEESAWOBJ,
+        COLLISION_GROUP_SEESAW |
+        COLLISION_GROUP_SEESAWOBJ |
+        COLLISION_GROUP_SPHERE |  
+        COLLISION_GROUP_PLANE |
+        COLLISION_GROUP_FUNNEL
     );
 
     addMeshToScene(bucketGroupMesh);
@@ -70,30 +82,34 @@ export function createBucket(position = {x:4 ,y:2, z:0}) {
 export function createCounterWeight(position = {x:-4 ,y:2, z:0}) {
 
 
-// THREE
-// CounterWeight
-let counterWeightMesh = new THREE.Mesh(
-    new THREE.BoxGeometry(1, 1, 1, 1, 1),
-    new THREE.MeshStandardMaterial({color: 0xF3F3F3})
-);
-counterWeightMesh.name = 'counterWeight';
-counterWeightMesh.castShadow = true;
-counterWeightMesh.receiveShadow = true;
+    // THREE
+    // CounterWeight
+    let counterWeightMesh = new THREE.Mesh(
+        new THREE.BoxGeometry(1, 1, 1, 1, 1),
+        new THREE.MeshStandardMaterial({color: 0xF3F3F3})
+    );
+    counterWeightMesh.name = 'counterWeight';
+    counterWeightMesh.castShadow = true;
+    counterWeightMesh.receiveShadow = true;
 
-// AMMO
-let shape = new Ammo.btBoxShape(new Ammo.btVector3(0.5, 0.5, 0.5));
-shape.setMargin(0.05);
-let rigidBody = createAmmoRigidBody(shape, counterWeightMesh, 0.3, 1.8, position, 2);
-counterWeightMesh.userData.physicsBody = rigidBody;
 
-phy.ammoPhysicsWorld.addRigidBody(
-    rigidBody,
-    COLLISION_GROUP_BOX,
-    COLLISION_GROUP_BOX | COLLISION_GROUP_SPHERE | COLLISION_GROUP_MOVEABLE | COLLISION_GROUP_PLANE | COLLISION_GROUP_SEESAW
-);
-addMeshToScene(counterWeightMesh);
-phy.rigidBodies.push(counterWeightMesh);
-rigidBody.threeMesh = counterWeightMesh;
+    // AMMO
+    let shape = new Ammo.btBoxShape(new Ammo.btVector3(0.5, 0.5, 0.5));
+    shape.setMargin(0.05);
+    let rigidBody = createAmmoRigidBody(shape, counterWeightMesh, 0.3, 1.8, position, 2);
+    counterWeightMesh.userData.physicsBody = rigidBody;
+
+    phy.ammoPhysicsWorld.addRigidBody(
+        rigidBody,
+        COLLISION_GROUP_SEESAWOBJ, 
+        COLLISION_GROUP_SPHERE | 
+        COLLISION_GROUP_SEESAWOBJ |
+        COLLISION_GROUP_PLANE |
+        COLLISION_GROUP_SEESAW
+    );
+    addMeshToScene(counterWeightMesh);
+    phy.rigidBodies.push(counterWeightMesh);
+    rigidBody.threeMesh = counterWeightMesh;
 
 
 }
