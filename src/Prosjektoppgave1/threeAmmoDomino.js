@@ -1,7 +1,12 @@
 import * as THREE from 'three';
 import { addMeshToScene, playAudioOnce } from './myThreeHelper';
 import { createAmmoRigidBody, phy } from './myAmmoHelper';
-import { COLLISION_GROUP_PLANE, COLLISION_GROUP_SPHERE, COLLISION_GROUP_DOMINO } from './myAmmoHelper';
+import { 
+    COLLISION_GROUP_PLANE, 
+    COLLISION_GROUP_SPHERE, 
+    COLLISION_GROUP_DOMINO,
+    COLLISION_GROUP_PENDULUM
+} from './myAmmoHelper';
 
 export function createAmmoDomino(
     pos={x:-10, y:0, z:10}, 
@@ -51,7 +56,10 @@ export function createAmmoDomino(
         phy.ammoPhysicsWorld.addRigidBody(
             rigidBody,
             COLLISION_GROUP_DOMINO,
-            COLLISION_GROUP_SPHERE | COLLISION_GROUP_PLANE | COLLISION_GROUP_DOMINO
+            COLLISION_GROUP_SPHERE | 
+            COLLISION_GROUP_PLANE | 
+            COLLISION_GROUP_DOMINO |
+            COLLISION_GROUP_PENDULUM
         );
 
 

@@ -2,7 +2,13 @@ import * as THREE from "three";
 import {addMeshToScene} from "./myThreeHelper.js";
 import {createAmmoRigidBody, phy} from "./myAmmoHelper.js";
 
-import {COLLISION_GROUP_PLANE, COLLISION_GROUP_SPHERE, COLLISION_GROUP_MOVEABLE, COLLISION_GROUP_BOX, COLLISION_GROUP_SEESAW} from "./myAmmoHelper.js"
+import {
+    COLLISION_GROUP_PLANE, 
+    COLLISION_GROUP_SPHERE, 
+    COLLISION_GROUP_SEESAW, 
+    COLLISION_GROUP_PENDULUM,
+    COLLISION_GROUP_DOMINO
+} from "./myAmmoHelper.js"
 
 export function createAmmoPendulum (
     mass = 1,
@@ -23,8 +29,9 @@ export function createAmmoPendulum (
 
     phy.ammoPhysicsWorld.addRigidBody(
         boxRigidBody,
-        COLLISION_GROUP_BOX,
-        COLLISION_GROUP_SPHERE | COLLISION_GROUP_BOX | COLLISION_GROUP_MOVEABLE | COLLISION_GROUP_PLANE | COLLISION_GROUP_SEESAW
+        COLLISION_GROUP_PENDULUM,
+        COLLISION_GROUP_SPHERE | 
+        COLLISION_GROUP_PLANE
     );
 
     addMeshToScene(boxMesh);
@@ -47,7 +54,9 @@ export function createAmmoPendulum (
     phy.ammoPhysicsWorld.addRigidBody(
         ballRigidBody,
         COLLISION_GROUP_SPHERE,
-        COLLISION_GROUP_SPHERE | COLLISION_GROUP_BOX | COLLISION_GROUP_MOVEABLE | COLLISION_GROUP_PLANE | COLLISION_GROUP_SEESAW
+        COLLISION_GROUP_SPHERE | 
+        COLLISION_GROUP_PLANE | 
+        COLLISION_GROUP_DOMINO
     );
         
     addMeshToScene(ballMesh);
