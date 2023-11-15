@@ -14,12 +14,12 @@ export function createAmmoDomino(
     dominoCount = 7,
     textureObject    
     ) {
-    let mass=1.5;
+    let mass=2.5;
     const color=0xFFFFFF; 
 
     for (let i = 0; i < dominoCount; i++) {;
         size = size + 0.25 * i; // update size
-        mass = mass + 1.33 * i; // update mass
+        mass = mass + 1.25 * i; // update mass
         pos.z += size - size * 0.2; // update pos
         
 
@@ -50,7 +50,7 @@ export function createAmmoDomino(
         let depth = mesh.geometry.parameters.depth;
         let shape = new Ammo.btBoxShape(new Ammo.btVector3(width/2, height/2, depth/2));
         shape.setMargin( 0.1 );
-        let rigidBody = createAmmoRigidBody(shape, mesh, 0.7, 0.5, pos, mass);
+        let rigidBody = createAmmoRigidBody(shape, mesh, 0.7, 0.9, pos, mass);
         mesh.userData.physicsBody = rigidBody;
 
         phy.ammoPhysicsWorld.addRigidBody(
