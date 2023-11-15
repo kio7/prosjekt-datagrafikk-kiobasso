@@ -2,12 +2,9 @@ import * as THREE from 'three';
 import { addMeshToScene } from './myThreeHelper';
 import { createAmmoRigidBody, phy } from './myAmmoHelper.js';
 
-import { 
-    COLLISION_GROUP_PLANE,
-    COLLISION_GROUP_SPHERE,
-    COLLISION_GROUP_MOVEABLE,
-    COLLISION_GROUP_BOX,
-    COLLISION_GROUP_SEESAW
+import {
+    COLLISION_GROUP_PENDULUM,
+    COLLISION_GROUP_WALL
 } from './myAmmoHelper.js';
 
 
@@ -58,8 +55,8 @@ export function createAmmoWall(mass, size, num, position) {
 
             phy.ammoPhysicsWorld.addRigidBody(
                 brickRigidBody,
-                COLLISION_GROUP_BOX,
-                COLLISION_GROUP_BOX | COLLISION_GROUP_SPHERE | COLLISION_GROUP_MOVEABLE | COLLISION_GROUP_PLANE | COLLISION_GROUP_SEESAW
+                COLLISION_GROUP_WALL,
+                COLLISION_GROUP_WALL | COLLISION_GROUP_PENDULUM
             );
             phy.rigidBodies.push(mesh);
             brickRigidBody.threeMesh = mesh;

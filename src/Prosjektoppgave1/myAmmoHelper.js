@@ -9,12 +9,13 @@ Domino soun effect: Sound Effect by Leobathro from Pixabay
 export const COLLISION_GROUP_PLANE = 1;
 export const COLLISION_GROUP_SPHERE = 2;
 export const COLLISION_GROUP_CANON = 4;
-export const COLLISION_GROUP_RAILS = 8;       //..osv. legg til etter behov.
+export const COLLISION_GROUP_RAILS = 8;
 export const COLLISION_GROUP_SEESAW = 16;
 export const COLLISION_GROUP_DOMINO = 32;
 export const COLLISION_GROUP_FUNNEL = 64;
 export const COLLISION_GROUP_SEESAWOBJ = 128;
 export const COLLISION_GROUP_PENDULUM = 256;
+export const COLLISION_GROUP_WALL = 512;
 
 
 
@@ -28,7 +29,7 @@ export let phy = {
 }
 
 export function createAmmoWorld() {
-	phy.transform = new Ammo.btTransform();           // Hjelpeobjekt.
+	phy.transform = new Ammo.btTransform();
 	
 	// Initialiserer phy.ammoPhysicsWorld:
 	let collisionConfiguration = new Ammo.btDefaultCollisionConfiguration(),

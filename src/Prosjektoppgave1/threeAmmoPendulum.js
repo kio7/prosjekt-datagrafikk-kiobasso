@@ -1,20 +1,22 @@
-// Pendel koden er basert på Patrik Andreassen sin kode.
-// Patrik sin kode er inspirert av armHingeConstraint.js fra modul 7 (Werner Farstad) og støttet opp med hjelp av ChatGPT 3.5 for feilsøking.
-// Koden for linjen er basert på kodeeksempelet springGeneric6DofSpringConstraint.js i modul 7 (Werner Farstad).
+/* 
+
+Pendel koden er basert på Patrik Andreassen sin kode.
+Patrik sin kode er inspirert av armHingeConstraint.js fra modul 7 (Werner Farstad) og støttet opp med hjelp av ChatGPT 3.5 for feilsøking.
+Koden for linjen er basert på kodeeksempelet springGeneric6DofSpringConstraint.js i modul 7 (Werner Farstad).
+
+*/
+
 
 import * as THREE from "three";
 import {addMeshToScene} from "./myThreeHelper.js";
 import {createAmmoRigidBody, phy} from "./myAmmoHelper.js";
 import {MTLLoader} from "three/examples/jsm/loaders/MTLLoader";
 import {OBJLoader} from "three/examples/jsm/loaders/OBJLoader";
-import {ri} from "./script.js";
 
 import {
-    COLLISION_GROUP_PLANE, 
-    COLLISION_GROUP_SPHERE, 
-    COLLISION_GROUP_SEESAW, 
     COLLISION_GROUP_PENDULUM,
-    COLLISION_GROUP_DOMINO
+    COLLISION_GROUP_DOMINO,
+    COLLISION_GROUP_WALL
 } from "./myAmmoHelper.js"
 
 export function createAmmoPendulum (
@@ -49,8 +51,8 @@ export function createAmmoPendulum (
     
     phy.ammoPhysicsWorld.addRigidBody(
         sphereRigidBody,
-        COLLISION_GROUP_SPHERE,
-        COLLISION_GROUP_BOX | COLLISION_GROUP_SPHERE | COLLISION_GROUP_MOVEABLE | COLLISION_GROUP_PLANE | COLLISION_GROUP_SEESAW
+        COLLISION_GROUP_PENDULUM,
+        COLLISION_GROUP_DOMINO | COLLISION_GROUP_WALL
     );
     phy.rigidBodies.push(ballMesh);
     sphereRigidBody.threeMesh = ballMesh;
@@ -71,10 +73,9 @@ export function createAmmoPendulum (
     anchorBoxMesh.userData.physicsBody = anchorRigidBody;
 
     phy.ammoPhysicsWorld.addRigidBody(
-        boxRigidBody,
+        anchorRigidBody,
         COLLISION_GROUP_PENDULUM,
-        COLLISION_GROUP_SPHERE | 
-        COLLISION_GROUP_PLANE
+        COLLISION_GROUP_WALL | COLLISION_GROUP_DOMINO
     );
 
     anchorRigidBody.threeMesh = anchorBoxMesh;
