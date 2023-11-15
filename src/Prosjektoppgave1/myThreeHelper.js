@@ -31,38 +31,38 @@ export function createThreeScene() {
 
 	// Kamera:
 	ri.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
-	ri.camera.position.x = -240;
-	ri.camera.position.y = 75;
-	ri.camera.position.z = -190;
+	ri.camera.position.x = 70;
+	ri.camera.position.y = 30;
+	ri.camera.position.z = 60;
 
 	// Create the camera positions timeline
-	const cameraPositions = [
-		{ x: 290, y: 90, z: 80 },
-		// Add more camera positions as needed
-	];
+	// const cameraPositions = [
+	// 	{ x: 290, y: 90, z: 80 },
+	// 	// Add more camera positions as needed
+	// ];
 
-	const cameraTimeline = gsap.timeline();
+	// const cameraTimeline = gsap.timeline();
 
-	cameraPositions.forEach((position, index) => {
-		cameraTimeline.to(ri.camera.position, {
-		duration: 50, // Duration of the animation in seconds
-		x: position.x,
-		y: position.y,
-		z: position.z,
-		ease: 'power1.inOut', // Easing function
-		onStart: () => {
-			// This function will be called when the animation starts for each position
-			console.log(`Animating to camera position ${index + 1}`);
-		},
-		onComplete: () => {
-			// This function will be called when the animation completes for each position
-			console.log(`Animation to camera position ${index + 1} complete`);
-		},
-		});
-	});
+	// cameraPositions.forEach((position, index) => {
+	// 	cameraTimeline.to(ri.camera.position, {
+	// 	duration: 50, // Duration of the animation in seconds
+	// 	x: position.x,
+	// 	y: position.y,
+	// 	z: position.z,
+	// 	ease: 'power1.inOut', // Easing function
+	// 	onStart: () => {
+	// 		// This function will be called when the animation starts for each position
+	// 		console.log(`Animating to camera position ${index + 1}`);
+	// 	},
+	// 	onComplete: () => {
+	// 		// This function will be called when the animation completes for each position
+	// 		console.log(`Animation to camera position ${index + 1} complete`);
+	// 	},
+	// 	});
+	// });
 
-	// Start the camera positions timeline
-  	cameraTimeline.play();
+	// // Start the camera positions timeline
+  	// cameraTimeline.play();
 
 
 

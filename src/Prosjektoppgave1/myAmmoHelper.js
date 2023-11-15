@@ -16,6 +16,7 @@ export const COLLISION_GROUP_FUNNEL = 64;
 export const COLLISION_GROUP_SEESAWOBJ = 128;
 export const COLLISION_GROUP_PENDULUM = 256;
 export const COLLISION_GROUP_WALL = 512;
+export const COLLISION_GROUP_FAN = 1024;
 
 
 
@@ -181,4 +182,12 @@ export function applyImpulse(rigidBody, force=IMPULSE_FORCE, direction = {x:0, y
 	rigidBody.activate(true);
 	let impulseVector = new Ammo.btVector3(direction.x * force , direction.y * force , direction.z * force );
 	rigidBody.applyCentralImpulse(impulseVector);
+}
+
+export function applyForce(rigidBody, force=IMPULSE_FORCE, direction = {x:0, y:1, z:0}) {
+	if (!rigidBody)
+		return;
+	rigidBody.activate(true);
+	let forceVector = new Ammo.btVector3(direction.x * force , direction.y * force , direction.z * force );
+	rigidBody.applyCentralForce(forceVector);
 }

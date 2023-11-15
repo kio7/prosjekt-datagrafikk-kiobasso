@@ -1,17 +1,24 @@
+/* 
+Koden under er inspirert av https://github.com/mrdoob/three.js/blob/master/examples/physics_ammo_rope.html
+Den har blitt endret til å passe vårt prosjekt.
+*/
+
 import * as THREE from 'three';
 import { addMeshToScene } from './myThreeHelper';
 import { createAmmoRigidBody, phy } from './myAmmoHelper.js';
 
 import {
     COLLISION_GROUP_PENDULUM,
-    COLLISION_GROUP_WALL
+    COLLISION_GROUP_WALL,
+    COLLISION_GROUP_PLANE,
+    COLLISION_GROUP_FAN
 } from './myAmmoHelper.js';
 
 
 export function createAmmoWall(mass, size, num, position) {
 
     const brickMass = mass;
-    const brickLength = size*0.4;
+    const brickLength = size*0.5;
     const brickDepth = size*0.2;
     const brickHeight = brickLength * 0.5;
     const numBricksLength = num;
@@ -44,6 +51,7 @@ export function createAmmoWall(mass, size, num, position) {
                 new THREE.BoxGeometry( brickDepth, brickHeight, brickLengthCurrent ),
                 new THREE.MeshStandardMaterial( { color: Math.floor( Math.random() * ( 1 << 24 )) } )
             );
+            mesh.name = "brick"
             mesh.castShadow = true;
             mesh.receiveShadow = true;
             addMeshToScene(mesh);
@@ -56,10 +64,11 @@ export function createAmmoWall(mass, size, num, position) {
             phy.ammoPhysicsWorld.addRigidBody(
                 brickRigidBody,
                 COLLISION_GROUP_WALL,
-                COLLISION_GROUP_WALL | COLLISION_GROUP_PENDULUM
+                COLLISION_GROUP_WALL | COLLISION_GROUP_PENDULUM | COLLISION_GROUP_PLANE | COLLISION_GROUP_FAN
             );
             phy.rigidBodies.push(mesh);
             brickRigidBody.threeMesh = mesh;
+            brickRigidBody.setActivationState(4); //DISABLE_DEACTIVATION
 
             if ( oddRow && ( i == 0 || i == nRow - 2 ) ) {
                 pos.z += 0.75 * brickLength;

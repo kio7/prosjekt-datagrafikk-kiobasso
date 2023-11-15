@@ -86,23 +86,20 @@ export function createAmmoPendulum (
     let  modelName = 'E_45_Aircraft';
 
     //Laster først materiale:
-    mtlLoader.load('./Spaceship/' + modelName + '.mtl', function (materials) {
+    mtlLoader.load('./models/spaceship/' + modelName + '.mtl', function (materials) {
         materials.preload();
-        let  objLoader = new OBJLoader();
+        let objLoader = new OBJLoader();
         objLoader.setMaterials(materials);
         
         //...deretter geometrien:
-        objLoader.load(
-            './Spaceship/' + modelName + '.obj',
-            (object) => {
+        objLoader.load('./models/spaceship/' + modelName + '.obj', (object) => {
                 mesh = object;
                 mesh.position.set(position.x, position.y, position.z);
                 mesh.rotation.set(0, -Math.PI/1.2, 0);
                 mesh.scale.set(1, 1, 1);
 
                 addMeshToScene(mesh);
-            }
-        );
+        });
     });
 
     // Line
