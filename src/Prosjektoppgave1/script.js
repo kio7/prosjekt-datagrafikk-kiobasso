@@ -54,7 +54,7 @@ export function main() {
 	createThreeScene();
 
 	// ammo
-	createAmmoWorld(true);
+	createAmmoWorld();
 
 	// Klokke for animasjon
 	ri.clock = new THREE.Clock();
@@ -75,6 +75,14 @@ export function main() {
 
 
 function loadScreenElements() {
+	// Setter opp container for GUI
+	const guiContainer = document.createElement('div');
+	guiContainer.className = 'gui-container';
+	guiContainer.classList.add("hide");
+	document.body.appendChild(guiContainer);
+
+
+
 	//Setter opp fps-counter:
     ri.stats = new Stats();
 	ri.stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
@@ -82,24 +90,55 @@ function loadScreenElements() {
 	statsDOM.style.top = "";
 	statsDOM.style.bottom = "0px";
 
-	const statsContainer = document.getElementById("stats-container");
-	statsContainer.className = 'stats';
-	statsContainer.appendChild(ri.stats.dom);
+	// Legger fpscounter til i gui-container:
+	guiContainer.appendChild(ri.stats.dom);
 
 	// Create a div element to display the coordinates on the canvas
     const coordinatesDiv = document.createElement('div');
 	coordinatesDiv.id = 'coordinatesText';
 	coordinatesDiv.className = 'coordinatesText';
-    document.body.appendChild(coordinatesDiv);
+    guiContainer.appendChild(coordinatesDiv);
+
+	// Create settingsbutton and add to gui-container:
+	const settingsButton = document.createElement("button");
+	settingsButton.className = "settings";
+	settingsButton.id = "settingsTray";
+	settingsButton.innerHTML = "SETTINGS";
+	guiContainer.appendChild(settingsButton);
+	let settingsButtonEvent = document.getElementById("settingsTray");	
+	settingsButtonEvent.addEventListener("click", animateButton);
 
 	// Toggles settings tray:
 	function animateButton() {
-		console.log("her")
 		const animatedDiv = document.querySelector(".lil-gui");
 		animatedDiv.classList.toggle("open");		
 	}
-	const animatedButton = document.getElementById("settingsTray");	
-	animatedButton.addEventListener("click", animateButton);
+
+	// Create startbutton and startbutton container:
+	const startButtonContainer = document.createElement("div");
+	startButtonContainer.className = "startButtonContainer";
+	startButtonContainer.id = "startButtonContainer";
+	document.body.appendChild(startButtonContainer);
+
+	const startButton = document.createElement("button");
+	startButton.className = "startButton";
+	startButton.id = "startButton";
+	startButton.innerHTML = "START!";
+	startButtonContainer.appendChild(startButton);
+
+	let startButtonElement = document.getElementById("startButton");
+	startButtonElement.addEventListener("click", startButtonEvent);
+
+	function startButtonEvent() {
+		const startButtonContainer = document.getElementById("startButtonContainer");
+		const guiContainer = document.querySelector(".gui-container");
+		startButtonContainer.classList.toggle("hide");
+		guiContainer.classList.toggle("hide");
+
+		// Kill cameramovemnt
+		// Load new movement
+	}
+
 }
 
 
@@ -127,6 +166,13 @@ function addAmmoSceneObjects() {
 		console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
 	};
 	loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
+		let element = ( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' )
+		const loadingBox = document.querySelector(".loadingBox")
+		const createDiv = document.createElement("div")
+		createDiv.className = "filnavn"
+		createDiv.innerHTML = element
+		loadingBox.appendChild(createDiv)
+		
 		console.log( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
 	};
 	loadingManager.onError = (url) => {
@@ -134,6 +180,17 @@ function addAmmoSceneObjects() {
 	};
 	
 	loadingManager.onLoad = () => {
+		let element = ( 'Loading complete!' )
+		const loadingBox = document.querySelector(".loadingBox")
+		const createDiv = document.createElement("div")
+		createDiv.className = "filnavn"
+		createDiv.innerHTML = element
+		loadingBox.appendChild(createDiv)
+
+
+		const loadingScreen =  document.querySelector(".loadingScreen")
+		loadingScreen.classList.toggle('hide')
+		console.log( 'Loading complete!');
 		createScene(textureObjects);
 	}
 }
@@ -179,7 +236,7 @@ function createScene(textureObjects) {
 	
 
 	createAmmoXZPlane(5, 20, {x:8, y:5.5, z:30}, textureObjects[1], 0x96f1ff);
-	createAmmoWall(0.1, 3, 10, {x:8, y:5.5, z:31});
+	// createAmmoWall(0.1, 3, 10, {x:8, y:5.5, z:31});
 
 	
 	
