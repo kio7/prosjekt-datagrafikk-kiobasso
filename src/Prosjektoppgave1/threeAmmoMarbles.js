@@ -2,6 +2,13 @@ import * as THREE from "three";
 import {addMeshToScene, playAudioOnce} from "./myThreeHelper.js";
 import {createAmmoRigidBody, phy} from "./myAmmoHelper.js";
 
+import { createCameraTimeline } from "./myThreeHelper";
+import { cameraCoordinates as cc } from "./cameraCoord";
+
+
+
+
+
 import {
 	COLLISION_GROUP_PLANE, 
 	COLLISION_GROUP_SPHERE, 
@@ -46,6 +53,7 @@ export function createAmmoMarble(
 		
 		if (mesh1.name === 'funnel' && funnel === 0) {
 			playAudioOnce('./sounds/larger-wine-glass.mp3', 0.5, 1);
+			createCameraTimeline(cc.funnel.c, cc.funnel.d)
 			funnel = 1;
 		}
 		

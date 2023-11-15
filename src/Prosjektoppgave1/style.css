@@ -165,6 +165,7 @@ table {
 }
 
 .startButton {
+    margin-top: 15rem;
     width: 10rem;
     height: 3rem;
     background: #090554;

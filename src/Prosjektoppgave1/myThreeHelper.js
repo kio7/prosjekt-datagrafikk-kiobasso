@@ -4,6 +4,7 @@ import {applyImpulse, moveRigidBody} from "./myAmmoHelper.js";
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 import {ri} from "./script.js";
 import {gsap} from "gsap";
+import { cameraCoordinates as cc } from "./cameraCoord.js";
 
 export function createThreeScene() {
 	const canvas = document.createElement('canvas');
@@ -16,8 +17,6 @@ export function createThreeScene() {
 	ri.renderer.shadowMap.enabled = true; //NB!
 	ri.renderer.shadowMapSoft = true;
 	ri.renderer.shadowMap.type = THREE.PCFSoftShadowMap; //THREE.BasicShadowMap;
-	// ri.renderer.shadowMap.type = THREE.VSMShadowMap;
-	// ri.renderer.shadowMap.type = THREE.BasicShadowMap;
 
 	// Scene
 	ri.scene = new THREE.Scene();
@@ -29,44 +28,14 @@ export function createThreeScene() {
 	// Sceneobjekter
 	addLights();
 
-	// Kamera:
+	// Kamera, utgangsposisjon:
 	ri.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
-	ri.camera.position.x = -9;
-	ri.camera.position.y = 18;
-	ri.camera.position.z = -4;
+	ri.camera.position.x = cc.init.c[0].x;
+	ri.camera.position.y = cc.init.c[0].y;
+	ri.camera.position.z = cc.init.c[0].z;
 
-	// Create the camera positions timeline
-	// const cameraPositions = [
-	// 	{ x: 290, y: 90, z: 80 },
-	// 	// Add more camera positions as needed
-	// ];
-
-	// const cameraTimeline = gsap.timeline();
-
-	// cameraPositions.forEach((position, index) => {
-	// 	cameraTimeline.to(ri.camera.position, {
-	// 	duration: 50, // Duration of the animation in seconds
-	// 	x: position.x,
-	// 	y: position.y,
-	// 	z: position.z,
-	// 	ease: 'power1.inOut', // Easing function
-	// 	onStart: () => {
-	// 		// This function will be called when the animation starts for each position
-	// 		console.log(`Animating to camera position ${index + 1}`);
-	// 	},
-	// 	onComplete: () => {
-	// 		// This function will be called when the animation completes for each position
-	// 		console.log(`Animation to camera position ${index + 1} complete`);
-	// 	},
-	// 	});
-	// });
-
-	// Start the camera positions timeline
-  	// cameraTimeline.play();
-
-
-
-    
+	// Set up camera timeline
+	// ri.cameraTimeline = gsap.timeline();
 
 	// Audio
 	const listener = new THREE.AudioListener();
@@ -88,6 +57,31 @@ export function createThreeScene() {
 	ri.controls = new OrbitControls(ri.camera, ri.renderer.domElement);
 	ri.controls.addEventListener( 'change', renderScene);
 }
+
+export function createCameraTimeline(cameraPositions = [{ x: 290, y: 90, z: 80 }], duration = 4) {
+	ri.cameraTimeline = gsap.timeline();
+	cameraPositions.forEach((position, index) => {
+		ri.cameraTimeline.to(ri.camera.position, {
+		duration: duration, // Duration of the animation in seconds
+		x: position.x,
+		y: position.y,
+		z: position.z,
+		ease: 'power1.inOut', // Easing function
+		onStart: () => {
+			// This function will be called when the animation starts for each position
+			console.log(`Animating to camera position ${index + 1}`);
+		},
+		onComplete: () => {
+			// This function will be called when the animation completes for each position
+			console.log(`Animation to camera position ${index + 1} complete`);
+		},
+		});
+	});
+
+	// Start the camera positions timeline
+	ri.cameraTimeline.play();
+}
+
 
 export function playAudioOnce(audioFile, setVolume=0.5, pitch=1) {
 	const listener = new THREE.AudioListener();

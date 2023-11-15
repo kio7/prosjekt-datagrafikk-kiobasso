@@ -4,11 +4,14 @@ import Stats from 'stats.js';
 
 import {
 	createThreeScene,
+	createCameraTimeline,
 	handleKeys,
 	onWindowResize,
 	renderScene,
 	updateThree
 } from "./myThreeHelper.js";
+
+import { cameraCoordinates as cc} from './cameraCoord.js';
 
 import {
 	phy,
@@ -38,6 +41,7 @@ export const ri = {
 	scene: undefined,
 	renderer: undefined,
 	camera: undefined,
+	cameraTimeline: undefined,
 	clock: undefined,
 	controls: undefined,
 	lilGui: undefined,
@@ -82,8 +86,6 @@ function loadScreenElements() {
 	guiContainer.className = 'gui-container';
 	guiContainer.classList.add("hide");
 	document.body.appendChild(guiContainer);
-
-
 
 	//Setter opp fps-counter:
     ri.stats = new Stats();
@@ -136,9 +138,10 @@ function loadScreenElements() {
 		const guiContainer = document.querySelector(".gui-container");
 		startButtonContainer.classList.toggle("hide");
 		guiContainer.classList.toggle("hide");
-
 		// Kill cameramovemnt
+		ri.cameraTimeline.kill();
 		// Load new movement
+		createCameraTimeline(cc.canon.c, cc.canon.d);
 	}
 
 }
@@ -162,8 +165,6 @@ function addAmmoSceneObjects() {
 	textureObjects[0] = textureLoader.load('textures/galaxy.jpeg');
 	textureObjects[1] = textureLoader.load('textures/glass.jpg');
 	textureObjects[2] = textureLoader.load('textures/wood.jpg');
-
-	// Implementer dette i forbindelse med loading screen?!?!?
 
 	loadingManager.onStart = (url, itemsLoaded, itemsTotal) => {
 		console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
@@ -193,6 +194,8 @@ function addAmmoSceneObjects() {
 
 		const loadingScreen =  document.querySelector(".loadingScreen")
 		loadingScreen.classList.toggle('hide')
+
+		createCameraTimeline(cc.pano.c, cc.pano.d)
 		console.log( 'Loading complete!');
 		createScene(textureObjects);
 	}
@@ -222,13 +225,8 @@ function createScene(textureObjects) {
 
 	createThreeSun();
 	
-
-
-
-
 	createAmmoPendulum(5, 0xFEFEFE, {x:4, y:23.5, z:30}, 0.5, 0.5);
 	
-
 	createAmmoXZPlane(5, 20, {x:8, y:5.5, z:30}, textureObjects[1], 0x96f1ff);
 	createAmmoWall(0.3, 3, 10, {x:8, y:5.5, z:31});
 
