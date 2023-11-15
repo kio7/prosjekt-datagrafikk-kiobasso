@@ -46,7 +46,7 @@ export function createAmmoPendulum (
     addMeshToScene(ballMesh);
     
     let sphereShape = new Ammo.btSphereShape(ballRadius);
-    let sphereRigidBody = createAmmoRigidBody(sphereShape, ballMesh, 0.7, 0.8, ballPosition, mass);
+    let sphereRigidBody = createAmmoRigidBody(sphereShape, ballMesh, 0.7, 0.1, ballPosition, mass);
     ballMesh.userData.physicsBody = sphereRigidBody;
     
     phy.ammoPhysicsWorld.addRigidBody(

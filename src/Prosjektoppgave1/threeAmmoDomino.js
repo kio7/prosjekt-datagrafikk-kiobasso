@@ -19,7 +19,7 @@ export function createAmmoDomino(
 
     for (let i = 0; i < dominoCount; i++) {;
         size = size + 0.25 * i; // update size
-        mass = mass + 1.25 * i; // update mass
+        mass = mass + 1.15 * i; // update mass
         pos.z += size - size * 0.2; // update pos
         
 
