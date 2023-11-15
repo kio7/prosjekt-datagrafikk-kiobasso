@@ -166,15 +166,10 @@ function createScene(textureObjects) {
 	createThreeSun();
 	
 
-
-
-
 	createAmmoPendulum(5, 0xFEFEFE, {x:4, y:23.5, z:30}, 0.5, 0.5);
 	
-
 	createAmmoXZPlane(5, 20, {x:8, y:5.5, z:30}, textureObjects[1], 0x96f1ff);
-	createAmmoWall(0.3, 3, 10, {x:8, y:5.5, z:31});
-
+	createAmmoWall(0.3, 3.5, 8, {x:8, y:5.5, z:31});
 
 	// V-Shape
 	createAmmoXZPlane(12, 15, {x:17, y:-7, z:24.5}, textureObjects[1], 0x96f1ff, {x: 0, y:Math.PI/2, z:Math.PI/7});
@@ -188,7 +183,7 @@ function createScene(textureObjects) {
 	createAmmoXZPlane(7, 23, {x:27.25, y:-7, z:30}, textureObjects[1], 0x96f1ff, {x: 0, y:0, z:Math.PI/2});
 
 	// Fan: pos, rot, scale
-	createAmmoFan({x:8, y:-7, z:30}, {x:0, y:0, z:0}, {x:2, y:2, z:2}, textureObjects[1], ri.loadingManager);
+	createAmmoFan({x:8, y:-7, z:30}, {x:0, y:0, z:Math.PI/2}, {x:2, y:2, z:2}, textureObjects[1], ri.loadingManager);
 
 	// The blocks fall down a pipe and hit a button.
 	// The button activates an old TV that plays a video with sound, video: Never gonna give you up.
