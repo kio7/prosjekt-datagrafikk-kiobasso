@@ -40,7 +40,7 @@ export function createAmmoMarble(
 	let bucket = 0;
 	mesh.collisionResponse = (mesh1) => {
 		if ((position.z < mesh.position.z - 0.5) && (mesh1.name === "rails")) {
-			console.log(position.z, mesh.position.z, )
+			// console.log(position.z, mesh.position.z, )
 			playAudioOnce('./sounds/marble-rolling.mp3', 0.5, 0.8);
 		}
 		
@@ -54,7 +54,7 @@ export function createAmmoMarble(
 		}
 
 		if (mesh1.name === 'bucket' && bucket === 0) {
-			console.log("Bucket - CR");
+			// console.log("Bucket - CR");
 			playAudioOnce('./sounds/metal-moving.mp3', 0.5, 1);
 			bucket = 1;
 		}

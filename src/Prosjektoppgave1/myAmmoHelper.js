@@ -1,6 +1,6 @@
 /*
 
-Domino soun effect: Sound Effect by Leobathro from Pixabay
+Domino sound effect: Sound Effect by Leobathro from Pixabay
 
 
 */
@@ -21,7 +21,7 @@ export const COLLISION_GROUP_FAN = 1024;
 
 
 
-export const IMPULSE_FORCE = 10;
+export const IMPULSE_FORCE = 20;
 
 export let phy = {
 	rigidBodies: [],
@@ -30,7 +30,7 @@ export let phy = {
 }
 
 export function createAmmoWorld() {
-	phy.transform = new Ammo.btTransform();
+	phy.transform = new Ammo.btTransform(); // Hjelpeobjekt.
 	
 	// Initialiserer phy.ammoPhysicsWorld:
 	let collisionConfiguration = new Ammo.btDefaultCollisionConfiguration(),

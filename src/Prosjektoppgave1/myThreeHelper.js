@@ -31,9 +31,9 @@ export function createThreeScene() {
 
 	// Kamera:
 	ri.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
-	ri.camera.position.x = 70;
-	ri.camera.position.y = 30;
-	ri.camera.position.z = 60;
+	ri.camera.position.x = -9;
+	ri.camera.position.y = 18;
+	ri.camera.position.z = -4;
 
 	// Create the camera positions timeline
 	// const cameraPositions = [
@@ -61,22 +61,12 @@ export function createThreeScene() {
 	// 	});
 	// });
 
-	// // Start the camera positions timeline
+	// Start the camera positions timeline
   	// cameraTimeline.play();
 
 
 
-    // Create a div element to display the coordinates on the canvas
-    const coordinatesDiv = document.createElement('div');
-	coordinatesDiv.id = 'coordinatesText';
-    coordinatesDiv.style.position = 'absolute';
-    coordinatesDiv.style.top = '10px';
-    coordinatesDiv.style.left = '10px';
-    coordinatesDiv.style.color = 'white';
-    coordinatesDiv.style.fontFamily = 'Arial';
-    coordinatesDiv.style.fontSize = '16px';
-    // Append the div to the canvas
-    document.body.appendChild(coordinatesDiv);
+    
 
 	// Audio
 	const listener = new THREE.AudioListener();
@@ -161,37 +151,13 @@ export function addLights() {
 //Sjekker tastaturet:
 export function handleKeys(delta) {
 
-	const activator = ri.scene.getObjectByName("marble");
 	printCameraPosition();
-
-	// if (ri.currentlyPressedKeys['KeyS'] && ri.activator < 6) {
-	// 	ri.activator += 1	//S
-	// 	activator.userData.physicsBody.applyCentralImpulse(new Ammo.btVector3(-1.5, 2.1, 1.5));
-	// }
+	
+	// Gir impuls til kula i kanonen:
+	const activator = ri.scene.getObjectByName("marble");
 	if (ri.currentlyPressedKeys['KeyS']) {
 		ri.activator = true
-	}
-	// if (ri.currentlyPressedKeys['KeyH']) {	//H
-	// 	createRandomSpheres(200);
-	// }
-	// if (ri.currentlyPressedKeys['KeyU']) {	//H
-	// 	const cube = ri.scene.getObjectByName("cube");
-	// 	applyImpulse(cube.userData.physicsBody, 50, {x:0, y:1, z:0});
-	// }
-
-	// const movable = ri.scene.getObjectByName("movable");
-	// if (ri.currentlyPressedKeys['KeyA']) {	//A
-	// 	moveRigidBody(movable,{x: -0.2, y: 0, z: 0});
-	// }
-	// if (ri.currentlyPressedKeys['KeyD']) {	//D
-	// 	moveRigidBody(movable,{x: 0.2, y: 0, z: 0});
-	// }
-	// if (ri.currentlyPressedKeys['KeyW']) {	//W
-	// 	moveRigidBody(movable,{x: 0, y: 0, z: -0.2});
-	// }
-	// if (ri.currentlyPressedKeys['KeyS']) {	//S
-	// 	moveRigidBody(movable,{x: 0, y: 0, z: 0.2});
-	// }
+	}	
 }
 
 export function onWindowResize() {
@@ -247,6 +213,7 @@ export function getRigidBodyFromMesh(meshName) {
 	else
 		return null;
 }
+
 
 export function printCameraPosition() {
     const cameraPosition = ri.camera.position;

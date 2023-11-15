@@ -48,7 +48,7 @@ export function createRails(position={x:0, y:0, z:0}, rotation=0) {
 
 
 export function createRailMesh(railGroupMesh, compoundShape) {
-    const radius = 0.04;
+    const radius = 0.15;
     const tilt = 0.09;
     const tubularSegments = 160
     const radialSegments = 100;

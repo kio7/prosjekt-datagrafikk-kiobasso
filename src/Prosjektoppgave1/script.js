@@ -52,20 +52,11 @@ export const XZPLANE_SIDELENGTH = 500;
 
 export function main() {
 
-    //Setter opp fps-counter:
-    ri.stats = new Stats();
-	ri.stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
-	document.body.appendChild( ri.stats.dom );
-
-    	//Input - standard Javascript / WebGL:
-	document.addEventListener('keyup', handleKeyUp, false);
-	document.addEventListener('keydown', handleKeyDown, false);
-
 	// three:
 	createThreeScene();
 
 	// ammo
-	createAmmoWorld(true);  //<<=== MERK!
+	createAmmoWorld(true);
 
 	// Klokke for animasjon
 	ri.clock = new THREE.Clock();
@@ -77,9 +68,42 @@ export function main() {
 	document.addEventListener('keyup', handleKeyUp, false);
 	document.addEventListener('keydown', handleKeyDown, false);
 
+	// GUI
+	loadScreenElements();
+
 	// three/ammo-objekter:
 	addAmmoSceneObjects();
 }
+
+
+function loadScreenElements() {
+	//Setter opp fps-counter:
+    ri.stats = new Stats();
+	ri.stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
+	const statsDOM = ri.stats.dom;
+	statsDOM.style.top = "";
+	statsDOM.style.bottom = "0px";
+
+	const statsContainer = document.getElementById("stats-container");
+	statsContainer.className = 'stats';
+	statsContainer.appendChild(ri.stats.dom);
+
+	// Create a div element to display the coordinates on the canvas
+    const coordinatesDiv = document.createElement('div');
+	coordinatesDiv.id = 'coordinatesText';
+	coordinatesDiv.className = 'coordinatesText';
+    document.body.appendChild(coordinatesDiv);
+
+	// Toggles settings tray:
+	function animateButton() {
+		console.log("her")
+		const animatedDiv = document.querySelector(".lil-gui");
+		animatedDiv.classList.toggle("open");		
+	}
+	const animatedButton = document.getElementById("settingsTray");	
+	animatedButton.addEventListener("click", animateButton);
+}
+
 
 function handleKeyUp(event) {
 	ri.currentlyPressedKeys[event.code] = false;
@@ -102,15 +126,15 @@ function addAmmoSceneObjects() {
 
 	// Implementer dette i forbindelse med loading screen?!?!?
 
-	// loadingManager.onStart = (url, itemsLoaded, itemsTotal) => {
-	// 	console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
-	// };
-	// loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
-	// 	console.log( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
-	// };
-	// loadingManager.onError = (url) => {
-	// 	console.log( 'There was an error loading ' + url );
-	// };
+	loadingManager.onStart = (url, itemsLoaded, itemsTotal) => {
+		console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+	};
+	loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
+		console.log( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+	};
+	loadingManager.onError = (url) => {
+		console.log( 'There was an error loading ' + url );
+	};
 	
 	loadingManager.onLoad = () => {
 		createScene(textureObjects);
@@ -127,13 +151,13 @@ function createScene(textureObjects) {
 	createAmmoXZPlane(10, 10, {x:0, y:0, z:0}, textureObjects[1], 0x96f1ff);
 		
 	createAmmoCanon({x:18, y:0, z:-12});
-	createAmmoMarble(0.2, 1, 0xF9F9F9, {x:18, y:0.2, z:-12}, 0.5, 0.5, "marble"); // Canonball
+	createAmmoMarble(0.2, 2, 0xF9F9F9, {x:18, y:0.2, z:-12}, 0.5, 0.5, "marble"); // Canonball
 	createAmmoXZPlane(5, 5, {x:18, y:0, z:-12}, textureObjects[1], 0x96f1ff);
 	
 	createAmmoFunnel(0, 0x00F3F3, {x:4, y:7.3, z:0}, 3.2, 0.4, 2.1, textureObjects[1]);
 	
 	createRails({x:-4, y:0.2, z:15}, Math.PI/2);
-	createAmmoMarble(0.58, 2.5, 0xFEFEFE, {x:-5, y:6, z:-1}, 0.1, 0.9, "railMarble"); // Rolling ball
+	createAmmoMarble(0.58, 3.0, 0xFEFEFE, {x:-5, y:6, z:-1}, 0.1, 0.9, "railMarble"); // Rolling ball
 	
 	createAmmoDomino({x:-3, y:0, z:16}, 0.5, 7, textureObjects[2]);
 
@@ -182,7 +206,8 @@ function animate(currentTime, myThreeScene, myAmmoPhysicsWorld) {
 
 	ri.stats.begin();
 	
-	if (ri.activator == true && ri.num < 6) {
+	// Dersom sann, kula sendes ut fra kanon:
+	if (ri.activator == true && ri.num < 12) {
 		const activator = ri.scene.getObjectByName("marble");
 		activator.userData.physicsBody.applyCentralImpulse(new Ammo.btVector3(-1.5, 2.1, 1.5));
 		ri.num += 1;
