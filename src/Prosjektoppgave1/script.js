@@ -28,6 +28,7 @@ import { createAmmoDomino } from './threeAmmoDomino.js';
 import { createWorld } from './threeWorld.js';
 import { createThreeSun } from './threeSun.js';
 import { createAmmoPendulum} from './threeAmmoPendulum.js';
+import { createAmmoWall } from './threeAmmoWall.js';
 
 //Globale variabler:
 //MERK: Denne brukes også i myThreeHelper:
@@ -164,12 +165,34 @@ function createScene(textureObjects) {
 	// console.log(ri.scene)
 	// console.log(phy)
 
-	// createAmmoPendulum(1, 0xFF0000, {x:-3, y:16.5, z:30});
-	createAmmoPendulum(5, 0xFF0000, {x:5, y:23.5, z:30});
+	
+	
+	
+	// createTable({x:8, y:0, z:-9});
+	// createTable({x:0, y:0, z:0});
+	// createAmmoMarble();
+	// createAmmoDomino({x:-3, y:0, z:16});
+	
+	// createAmmoMarble(0.58, 1.5, 0xF9F9F9, {x:0, y:7, z:0}, 0.5, 0.5);
+	
+	createAmmoPendulum(5, 0xFEFEFE, {x:4, y:23.5, z:30}, 0.5, 0.5);
+	
 
+	createAmmoXZPlane(5, 20, {x:8, y:5.5, z:30}, textureObjects[1], 0x96f1ff);
+	createAmmoWall(0.1, 3, 10, {x:8, y:5.5, z:31});
+
+	
+	
+	
+	// Blocks in the wall fall down on a plane.
+	createAmmoXZPlane(10, 30, {x:14, y:-5, z:30}, textureObjects[1], 0x96f1ff);
+	createAmmoXZPlane(10, 30, {x:23.5, y:-6.9, z:30}, textureObjects[1], 0x96f1ff, {x: 0, y:0, z:-Math.PI/8});
+	// On the plane is a fan that blows the blocks into a funnel of sorts.
+	// The funnel leads to a pipe that leads to a button on a lower plane.
+	// The button activates an old TV that plays a video with sound, video: Never gonna give you up.
+	// The end.
+	
 	animate(0);
-
-
 }
 
 

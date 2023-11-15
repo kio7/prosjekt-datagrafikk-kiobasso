@@ -168,12 +168,43 @@ export function onWindowResize() {
 	renderScene();
 }
 
-//Oppdater trackball-kontrollen:
-export function updateThree(deltaTime) {ri.controls.update();}
-// Legger mesh til scene
-export function addMeshToScene(mesh) {ri.scene.add(mesh);}
-// Rendrer scenen:
-export function renderScene() {ri.renderer.render(ri.scene, ri.camera);}
+export function updateThree(deltaTime) {
+	// Endre linje posisjon:
+	const lineMeshStartPoint = ri.scene.getObjectByName("anchorBoxMesh");
+	const lineMeshEndPoint = ri.scene.getObjectByName("WreckingBall");
+	const line = ri.scene.getObjectByName("pendulumLineMesh");
+
+	const lineVertexPositions = line.geometry.attributes.position.array;
+
+	const lineStartPos = new THREE.Vector3();
+	lineMeshStartPoint.getWorldPosition(lineStartPos);
+	lineVertexPositions[0] = lineStartPos.x;
+	lineVertexPositions[1] = lineStartPos.y;
+	lineVertexPositions[2] = lineStartPos.z;
+
+	const lineEndPos = new THREE.Vector3();
+	lineMeshEndPoint.getWorldPosition(lineEndPos);
+	lineVertexPositions[3] = lineEndPos.x;
+	lineVertexPositions[4] = lineEndPos.y;
+	lineVertexPositions[5] = lineEndPos.z;
+	
+	line.geometry.attributes.position.needsUpdate = true;
+	line.geometry.computeBoundingBox();
+	line.geometry.computeBoundingSphere();
+
+
+	//Oppdater trackball-kontrollen:
+	ri.controls.update();
+}
+
+export function addMeshToScene(mesh) {
+	ri.scene.add(mesh);
+}
+
+export function renderScene()
+{
+	ri.renderer.render(ri.scene, ri.camera);
+}
 
 export function getRigidBodyFromMesh(meshName) {
 	const mesh = ri.scene.getObjectByName(meshName);

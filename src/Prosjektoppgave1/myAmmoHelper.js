@@ -15,6 +15,7 @@ export const COLLISION_GROUP_DOMINO = 32;
 export const COLLISION_GROUP_FUNNEL = 64;
 export const COLLISION_GROUP_SEESAWOBJ = 128;
 export const COLLISION_GROUP_PENDULUM = 256;
+export const COLLISION_GROUP_WALL = 512;
 
 
 
