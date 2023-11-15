@@ -9,7 +9,13 @@ import {MTLLoader} from "three/examples/jsm/loaders/MTLLoader";
 import {OBJLoader} from "three/examples/jsm/loaders/OBJLoader";
 import {ri} from "./script.js";
 
-import {COLLISION_GROUP_PLANE, COLLISION_GROUP_SPHERE, COLLISION_GROUP_MOVEABLE, COLLISION_GROUP_BOX, COLLISION_GROUP_SEESAW} from "./myAmmoHelper.js"
+import {
+    COLLISION_GROUP_PLANE, 
+    COLLISION_GROUP_SPHERE, 
+    COLLISION_GROUP_SEESAW, 
+    COLLISION_GROUP_PENDULUM,
+    COLLISION_GROUP_DOMINO
+} from "./myAmmoHelper.js"
 
 export function createAmmoPendulum (
     mass = 1,
@@ -65,9 +71,10 @@ export function createAmmoPendulum (
     anchorBoxMesh.userData.physicsBody = anchorRigidBody;
 
     phy.ammoPhysicsWorld.addRigidBody(
-        anchorRigidBody,
-        COLLISION_GROUP_BOX,
-        COLLISION_GROUP_SPHERE | COLLISION_GROUP_BOX | COLLISION_GROUP_MOVEABLE | COLLISION_GROUP_PLANE | COLLISION_GROUP_SEESAW
+        boxRigidBody,
+        COLLISION_GROUP_PENDULUM,
+        COLLISION_GROUP_SPHERE | 
+        COLLISION_GROUP_PLANE
     );
 
     anchorRigidBody.threeMesh = anchorBoxMesh;

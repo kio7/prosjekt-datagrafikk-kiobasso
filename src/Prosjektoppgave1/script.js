@@ -16,7 +16,7 @@ import {
 	updatePhysics
 } from "./myAmmoHelper.js";
 
-import { createAmmoXZPlane } from "./ammoThreeXZPlane.js";
+import { createAmmoXZPlane } from './ammoThreeXZPlane.js';
 import { createAmmoSeeSaw } from './threeAmmoSeeSaw.js';
 import { createBucket } from './threeAmmoSeeSawObj.js';	
 import { createCounterWeight } from './threeAmmoSeeSawObj.js';	
@@ -26,6 +26,7 @@ import { createRails } from './threeAmmoRails.js';
 import { createAmmoFunnel } from './threeAmmoFunnel.js';
 import { createAmmoDomino } from './threeAmmoDomino.js';
 import { createWorld } from './threeWorld.js';
+import { createThreeSun } from './threeSun.js';
 import { createAmmoPendulum} from './threeAmmoPendulum.js';
 import { createAmmoWall } from './threeAmmoWall.js';
 
@@ -126,13 +127,20 @@ function createScene(textureObjects) {
 	createAmmoMarble(0.2, 1, 0xF9F9F9, {x:18, y:0.2, z:-12}, 0.5, 0.5, "marble"); // Canonball
 	createAmmoXZPlane(5, 5, {x:18, y:0, z:-12}, textureObjects[1], 0x96f1ff);
 	
-	createAmmoFunnel(0, 0x00F3F3, {x:4, y:7.2, z:0}, 3, 0.4, 1.7, textureObjects[1]);
+	createAmmoFunnel(0, 0x00F3F3, {x:4, y:7.3, z:0}, 3.2, 0.4, 2.1, textureObjects[1]);
 	
 	createRails({x:-4, y:0.2, z:15}, Math.PI/2);
-	createAmmoMarble(0.58, 2.5, 0xFEFEFE, {x:-5, y:6, z:-2}, 0.1, 0.9); // Rolling ball
+	createAmmoMarble(0.58, 2.5, 0xFEFEFE, {x:-5, y:6, z:-1}, 0.1, 0.9, "railMarble"); // Rolling ball
 	
 	createAmmoDomino({x:-3, y:0, z:16}, 0.5, 7, textureObjects[2]);
+
 	createAmmoXZPlane(15, 25, {x:-3, y:0, z:25}, textureObjects[1], 0x96f1ff);
+
+	createThreeSun();
+
+	// console.log(ri.scene)
+	// console.log(phy)
+
 	
 	
 	

@@ -1,13 +1,29 @@
+/*
+
+Domino soun effect: Sound Effect by Leobathro from Pixabay
+
+
+*/
+
+
 export const COLLISION_GROUP_PLANE = 1;
 export const COLLISION_GROUP_SPHERE = 2;
-export const COLLISION_GROUP_MOVEABLE = 4;
-export const COLLISION_GROUP_BOX = 8;       //..osv. legg til etter behov.
+export const COLLISION_GROUP_CANON = 4;
+export const COLLISION_GROUP_RAILS = 8;       //..osv. legg til etter behov.
 export const COLLISION_GROUP_SEESAW = 16;
+export const COLLISION_GROUP_DOMINO = 32;
+export const COLLISION_GROUP_FUNNEL = 64;
+export const COLLISION_GROUP_SEESAWOBJ = 128;
+export const COLLISION_GROUP_PENDULUM = 256;
+
+
+
 
 export const IMPULSE_FORCE = 10;
 
 export let phy = {
 	rigidBodies: [],
+	checkCollisions: true,
 	transform: undefined
 }
 
@@ -24,7 +40,7 @@ export function createAmmoWorld() {
 	phy.ammoPhysicsWorld.setGravity(new Ammo.btVector3(0, -9.80665, 0));
 }
 
-export function createAmmoRigidBody(shape, threeMesh, restitution=0.7, friction=0.8, position={x:0, y:50, z:0}, mass=1, setLocalScaling=true) {
+export function createAmmoRigidBody(shape, threeMesh, restitution=0.7, friction=0.8, position={x:0, y:50, z:0}, mass=1, setLocalScaling=false) {
 
 	let transform = new Ammo.btTransform();
 	transform.setIdentity();
@@ -67,7 +83,87 @@ export function updatePhysics(deltaTime) {
 			mesh.quaternion.set(q.x(), q.y(), q.z(), q.w());
 		}
 	}
+	// Kollisjonsdeteksjon:
+	if (phy.checkCollisions)
+		checkCollisions(deltaTime);
 }
+
+// Finner alle manifolds, gjennomløper og gjør noe dersom kollison mellom kulene:
+function checkCollisions(deltaTime) {
+	// Finner alle mulige kollisjonspunkter/kontaktpunkter (broad phase):
+	let numManifolds = phy.ammoPhysicsWorld.getDispatcher().getNumManifolds();
+	// Gjennomløper alle kontaktpunkter:
+	for (let i=0; i < numManifolds;i++) {
+		// contactManifold er et btPersistentManifold-objekt:
+		let contactManifold =  phy.ammoPhysicsWorld.getDispatcher().getManifoldByIndexInternal(i);
+		let numContacts = contactManifold.getNumContacts();
+		if (numContacts>0) {
+			// Henter objektene som er involvert:
+			// getBody0() og getBody1() returnerer et btCollisionObject,
+			// gjøres derfor om til btRigidBody-objekter vha. Ammo.castObject():
+			let rbObject0 = Ammo.castObject(contactManifold.getBody0(), Ammo.btRigidBody);
+			let rbObject1 = Ammo.castObject(contactManifold.getBody1(), Ammo.btRigidBody);
+			let threeMesh0 = rbObject0.threeMesh;
+			let threeMesh1 = rbObject1.threeMesh;
+			
+			if (threeMesh0 && threeMesh1) {
+				for (let j = 0; j < numContacts; j++) {
+					let contactPoint = contactManifold.getContactPoint(j);
+					const distance = contactPoint.getDistance();
+					if (distance <= 0) {
+												
+						// DOMINO
+						if (
+						(threeMesh0.name === 'domino' && threeMesh1.name === 'domino') ||
+						(threeMesh1.name === 'domino' && threeMesh0.name === 'domino')
+						) {
+							if (typeof threeMesh0.collisionResponse === 'function')
+								threeMesh0.collisionResponse(threeMesh1);
+							if (typeof threeMesh1.collisionResponse === 'function')
+								threeMesh1.collisionResponse(threeMesh0);
+						}
+						// Marble fra rails treffes domino eller rails
+						if (
+						(threeMesh0.name === 'railMarble' && threeMesh1.name === 'rails') ||
+						(threeMesh1.name === 'railMarble' && threeMesh0.name === 'rails')
+						) {
+							if (typeof threeMesh0.collisionResponse === 'function')
+								threeMesh0.collisionResponse(threeMesh1);
+							if (typeof threeMesh1.collisionResponse === 'function')
+								threeMesh1.collisionResponse(threeMesh0);
+						}
+
+						// Marble fra kanon treffer funnel
+						if (
+						(threeMesh0.name === 'marble' && threeMesh1.name === 'funnel') ||
+						(threeMesh1.name === 'marble' && threeMesh0.name === 'funnel')
+						) {
+							if (typeof threeMesh0.collisionResponse === 'function')
+								threeMesh0.collisionResponse(threeMesh1);
+							if (typeof threeMesh1.collisionResponse === 'function')
+								threeMesh1.collisionResponse(threeMesh0);
+						}
+
+						// Marble fra kanon treffer bucket
+						if (
+						(threeMesh0.name === 'marble' && threeMesh1.name === 'bucket') ||
+						(threeMesh1.name === 'marble' && threeMesh0.name === 'bucket')
+						) {
+							if (threeMesh1.name === 'marble') {console.log('1marble')}
+							// if (threeMesh0.name === 'bucket') {console.log('0bucket')}
+							if (typeof threeMesh1.collisionResponse === 'function')
+								threeMesh1.collisionResponse(threeMesh0);
+						}
+
+
+					}
+				}
+			}
+		}
+	}
+}
+
+
 
 export function moveRigidBody(movableMesh, direction) {
 	let transform = new Ammo.btTransform();
