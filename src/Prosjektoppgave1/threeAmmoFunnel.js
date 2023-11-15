@@ -9,8 +9,6 @@ import {
     COLLISION_GROUP_SEESAWOBJ
 } from "./myAmmoHelper.js";
 
-import {ri} from "./script.js";
-
 export function createAmmoFunnel(
     mass=0, 
     color=0xF3F3F3, 

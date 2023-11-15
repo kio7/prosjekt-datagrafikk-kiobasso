@@ -16,7 +16,7 @@ import {
 	updatePhysics
 } from "./myAmmoHelper.js";
 
-import { createAmmoXZPlane } from './ammoThreeXZPlane.js';
+import { createAmmoXZPlane } from './threeAmmoXZPlane.js';
 import { createAmmoSeeSaw } from './threeAmmoSeeSaw.js';
 import { createBucket } from './threeAmmoSeeSawObj.js';	
 import { createCounterWeight } from './threeAmmoSeeSawObj.js';	
@@ -29,6 +29,7 @@ import { createWorld } from './threeWorld.js';
 import { createThreeSun } from './threeSun.js';
 import { createAmmoPendulum} from './threeAmmoPendulum.js';
 import { createAmmoWall } from './threeAmmoWall.js';
+import { createAmmoFan, moveBricks } from './threeAmmoFan.js';
 
 //Globale variabler:
 //MERK: Denne brukes også i myThreeHelper:
@@ -41,8 +42,9 @@ export const ri = {
 	controls: undefined,
 	lilGui: undefined,
 	stats: undefined,
+	loadingManager: undefined,
 	activator: false,
-	num: 0
+	num: 0,
 };
 
 export const XZPLANE_SIDELENGTH = 500;
@@ -154,6 +156,7 @@ function handleKeyDown(event) {
 function addAmmoSceneObjects() {
 
 	const loadingManager = new THREE.LoadingManager();
+	ri.loadingManager = loadingManager;
 	const textureLoader = new THREE.TextureLoader(loadingManager);
 	const textureObjects = [];
 	textureObjects[0] = textureLoader.load('textures/galaxy.jpeg');
@@ -218,34 +221,33 @@ function createScene(textureObjects) {
 	createAmmoXZPlane(15, 25, {x:-3, y:0, z:25}, textureObjects[1], 0x96f1ff);
 
 	createThreeSun();
+	
 
-	// console.log(ri.scene)
-	// console.log(phy)
 
-	
-	
-	
-	// createTable({x:8, y:0, z:-9});
-	// createTable({x:0, y:0, z:0});
-	// createAmmoMarble();
-	// createAmmoDomino({x:-3, y:0, z:16});
-	
-	// createAmmoMarble(0.58, 1.5, 0xF9F9F9, {x:0, y:7, z:0}, 0.5, 0.5);
-	
+
+
 	createAmmoPendulum(5, 0xFEFEFE, {x:4, y:23.5, z:30}, 0.5, 0.5);
 	
 
 	createAmmoXZPlane(5, 20, {x:8, y:5.5, z:30}, textureObjects[1], 0x96f1ff);
-	// createAmmoWall(0.1, 3, 10, {x:8, y:5.5, z:31});
+	createAmmoWall(0.3, 3, 10, {x:8, y:5.5, z:31});
 
+
+	// V-Shape
+	createAmmoXZPlane(12, 15, {x:17, y:-7, z:24.5}, textureObjects[1], 0x96f1ff, {x: 0, y:Math.PI/2, z:Math.PI/7});
+	createAmmoXZPlane(12, 15, {x:17, y:-7, z:35.5}, textureObjects[1], 0x96f1ff, {x: 0, y:Math.PI/2, z:-Math.PI/7});
+
+	// V-Shape with a hole in the middle
+	createAmmoXZPlane(10, 2.5, {x:25.75, y:-6.57, z:23.6}, textureObjects[1], 0x96f1ff, {x: 0, y:Math.PI/2, z:Math.PI/7});
+	createAmmoXZPlane(10, 2.5, {x:25.75, y:-6.57, z:36.4}, textureObjects[1], 0x96f1ff, {x: 0, y:Math.PI/2, z:-Math.PI/7});
 	
-	
-	
-	// Blocks in the wall fall down on a plane.
-	createAmmoXZPlane(10, 30, {x:14, y:-5, z:30}, textureObjects[1], 0x96f1ff);
-	createAmmoXZPlane(10, 30, {x:23.5, y:-6.9, z:30}, textureObjects[1], 0x96f1ff, {x: 0, y:0, z:-Math.PI/8});
-	// On the plane is a fan that blows the blocks into a funnel of sorts.
-	// The funnel leads to a pipe that leads to a button on a lower plane.
+	// Back Wall
+	createAmmoXZPlane(7, 23, {x:27.25, y:-7, z:30}, textureObjects[1], 0x96f1ff, {x: 0, y:0, z:Math.PI/2});
+
+	// Fan: pos, rot, scale
+	createAmmoFan({x:8, y:-7, z:30}, {x:0, y:0, z:0}, {x:2, y:2, z:2}, textureObjects[1], ri.loadingManager);
+
+	// The blocks fall down a pipe and hit a button.
 	// The button activates an old TV that plays a video with sound, video: Never gonna give you up.
 	// The end.
 	
@@ -267,7 +269,9 @@ function animate(currentTime, myThreeScene, myAmmoPhysicsWorld) {
 		activator.userData.physicsBody.applyCentralImpulse(new Ammo.btVector3(-1.5, 2.1, 1.5));
 		ri.num += 1;
 	}
-	
+	// Sjekker om bricks skal flyttes:
+	moveBricks();
+
 	//Oppdaterer grafikken:
 	updateThree(deltaTime);
 	//Oppdaterer fysikken:
