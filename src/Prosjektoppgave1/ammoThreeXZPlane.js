@@ -11,7 +11,8 @@ export function createAmmoXZPlane(
     depth = 10, 
     position = {x: 0, y: 0, z: 0},
     textureObject,
-    color=0x00FF00
+    color = 0x00FF00,
+	rotation = {x: 0, y: 0, z: 0}
     ){
 	
     const mass=0;
@@ -34,6 +35,7 @@ export function createAmmoXZPlane(
     mesh.renderOrder = 1;
 	mesh.receiveShadow = true;
     // mesh.castShadow = true;
+	mesh.rotation.set(rotation.x, rotation.y, rotation.z);
 	mesh.name = 'xzplane';
 
 	// AMMO:

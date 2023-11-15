@@ -86,7 +86,7 @@ export function addLights() {
 //Sjekker tastaturet:
 export function handleKeys(delta) {
 
-	const activator = ri.scene.getObjectByName("marble"); //S
+	// const activator = ri.scene.getObjectByName("marble"); //S
 
 	// if (ri.currentlyPressedKeys['KeyS'] && ri.activator < 6) {
 	// 	ri.activator += 1	//S
@@ -127,6 +127,30 @@ export function onWindowResize() {
 }
 
 export function updateThree(deltaTime) {
+	// Endre linje posisjon:
+	const lineMeshStartPoint = ri.scene.getObjectByName("anchorBoxMesh");
+	const lineMeshEndPoint = ri.scene.getObjectByName("WreckingBall");
+	const line = ri.scene.getObjectByName("pendulumLineMesh");
+
+	const lineVertexPositions = line.geometry.attributes.position.array;
+
+	const lineStartPos = new THREE.Vector3();
+	lineMeshStartPoint.getWorldPosition(lineStartPos);
+	lineVertexPositions[0] = lineStartPos.x;
+	lineVertexPositions[1] = lineStartPos.y;
+	lineVertexPositions[2] = lineStartPos.z;
+
+	const lineEndPos = new THREE.Vector3();
+	lineMeshEndPoint.getWorldPosition(lineEndPos);
+	lineVertexPositions[3] = lineEndPos.x;
+	lineVertexPositions[4] = lineEndPos.y;
+	lineVertexPositions[5] = lineEndPos.z;
+	
+	line.geometry.attributes.position.needsUpdate = true;
+	line.geometry.computeBoundingBox();
+	line.geometry.computeBoundingSphere();
+
+
 	//Oppdater trackball-kontrollen:
 	ri.controls.update();
 }
