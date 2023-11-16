@@ -59,6 +59,9 @@ export function createThreeScene() {
 }
 
 export function createCameraTimeline(cameraPositions = [{ x: 290, y: 90, z: 80 }], duration = 4) {
+	
+	if (ri.cameraTimeline != undefined) {ri.cameraTimeline.kill();}
+
 	ri.cameraTimeline = gsap.timeline();
 	cameraPositions.forEach((position, index) => {
 		ri.cameraTimeline.to(ri.camera.position, {
