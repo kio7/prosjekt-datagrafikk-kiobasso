@@ -151,8 +151,6 @@ function checkCollisions(deltaTime) {
 						(threeMesh0.name === 'marble' && threeMesh1.name === 'bucket') ||
 						(threeMesh1.name === 'marble' && threeMesh0.name === 'bucket')
 						) {
-							if (threeMesh1.name === 'marble') {console.log('1marble')}
-							// if (threeMesh0.name === 'bucket') {console.log('0bucket')}
 							if (typeof threeMesh1.collisionResponse === 'function')
 								threeMesh1.collisionResponse(threeMesh0);
 						}
