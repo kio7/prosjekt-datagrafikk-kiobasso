@@ -2,6 +2,9 @@ import './style.css';
 import * as THREE from "three";
 import Stats from 'stats.js';
 
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import * as SkeletonUtils from 'three/examples/jsm/utils/SkeletonUtils.js';
+
 import {
 	createThreeScene,
 	createCameraTimeline,
@@ -42,6 +45,7 @@ export const ri = {
 	renderer: undefined,
 	camera: undefined,
 	cameraTimeline: undefined,
+	timelineToggle: false,
 	clock: undefined,
 	controls: undefined,
 	lilGui: undefined,
@@ -49,6 +53,8 @@ export const ri = {
 	loadingManager: undefined,
 	activator: false,
 	num: 0,
+	models: {},
+	animationMixers: [],
 };
 
 export const XZPLANE_SIDELENGTH = 500;
@@ -157,7 +163,6 @@ function handleKeyDown(event) {
 
 
 function addAmmoSceneObjects() {
-
 	const loadingManager = new THREE.LoadingManager();
 	ri.loadingManager = loadingManager;
 	const textureLoader = new THREE.TextureLoader(loadingManager);
@@ -199,9 +204,46 @@ function addAmmoSceneObjects() {
 		console.log( 'Loading complete!');
 		createScene(textureObjects);
 	}
+
+	ri.models = {
+		fan: {url: 'models/rgb_fan.glb', position: {x:10, y:-8, z:30}, scale: {x:20, y:20, z:20}, rotation: {x:0, y:0, z:Math.PI/2}},
+		spaceBunny: {url: 'models/space_bunny.glb', position: {x:3.85, y:23.9, z:29.2}, scale: {x:2, y:2, z:2}, rotation: {x:0, y:-Math.PI/1.3, z:0}},
+		button: {url: 'models/button.glb', position: {x:26, y:-18, z:30}, scale: {x:7.5, y:7.5, z:7.5}, rotation: {x:0, y:0, z:0}},
+	};
+
+
+	const gltfLoader = new GLTFLoader(loadingManager);
+	for (const model of Object.values(ri.models)) {
+		gltfLoader.load(model.url, (gltf) => {
+			model.gltf = gltf;
+		});
+	}
 }
 
 function createScene(textureObjects) {
+	// Add 3d models to scene
+	Object.values(ri.models).forEach((model, index) => {
+		const clonedScene = SkeletonUtils.clone(model.gltf.scene);
+		const root = new THREE.Object3D();
+		root.add(clonedScene);
+		//Skalerer og posisjonerer:
+		root.scale.set(model.scale.x, model.scale.y, model.scale.z);
+		root.position.set(model.position.x, model.position.y, model.position.z);
+		root.rotation.set(model.rotation.x, model.rotation.y, model.rotation.z);
+		ri.scene.add(root);
+
+		if (model.gltf.animations[0]) {
+			let mixer = new THREE.AnimationMixer(clonedScene);
+			ri.animationMixers.push(mixer);
+			
+			const animation0 = model.gltf.animations[0];
+			const action0 = mixer.clipAction(animation0);
+			action0.setLoop(THREE.LoopRepeat);
+			action0.setDuration(2);
+			action0.play();
+		}
+	});
+
 
 	createWorld(textureObjects[0]);
 	
@@ -224,11 +266,11 @@ function createScene(textureObjects) {
 	createAmmoXZPlane(15, 25, {x:-3, y:0, z:25}, textureObjects[1], 0x96f1ff);
 
 	createThreeSun();
-	
+
 	createAmmoPendulum(5, 0xFEFEFE, {x:4, y:23.5, z:30}, 0.5, 0.5);
 	
 	createAmmoXZPlane(5, 20, {x:8, y:5.5, z:30}, textureObjects[1], 0x96f1ff);
-	createAmmoWall(0.3, 3.5, 8, {x:8, y:5.5, z:31});
+	createAmmoWall(0.3, 2.5, 8, {x:8, y:5.5, z:31});
 
 	// V-Shape
 	createAmmoXZPlane(12, 15, {x:17, y:-7, z:24.5}, textureObjects[1], 0x96f1ff, {x: 0, y:Math.PI/2, z:Math.PI/7});
@@ -242,12 +284,9 @@ function createScene(textureObjects) {
 	createAmmoXZPlane(7, 23, {x:27.25, y:-7, z:30}, textureObjects[1], 0x96f1ff, {x: 0, y:0, z:Math.PI/2});
 
 	// Fan: pos, rot, scale
-	createAmmoFan({x:8, y:-7, z:30}, {x:0, y:0, z:Math.PI/2}, {x:2, y:2, z:2}, textureObjects[1], ri.loadingManager);
+	createAmmoFan({x:8, y:-7, z:30}, {x:0, y:0, z:Math.PI/2}, {x:2, y:2, z:2}, textureObjects[1]);
 
-	// The blocks fall down a pipe and hit a button.
-	// The button activates an old TV that plays a video with sound, video: Never gonna give you up.
-	// The end.
-	
+
 	animate(0);
 }
 
@@ -268,6 +307,13 @@ function animate(currentTime, myThreeScene, myAmmoPhysicsWorld) {
 	}
 	// Sjekker om bricks skal flyttes:
 	moveBricks();
+
+	if (ri.animationMixers.length>0) {
+		// Merk: Dette vil ikke kjøre før alle modellene er lastet og g_animationMixers er fylt med data.
+		for (const mixer of ri.animationMixers) {
+			mixer.update(deltaTime);
+		}
+	}
 
 	//Oppdaterer grafikken:
 	updateThree(deltaTime);

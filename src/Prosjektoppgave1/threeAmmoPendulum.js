@@ -10,8 +10,6 @@ Koden for linjen er basert på kodeeksempelet springGeneric6DofSpringConstraint.
 import * as THREE from "three";
 import {addMeshToScene} from "./myThreeHelper.js";
 import {createAmmoRigidBody, phy} from "./myAmmoHelper.js";
-import {MTLLoader} from "three/examples/jsm/loaders/MTLLoader";
-import {OBJLoader} from "three/examples/jsm/loaders/OBJLoader";
 
 import {
     COLLISION_GROUP_PENDULUM,
@@ -19,16 +17,17 @@ import {
     COLLISION_GROUP_WALL
 } from "./myAmmoHelper.js"
 
+
 export function createAmmoPendulum (
     mass = 1,
     color = 0xFF0000,
     position = {x:0, y:0, z:0},
     roughness = 0.5,
-    metalness
+    metalness = 0.5
 ) {
     // Ball
     const ballPosition = {x: position.x -12, y: position.y - 12.9, z: position.z}
-    const ballRadius = 1
+    const ballRadius = 1.5;
 
     let ballMesh = new THREE.Mesh(
         new THREE.SphereGeometry(ballRadius, 32, 32),
@@ -80,27 +79,6 @@ export function createAmmoPendulum (
 
     anchorRigidBody.threeMesh = anchorBoxMesh;
     
-    // Spaceship over the box.
-    let  mesh = null;
-    let  mtlLoader = new MTLLoader();
-    let  modelName = 'E_45_Aircraft';
-
-    //Laster først materiale:
-    mtlLoader.load('./models/spaceship/' + modelName + '.mtl', function (materials) {
-        materials.preload();
-        let objLoader = new OBJLoader();
-        objLoader.setMaterials(materials);
-        
-        //...deretter geometrien:
-        objLoader.load('./models/spaceship/' + modelName + '.obj', (object) => {
-                mesh = object;
-                mesh.position.set(position.x, position.y, position.z);
-                mesh.rotation.set(0, -Math.PI/1.2, 0);
-                mesh.scale.set(1, 1, 1);
-
-                addMeshToScene(mesh);
-        });
-    });
 
     // Line
     const lineGeometry = new THREE.BufferGeometry().setFromPoints([anchorBoxMesh.position, ballMesh.position]);
