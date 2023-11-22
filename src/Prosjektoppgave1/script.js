@@ -35,7 +35,8 @@ import { createWorld } from './threeWorld.js';
 import { createThreeSun } from './threeSun.js';
 import { createAmmoPendulum} from './threeAmmoPendulum.js';
 import { createAmmoWall } from './threeAmmoWall.js';
-import { createAmmoFan, moveBricks } from './threeAmmoFan.js';
+import { createAmmoFan } from './threeAmmoFan.js';
+import { createParticles } from './threeParticles.js';
 
 //Globale variabler:
 //MERK: Denne brukes også i myThreeHelper:
@@ -52,7 +53,7 @@ export const ri = {
 	stats: undefined,
 	loadingManager: undefined,
 	activator: false,
-	num: 0,
+	numForceApplied: 0,
 	models: {},
 	animationMixers: [],
 };
@@ -300,14 +301,15 @@ function animate(currentTime, myThreeScene, myAmmoPhysicsWorld) {
 	ri.stats.begin();
 	
 	// Dersom sann, kula sendes ut fra kanon:
-	if (ri.activator == true && ri.num < 12) {
+	if (ri.activator == true && ri.numForceApplied < 12) {
 		const activator = ri.scene.getObjectByName("marble");
 		activator.userData.physicsBody.applyCentralImpulse(new Ammo.btVector3(-1.5, 2.1, 1.5));
-		ri.num += 1;
+		ri.numForceApplied += 1;
 	}
 	// Sjekker om bricks skal flyttes:
-	moveBricks();
+	checkPositions();
 
+	// Oppdaterer animasjoner:
 	if (ri.animationMixers.length>0) {
 		// Merk: Dette vil ikke kjøre før alle modellene er lastet og g_animationMixers er fylt med data.
 		for (const mixer of ri.animationMixers) {
@@ -324,4 +326,35 @@ function animate(currentTime, myThreeScene, myAmmoPhysicsWorld) {
 	//Tegner scenen med gitt kamera:
 	renderScene();
 	ri.stats.end();
+}
+
+function checkPositions() {
+	ri.scene.children.forEach((object) => {
+        if (object.name == "brick") {
+            let brickPosition = object.userData.physicsBody.getWorldTransform().getOrigin();
+            if (brickPosition.y() < -2 && brickPosition.y() > -11 && brickPosition.x() < 26) {
+                let force = new Ammo.btVector3(0.02, 0, 0);
+                object.userData.physicsBody.applyCentralImpulse(force);
+            }
+        }
+
+		if (object.name == "brick" && !object.done) {
+            let brickPosition = object.userData.physicsBody.getWorldTransform().getOrigin();
+            if (brickPosition.y() < -15.5 && brickPosition.x() > 24) {
+                object.visible = false;
+                object.done = true;
+                createParticles({x: brickPosition.x(), y: brickPosition.y() + 0.5, z: brickPosition.z()});
+            }
+        }
+
+		if (object.name == "particles") {
+            object.material.opacity -= 0.005;
+            object.position.y -= 0.04;
+            object.material.needsUpdate = true;
+            object.time += 1;
+            if (object.time > 100) {
+                ri.scene.remove(object);
+            }
+        }
+    });
 }
