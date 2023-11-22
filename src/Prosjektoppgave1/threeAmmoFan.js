@@ -46,17 +46,3 @@ export function createAmmoFan(
     phy.rigidBodies.push(fanMesh);
     rigidBody.threeMesh = fanMesh;
 }
-
-
-export function moveBricks() {
-    ri.scene.children.forEach((object) => {
-        if (object.name == "brick") {
-            let brickPosition = object.userData.physicsBody.getWorldTransform().getOrigin();
-            // console.log(brickPosition.y());
-            if (brickPosition.y() < -2 && brickPosition.y() > -11 && brickPosition.x() < 26) {
-                let force = new Ammo.btVector3(0.02, 0, 0);
-                object.userData.physicsBody.applyCentralImpulse(force);
-            }
-        }
-    });
-}

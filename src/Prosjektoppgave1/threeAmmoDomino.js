@@ -50,7 +50,7 @@ export function createAmmoDomino(
         let depth = mesh.geometry.parameters.depth;
         let shape = new Ammo.btBoxShape(new Ammo.btVector3(width/2, height/2, depth/2));
         shape.setMargin( 0.1 );
-        let rigidBody = createAmmoRigidBody(shape, mesh, 0.7, 0.9, pos, mass);
+        let rigidBody = createAmmoRigidBody(shape, mesh, 0.7, 0.8, pos, mass);
         mesh.userData.physicsBody = rigidBody;
 
         phy.ammoPhysicsWorld.addRigidBody(
@@ -68,7 +68,4 @@ export function createAmmoDomino(
         rigidBody.threeMesh = mesh;
         rigidBody.setActivationState(4); //DISABLE_DEACTIVATION
     }
-
-
-
 }
