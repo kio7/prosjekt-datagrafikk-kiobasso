@@ -37,6 +37,7 @@ import { createAmmoPendulum} from './threeAmmoPendulum.js';
 import { createAmmoWall } from './threeAmmoWall.js';
 import { createAmmoFan } from './threeAmmoFan.js';
 import { createParticles } from './threeParticles.js';
+import { createFunnelBox } from './threeAmmoFunnelBox.js';
 
 //Globale variabler:
 //MERK: Denne brukes også i myThreeHelper:
@@ -281,7 +282,7 @@ function createScene(textureObjects) {
 	// Dominos
 	createAmmoDomino({x:-3, y:0, z:16}, 0.5, 7, textureObjects[2]);
 	createAmmoXZPlane(15, 25, {x:-3, y:0, z:25}, textureObjects[1], 0x96f1ff, {x: 0, y:0, z:0}, 5.0);
-	createAmmoXZPlane(0.5, 0.5, {x:0.25, y:0.5, z:30}, textureObjects[1], 0x00ff00, {x: 0, y:0, z:0}, 0.0); // Stopping block
+	createAmmoXZPlane(0.5, 2.0, {x:0.25, y:0.5, z:30}, textureObjects[1], 0x00ff00, {x: 0, y:0, z:0}, 0.0); // Stopping block
 
 	// Pendulum
 	createAmmoPendulum(5, 0xFEFEFE, {x:4, y:23.5, z:30}, 0.5, 0.5);
@@ -290,16 +291,8 @@ function createScene(textureObjects) {
 	createAmmoWall(0.3, 2.75, 8, {x:8, y:5.5, z:31});
 	createAmmoXZPlane(5, 20, {x:8, y:5.5, z:30}, textureObjects[1], 0x96f1ff, {x: 0, y:0, z:0}, 0.1);
 
-	/* Shaft */
-	// V-Shape
-	createAmmoXZPlane(12, 15, {x:17, y:-7, z:24.5}, textureObjects[1], 0x96f1ff, {x: 0, y:Math.PI/2, z:Math.PI/7}, 0.1);
-	createAmmoXZPlane(12, 15, {x:17, y:-7, z:35.5}, textureObjects[1], 0x96f1ff, {x: 0, y:Math.PI/2, z:-Math.PI/7}, 0.1);
-	// V-Shape with a hole in the middle
-	createAmmoXZPlane(10, 2.5, {x:25.75, y:-6.57, z:23.6}, textureObjects[1], 0x96f1ff, {x: 0, y:Math.PI/2, z:Math.PI/7}, 0.1);
-	createAmmoXZPlane(10, 2.5, {x:25.75, y:-6.57, z:36.4}, textureObjects[1], 0x96f1ff, {x: 0, y:Math.PI/2, z:-Math.PI/7}, 0.1);
-	// Back Wall
-	createAmmoXZPlane(7, 23, {x:27.25, y:-7, z:30}, textureObjects[1], 0x96f1ff, {x: 0, y:0, z:Math.PI/2}, 0.1);
-
+	// FunnelBox
+	createFunnelBox(10, 10, textureObjects[1], 0x96f1ff, {x:20, y:-7, z:30}, {x:0, y:0, z:0});
 
 	// Fan
 	createAmmoFan({x:8, y:-7, z:30}, {x:0, y:0, z:Math.PI/2}, {x:2, y:2, z:2}, textureObjects[1]);

@@ -51,6 +51,9 @@ export function createAmmoDomino(
         let shape = new Ammo.btBoxShape(new Ammo.btVector3(width/2, height/2, depth/2));
         shape.setMargin( 0.1 );
         let rigidBody = createAmmoRigidBody(shape, mesh, 0.7, 0.8, pos, mass);
+        if (i === dominoCount - 1 ) {
+            rigidBody = createAmmoRigidBody(shape, mesh, 0.7, 0.3, pos, mass);
+        }
         mesh.userData.physicsBody = rigidBody;
 
         phy.ammoPhysicsWorld.addRigidBody(

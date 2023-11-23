@@ -199,7 +199,6 @@ export function handleKeys(delta) {
 	printCameraPosition();
 	
 	// Gir impuls til kula i kanonen:
-	const activator = ri.scene.getObjectByName("marble");
 	if (ri.currentlyPressedKeys['Space']) {
 		ri.activator = true
 	}	

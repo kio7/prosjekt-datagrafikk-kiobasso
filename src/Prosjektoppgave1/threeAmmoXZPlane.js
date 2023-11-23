@@ -22,7 +22,7 @@ export function createAmmoXZPlane(
 	// THREE:
 	// let geometry = new THREE.PlaneGeometry( width, depth, 1, 1 );
 	// geometry.rotateX( Math.PI / 2 );
-	let geometry = new THREE.BoxGeometry(width, 0.5, depth, 1, 1 );
+	let geometry = new THREE.BoxGeometry(width, 0.5, depth, 1, 1);
 
 	let material = new THREE.MeshPhongMaterial( { 
         color: color,
