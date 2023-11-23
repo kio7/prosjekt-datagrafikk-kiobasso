@@ -126,7 +126,7 @@ table {
 }
 
 .loadingScreen .loadingBox {
-    width: 20rem;
+    width: 40rem;
     padding: 1rem;
     background: black;
     color: #090554;

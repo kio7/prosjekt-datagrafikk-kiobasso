@@ -97,7 +97,7 @@ function loadScreenElements() {
 	// Setter opp container for GUI
 	const guiContainer = document.createElement('div');
 	guiContainer.className = 'gui-container';
-	// guiContainer.classList.add("hide");
+	guiContainer.classList.add("hide");
 	document.body.appendChild(guiContainer);
 
 	//Setter opp fps-counter:
@@ -131,6 +131,12 @@ function loadScreenElements() {
 		animatedDiv.classList.toggle("open");		
 	}
 
+	// Create playerMessage
+	const startMessage = document.createElement("div");
+	startMessage.className = "start-message";
+	startMessage.innerHTML = "PRESS SPACE TO BEGIN"
+	startMessage.classList.toggle("hide");
+
 	// Create startbutton and startbutton container:
 	const startButtonContainer = document.createElement("div");
 	startButtonContainer.className = "startButtonContainer";
@@ -146,17 +152,17 @@ function loadScreenElements() {
 	let startButtonElement = document.getElementById("startButton");
 	startButtonElement.addEventListener("click", startButtonEvent);
 
+
 	function startButtonEvent() {
 		const startButtonContainer = document.getElementById("startButtonContainer");
 		const guiContainer = document.querySelector(".gui-container");
 		startButtonContainer.classList.toggle("hide");
-		// guiContainer.classList.toggle("hide");
-		// Kill cameramovemnt
-		// ri.cameraTimeline.kill();
+		guiContainer.classList.toggle("hide");
+		startMessage.classList.toggle("hide")
 		// Load new movement
 		createCameraTimeline(cc.canon);
 	}
-
+	
 }
 
 

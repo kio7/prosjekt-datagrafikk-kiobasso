@@ -43,7 +43,7 @@ export function createAmmoXZPlane(
 	// AMMO:
 	let shape = new Ammo.btBoxShape(new Ammo.btVector3(width/2, 0.25, depth/2));
 	shape.setMargin( 0.0 );
-	let rigidBody = createAmmoRigidBody(shape, mesh, 0.7, 1.0, position, mass);
+	let rigidBody = createAmmoRigidBody(shape, mesh, 0.7, 5.0, position, mass);
 
 	mesh.userData.physicsBody = rigidBody;
 

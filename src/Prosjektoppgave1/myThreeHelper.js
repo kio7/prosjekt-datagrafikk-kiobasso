@@ -134,11 +134,6 @@ function controlsTimeline(cameraPositions) {
 	ri.cameraTimeline.cont.play();
 }
 
-
-
-
-
-
 export function playAudioOnce(audioFile, setVolume=0.5, pitch=1) {
 	const listener = new THREE.AudioListener();
 	ri.camera.add( listener );
@@ -205,9 +200,20 @@ export function handleKeys(delta) {
 	
 	// Gir impuls til kula i kanonen:
 	const activator = ri.scene.getObjectByName("marble");
-	if (ri.currentlyPressedKeys['KeyS']) {
+	if (ri.currentlyPressedKeys['Space']) {
 		ri.activator = true
 	}	
+
+
+	if (ri.currentlyPressedKeys['KeyK']) {
+		ri.timelineToggle = !ri.timelineToggle;
+		ri.currentlyPressedKeys['KeyK'] = false;
+		if (ri.timelineToggle == false) {
+			ri.cameraTimeline.camt.kill();
+			ri.cameraTimeline.cont.kill();
+		};
+		console.log(ri.timelineToggle);
+	}
 }
 
 export function onWindowResize() {
