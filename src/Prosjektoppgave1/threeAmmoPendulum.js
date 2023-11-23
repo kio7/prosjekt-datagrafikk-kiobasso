@@ -8,14 +8,16 @@ Koden for linjen er basert på kodeeksempelet springGeneric6DofSpringConstraint.
 
 
 import * as THREE from "three";
-import {addMeshToScene} from "./myThreeHelper.js";
+import {addMeshToScene, createCameraTimeline, playAudioOnce} from "./myThreeHelper.js";
 import {createAmmoRigidBody, phy} from "./myAmmoHelper.js";
 
 import {
     COLLISION_GROUP_PENDULUM,
     COLLISION_GROUP_DOMINO,
     COLLISION_GROUP_WALL
-} from "./myAmmoHelper.js"
+} from "./myAmmoHelper.js";
+
+import {cameraCoordinates as cc} from "./cameraCoord.js";
 
 
 export function createAmmoPendulum (
@@ -42,7 +44,18 @@ export function createAmmoPendulum (
     ballMesh.castShadow = true;
     ballMesh.name = "WreckingBall";
     ballMesh.position.set(ballPosition.x, ballPosition.y, ballPosition.z);
-    addMeshToScene(ballMesh);
+
+    let i = false;
+    ballMesh.collisionResponse = (mesh1) => {
+        if (mesh1.name === "brick" && i === false) {
+            console.log("Wrecking ball")
+            createCameraTimeline(cc.wall)
+            i = true
+        }
+    }
+
+
+        addMeshToScene(ballMesh);
     
     let sphereShape = new Ammo.btSphereShape(ballRadius);
     let sphereRigidBody = createAmmoRigidBody(sphereShape, ballMesh, 0.7, 0.1, ballPosition, mass);

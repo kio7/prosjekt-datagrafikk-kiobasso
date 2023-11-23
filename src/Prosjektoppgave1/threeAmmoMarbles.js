@@ -65,6 +65,11 @@ export function createAmmoMarble(
 			// console.log("Bucket - CR");
 			playAudioOnce('./sounds/metal-moving.mp3', 0.5, 1);
 			bucket = 1;
+			createCameraTimeline(cc.bucket)
+		}
+		
+		if (mesh1.name === 'domino') {
+			createCameraTimeline(cc.dominos)
 		}
 	};
 

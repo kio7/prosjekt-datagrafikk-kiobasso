@@ -42,6 +42,7 @@ import { createParticles } from './threeParticles.js';
 //MERK: Denne brukes også i myThreeHelper:
 export const ri = {
 	currentlyPressedKeys: [],
+	gameIsStarted: false,
 	scene: undefined,
 	renderer: undefined,
 	camera: undefined,
@@ -136,6 +137,7 @@ function loadScreenElements() {
 	startMessage.className = "start-message";
 	startMessage.innerHTML = "PRESS SPACE TO BEGIN"
 	startMessage.classList.toggle("hide");
+	document.body.appendChild(startMessage);
 
 	// Create startbutton and startbutton container:
 	const startButtonContainer = document.createElement("div");
@@ -155,10 +157,12 @@ function loadScreenElements() {
 
 	function startButtonEvent() {
 		const startButtonContainer = document.getElementById("startButtonContainer");
+		const startButton = document.querySelector(".startButton")
 		const guiContainer = document.querySelector(".gui-container");
 		startButtonContainer.classList.toggle("hide");
 		guiContainer.classList.toggle("hide");
 		startMessage.classList.toggle("hide")
+		startButton.remove()
 		// Load new movement
 		createCameraTimeline(cc.canon);
 	}

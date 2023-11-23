@@ -85,7 +85,7 @@ function cameraTimeline(cameraPositions) {
 			ease: CustomEase.create("custom", "M0,0 C0.321,0.114 0.472,0.455 0.496,0.496 0.574,0.63 0.731,0.93 1,1"), // Easing function
 			onStart: () => {
 				// This function will be called when the animation starts for each position
-				console.log(`Animating to camera position ${index + 1}`);
+				// console.log(`Animating to camera position ${index + 1}`);
 			},
 			onUpdate: () => {
 				// ri.camera.lookAt(ri.controls.target);
@@ -93,7 +93,7 @@ function cameraTimeline(cameraPositions) {
 			},
 			onComplete: () => {
 				// This function will be called when the animation completes for each position
-				console.log(`Animation to camera position ${index + 1} complete`);
+				// console.log(`Animation to camera position ${index + 1} complete`);
 			},
 		});
 	});
@@ -117,7 +117,7 @@ function controlsTimeline(cameraPositions) {
 			ease: CustomEase.create("custom", "M0,0 C0.453,0.131 0.418,0.818 1,0.986 "), // Easing function
 			onStart: () => {
 				// This function will be called when the animation starts for each position
-				console.log(`Animating to camera position ${index + 1}`);
+				// console.log(`Animating to camera position ${index + 1}`);
 			},
 			onUpdate: () => {
 				ri.camera.lookAt(ri.controls.target);
@@ -125,7 +125,7 @@ function controlsTimeline(cameraPositions) {
 			},
 			onComplete: () => {
 				// This function will be called when the animation completes for each position
-				console.log(`Animation to camera position ${index + 1} complete`);
+				// console.log(`Animation to camera position ${index + 1} complete`);
 			},
 		});
 	});
@@ -200,15 +200,19 @@ export function handleKeys(delta) {
 	
 	// Gir impuls til kula i kanonen:
 	const activator = ri.scene.getObjectByName("marble");
-	if (ri.currentlyPressedKeys['Space']) {
+	const startMessage = document.querySelector(".start-message");
+	if (ri.currentlyPressedKeys['Space'] && !ri.gameIsStarted) {
+		ri.gameIsStarted = true;
+		startMessage.classList.toggle("hide")
 		ri.activator = true
+		createCameraTimeline(cc.canon_fire)
 	}	
 
 
 	if (ri.currentlyPressedKeys['KeyK']) {
 		ri.timelineToggle = !ri.timelineToggle;
 		ri.currentlyPressedKeys['KeyK'] = false;
-		if (ri.timelineToggle == false) {
+		if (ri.timelineToggle === false) {
 			ri.cameraTimeline.camt.kill();
 			ri.cameraTimeline.cont.kill();
 		};
@@ -220,7 +224,7 @@ export function onWindowResize() {
 	ri.camera.aspect = window.innerWidth / window.innerHeight;
 	ri.camera.updateProjectionMatrix();
 	ri.renderer.setSize(window.innerWidth, window.innerHeight);
-	ri.controls.handleResize();
+	// ri.controls.handleResize();
 	renderScene();
 }
 

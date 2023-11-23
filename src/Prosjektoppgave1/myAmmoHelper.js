@@ -155,6 +155,29 @@ function checkCollisions(deltaTime) {
 								threeMesh1.collisionResponse(threeMesh0);
 						}
 
+						// Marble fra kanon treffer dominos
+						if (
+						(threeMesh0.name === 'railMarble' && threeMesh1.name === 'domino') ||
+						(threeMesh1.name === 'railMarble' && threeMesh0.name === 'domino')
+						) {
+							if (typeof threeMesh0.collisionResponse === 'function')
+								threeMesh0.collisionResponse(threeMesh1);
+							if (typeof threeMesh1.collisionResponse === 'function')
+								threeMesh1.collisionResponse(threeMesh0);
+						}
+
+						// WreckingBall treffer vegg
+						if (
+						(threeMesh0.name === 'WreckingBall' && threeMesh1.name === 'brick') ||
+						(threeMesh1.name === 'WreckingBall' && threeMesh0.name === 'brick')
+						) {
+							console.log("Helping the collision...")
+							if (typeof threeMesh0.collisionResponse === 'function')
+								threeMesh0.collisionResponse(threeMesh1);
+							if (typeof threeMesh1.collisionResponse === 'function')
+								threeMesh1.collisionResponse(threeMesh0);
+						}
+
 
 					}
 				}
