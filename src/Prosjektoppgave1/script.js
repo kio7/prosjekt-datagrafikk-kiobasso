@@ -244,49 +244,54 @@ function createScene(textureObjects) {
 			action0.play();
 		}
 	});
-
-
+	
+	
+	createThreeSun();
 	createWorld(textureObjects[0]);
 	
+	// Canon
+	createAmmoCanon({x:18, y:0, z:-12});
+	createAmmoMarble(0.2, 2, 0xF9F9F9, {x:18, y:0.2, z:-12}, 0.5, 0.5, "marble"); // Canonball
+	createAmmoXZPlane(5, 5, {x:18, y:0, z:-12}, textureObjects[1], 0x96f1ff);
+
+	// Seesaw
 	createAmmoSeeSaw(5, {x:0, y:0, z:0});
 	createBucket({x:4, y:5, z:0});
 	createCounterWeight({x:-4, y:5, z:0});
 	createAmmoXZPlane(10, 10, {x:0, y:0, z:0}, textureObjects[1], 0x96f1ff);
-		
-	createAmmoCanon({x:18, y:0, z:-12});
-	createAmmoMarble(0.2, 2, 0xF9F9F9, {x:18, y:0.2, z:-12}, 0.5, 0.5, "marble"); // Canonball
-	createAmmoXZPlane(5, 5, {x:18, y:0, z:-12}, textureObjects[1], 0x96f1ff);
 	
+	// Funnel
 	createAmmoFunnel(0, 0x00F3F3, {x:4, y:7.3, z:0}, 3.2, 0.4, 2.1, textureObjects[1]);
 	
+	// Rails
 	createRails({x:-4, y:0.2, z:15}, Math.PI/2);
 	createAmmoMarble(0.58, 3.0, 0xFEFEFE, {x:-5, y:6, z:-1}, 0.1, 0.9, "railMarble"); // Rolling ball
 	
+	// Dominos
 	createAmmoDomino({x:-3, y:0, z:16}, 0.5, 7, textureObjects[2]);
+	createAmmoXZPlane(15, 25, {x:-3, y:0, z:25}, textureObjects[1], 0x96f1ff, {x: 0, y:0, z:0}, 5.0);
+	createAmmoXZPlane(0.5, 0.5, {x:0.25, y:0.5, z:30}, textureObjects[1], 0x00ff00, {x: 0, y:0, z:0}, 0.0); // Stopping block
 
-	createAmmoXZPlane(15, 25, {x:-3, y:0, z:25}, textureObjects[1], 0x96f1ff);
-
-	createThreeSun();
-
+	// Pendulum
 	createAmmoPendulum(5, 0xFEFEFE, {x:4, y:23.5, z:30}, 0.5, 0.5);
 	
-	createAmmoXZPlane(5, 20, {x:8, y:5.5, z:30}, textureObjects[1], 0x96f1ff);
-	createAmmoWall(0.3, 2.5, 8, {x:8, y:5.5, z:31});
+	// Wall/Bricks
+	createAmmoWall(0.3, 2.75, 8, {x:8, y:5.5, z:31});
+	createAmmoXZPlane(5, 20, {x:8, y:5.5, z:30}, textureObjects[1], 0x96f1ff, {x: 0, y:0, z:0}, 0.1);
 
+	/* Shaft */
 	// V-Shape
-	createAmmoXZPlane(12, 15, {x:17, y:-7, z:24.5}, textureObjects[1], 0x96f1ff, {x: 0, y:Math.PI/2, z:Math.PI/7});
-	createAmmoXZPlane(12, 15, {x:17, y:-7, z:35.5}, textureObjects[1], 0x96f1ff, {x: 0, y:Math.PI/2, z:-Math.PI/7});
-
+	createAmmoXZPlane(12, 15, {x:17, y:-7, z:24.5}, textureObjects[1], 0x96f1ff, {x: 0, y:Math.PI/2, z:Math.PI/7}, 0.1);
+	createAmmoXZPlane(12, 15, {x:17, y:-7, z:35.5}, textureObjects[1], 0x96f1ff, {x: 0, y:Math.PI/2, z:-Math.PI/7}, 0.1);
 	// V-Shape with a hole in the middle
-	createAmmoXZPlane(10, 2.5, {x:25.75, y:-6.57, z:23.6}, textureObjects[1], 0x96f1ff, {x: 0, y:Math.PI/2, z:Math.PI/7});
-	createAmmoXZPlane(10, 2.5, {x:25.75, y:-6.57, z:36.4}, textureObjects[1], 0x96f1ff, {x: 0, y:Math.PI/2, z:-Math.PI/7});
-	
+	createAmmoXZPlane(10, 2.5, {x:25.75, y:-6.57, z:23.6}, textureObjects[1], 0x96f1ff, {x: 0, y:Math.PI/2, z:Math.PI/7}, 0.1);
+	createAmmoXZPlane(10, 2.5, {x:25.75, y:-6.57, z:36.4}, textureObjects[1], 0x96f1ff, {x: 0, y:Math.PI/2, z:-Math.PI/7}, 0.1);
 	// Back Wall
-	createAmmoXZPlane(7, 23, {x:27.25, y:-7, z:30}, textureObjects[1], 0x96f1ff, {x: 0, y:0, z:Math.PI/2});
+	createAmmoXZPlane(7, 23, {x:27.25, y:-7, z:30}, textureObjects[1], 0x96f1ff, {x: 0, y:0, z:Math.PI/2}, 0.1);
 
-	// Fan: pos, rot, scale
+
+	// Fan
 	createAmmoFan({x:8, y:-7, z:30}, {x:0, y:0, z:Math.PI/2}, {x:2, y:2, z:2}, textureObjects[1]);
-
 
 	animate(0);
 }
@@ -332,7 +337,7 @@ function checkPositions() {
 	ri.scene.children.forEach((object) => {
         if (object.name == "brick") {
             let brickPosition = object.userData.physicsBody.getWorldTransform().getOrigin();
-            if (brickPosition.y() < -2 && brickPosition.y() > -11 && brickPosition.x() < 26) {
+            if (brickPosition.y() < -5 && brickPosition.y() > -11 && brickPosition.x() < 27.5 && brickPosition.x() > 10.5) {
                 let force = new Ammo.btVector3(0.02, 0, 0);
                 object.userData.physicsBody.applyCentralImpulse(force);
             }
