@@ -61,7 +61,7 @@ export function createAmmoWall(mass, size, num, position) {
             
             let boxShape = new Ammo.btBoxShape(new Ammo.btVector3(brickDepth*0.5, brickHeight*0.5, brickLengthCurrent*0.5));
             boxShape.setMargin(0.05);
-            let brickRigidBody = createAmmoRigidBody(boxShape, mesh, 0.7, 1.0, {x: pos.x, y:pos.y, z:pos.z + position.z}, brickMassCurrent);
+            let brickRigidBody = createAmmoRigidBody(boxShape, mesh, 0.2, 0.9, {x: pos.x, y:pos.y, z:pos.z + position.z}, brickMassCurrent);
             mesh.userData.physicsBody = brickRigidBody;
 
             phy.ammoPhysicsWorld.addRigidBody(

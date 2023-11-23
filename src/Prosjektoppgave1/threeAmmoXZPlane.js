@@ -12,7 +12,8 @@ export function createAmmoXZPlane(
     position = {x: 0, y: 0, z: 0},
     textureObject,
     color = 0x00FF00,
-	rotation = {x: 0, y: 0, z: 0}
+	rotation = {x: 0, y: 0, z: 0},
+	friction = 0.7,
     ){
 	
     const mass=0;
@@ -43,7 +44,7 @@ export function createAmmoXZPlane(
 	// AMMO:
 	let shape = new Ammo.btBoxShape(new Ammo.btVector3(width/2, 0.25, depth/2));
 	shape.setMargin( 0.0 );
-	let rigidBody = createAmmoRigidBody(shape, mesh, 0.7, 5.0, position, mass);
+	let rigidBody = createAmmoRigidBody(shape, mesh, 0.2, friction, position, mass);
 
 	mesh.userData.physicsBody = rigidBody;
 
