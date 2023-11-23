@@ -15,7 +15,6 @@ export function createFunnelBox(
     textureObject,
     color = 0x96f1ff,
     position = {x:0, y:0, z:0},
-    rotation = {x:0, y:0, z:0},
 ) {
     const mass = 0;
     let funnelBoxGroupMesh = new THREE.Group();
@@ -30,7 +29,7 @@ export function createFunnelBox(
         transparent: true,
         depthWrite: false,
         opacity: 0.5,
-    } );
+    });
 
     // Close boxes
     let Left1Geometry = new THREE.BoxGeometry(width*1.2, 0.5, depth*1.5, 1, 1);
@@ -93,6 +92,7 @@ export function createFunnelBox(
     let BackMesh = new THREE.Mesh(BackGeometry, material);
     BackMesh.renderOrder = 1;
     BackMesh.receiveShadow = true;
+    BackMesh.castShadow = true;
     BackMesh.position.x = 7.25;
     BackMesh.rotation.z = Math.PI/2;
 
