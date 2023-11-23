@@ -17,8 +17,8 @@ export const COLLISION_GROUP_SEESAWOBJ = 128;
 export const COLLISION_GROUP_PENDULUM = 256;
 export const COLLISION_GROUP_WALL = 512;
 export const COLLISION_GROUP_FAN = 1024;
-
-
+export const COLLISION_GROUP_PORTAL = 2048;
+export const COLLISION_GROUP_BOX = 4096;
 
 
 export const IMPULSE_FORCE = 20;
@@ -165,20 +165,6 @@ function checkCollisions(deltaTime) {
 							if (typeof threeMesh1.collisionResponse === 'function')
 								threeMesh1.collisionResponse(threeMesh0);
 						}
-
-						// WreckingBall treffer vegg
-						if (
-						(threeMesh0.name === 'WreckingBall' && threeMesh1.name === 'brick') ||
-						(threeMesh1.name === 'WreckingBall' && threeMesh0.name === 'brick')
-						) {
-							console.log("Helping the collision...")
-							if (typeof threeMesh0.collisionResponse === 'function')
-								threeMesh0.collisionResponse(threeMesh1);
-							if (typeof threeMesh1.collisionResponse === 'function')
-								threeMesh1.collisionResponse(threeMesh0);
-						}
-
-
 					}
 				}
 			}

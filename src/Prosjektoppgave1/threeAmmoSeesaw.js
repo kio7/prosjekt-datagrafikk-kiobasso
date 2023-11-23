@@ -1,25 +1,20 @@
 import * as THREE from "three";
 import {addMeshToScene} from "./myThreeHelper.js";
 import {createAmmoRigidBody, phy} from "./myAmmoHelper.js";
-import {addToCompound} from "./triangleMeshHelpers.js";
+
 import {
     COLLISION_GROUP_SEESAW, 
     COLLISION_GROUP_SEESAWOBJ,
     COLLISION_GROUP_PLANE, 
     COLLISION_GROUP_SPHERE,
     COLLISION_GROUP_RAILS
-    } from "./myAmmoHelper.js";
+} from "./myAmmoHelper.js";
 
 
 export function createAmmoSeeSaw ( sessawHeight = 4, position = {x:0, y:0, z:0}) {
-    const mass = 10;
-    const color = 0x00FF00;
-
     const rigidBodyPlank = createPlank(sessawHeight, position);
     const rigidBodyAnchor = createAnchor(sessawHeight, position);
-    // const rigidBodyBase = createBase();
 
-    const plankLength = rigidBodyPlank.threeMesh.geometry.parameters.width;
     const anchorPivot = new Ammo.btVector3(0, 0.5 * sessawHeight, 0);
     const anchorAxis = new Ammo.btVector3(0, 0, 1);
     const plankPivot = new Ammo.btVector3(0, 0, 0);
@@ -125,10 +120,3 @@ function createAnchor(sessawHeight, position) {
 
     return rigidBody
 };
-
-
-
-function createBase() {
-
-}
-

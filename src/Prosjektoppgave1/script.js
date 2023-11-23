@@ -37,6 +37,9 @@ import { createAmmoPendulum} from './threeAmmoPendulum.js';
 import { createAmmoWall } from './threeAmmoWall.js';
 import { createAmmoFan } from './threeAmmoFan.js';
 import { createParticles } from './threeParticles.js';
+import { createFunnelBox } from './threeAmmoFunnelBox.js';
+import { createAmmoPortals as createAmmoPortal } from './threeAmmoPortals.js';
+import { createBox } from './threeAmmeBox.js';
 
 //Globale variabler:
 //MERK: Denne brukes også i myThreeHelper:
@@ -187,6 +190,7 @@ function addAmmoSceneObjects() {
 	textureObjects[0] = textureLoader.load('textures/galaxy.jpeg');
 	textureObjects[1] = textureLoader.load('textures/glass.jpg');
 	textureObjects[2] = textureLoader.load('textures/wood.jpg');
+	textureObjects[3] = textureLoader.load('textures/milky_way_illustration.jpeg');
 
 	loadingManager.onStart = (url, itemsLoaded, itemsTotal) => {
 		// console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
@@ -224,7 +228,7 @@ function addAmmoSceneObjects() {
 	ri.models = {
 		fan: {url: 'models/rgb_fan.glb', position: {x:10, y:-8, z:30}, scale: {x:20, y:20, z:20}, rotation: {x:0, y:0, z:Math.PI/2}},
 		spaceBunny: {url: 'models/space_bunny.glb', position: {x:3.85, y:23.9, z:29.2}, scale: {x:2, y:2, z:2}, rotation: {x:0, y:-Math.PI/1.3, z:0}},
-		button: {url: 'models/button.glb', position: {x:26, y:-18, z:30}, scale: {x:7.5, y:7.5, z:7.5}, rotation: {x:0, y:0, z:0}},
+		// button: {url: 'models/button.glb', position: {x:26, y:-18, z:30}, scale: {x:7.5, y:7.5, z:7.5}, rotation: {x:0, y:0, z:0}},
 	};
 
 
@@ -285,7 +289,7 @@ function createScene(textureObjects) {
 	// Dominos
 	createAmmoDomino({x:-3, y:0, z:16}, 0.5, 7, textureObjects[2]);
 	createAmmoXZPlane(15, 25, {x:-3, y:0, z:25}, textureObjects[1], 0x96f1ff, {x: 0, y:0, z:0}, 5.0);
-	createAmmoXZPlane(0.5, 0.5, {x:0.25, y:0.5, z:30}, textureObjects[1], 0x00ff00, {x: 0, y:0, z:0}, 0.0); // Stopping block
+	createAmmoXZPlane(0.5, 2.0, {x:0.25, y:0.5, z:30}, textureObjects[1], 0x00ff00, {x: 0, y:0, z:0}, 0.0); // Stopping block
 
 	// Pendulum
 	createAmmoPendulum(5, 0xFEFEFE, {x:4, y:23.5, z:30}, 0.5, 0.5);
@@ -293,20 +297,19 @@ function createScene(textureObjects) {
 	// Wall/Bricks
 	createAmmoWall(0.3, 2.75, 8, {x:8, y:5.5, z:31});
 	createAmmoXZPlane(5, 20, {x:8, y:5.5, z:30}, textureObjects[1], 0x96f1ff, {x: 0, y:0, z:0}, 0.1);
-
-	/* Shaft */
-	// V-Shape
-	createAmmoXZPlane(12, 15, {x:17, y:-7, z:24.5}, textureObjects[1], 0x96f1ff, {x: 0, y:Math.PI/2, z:Math.PI/7}, 0.1);
-	createAmmoXZPlane(12, 15, {x:17, y:-7, z:35.5}, textureObjects[1], 0x96f1ff, {x: 0, y:Math.PI/2, z:-Math.PI/7}, 0.1);
-	// V-Shape with a hole in the middle
-	createAmmoXZPlane(10, 2.5, {x:25.75, y:-6.57, z:23.6}, textureObjects[1], 0x96f1ff, {x: 0, y:Math.PI/2, z:Math.PI/7}, 0.1);
-	createAmmoXZPlane(10, 2.5, {x:25.75, y:-6.57, z:36.4}, textureObjects[1], 0x96f1ff, {x: 0, y:Math.PI/2, z:-Math.PI/7}, 0.1);
-	// Back Wall
-	createAmmoXZPlane(7, 23, {x:27.25, y:-7, z:30}, textureObjects[1], 0x96f1ff, {x: 0, y:0, z:Math.PI/2}, 0.1);
-
-
+	
 	// Fan
 	createAmmoFan({x:8, y:-7, z:30}, {x:0, y:0, z:Math.PI/2}, {x:2, y:2, z:2}, textureObjects[1]);
+
+	// FunnelBox
+	createFunnelBox(10, 10, textureObjects[1], 0x96f1ff, {x:20, y:-7, z:30}, {x:0, y:0, z:0});
+
+	// Portals
+	createAmmoPortal(0xF3F3F3, {x:26, y:-18, z:30}, 5, textureObjects[3]);
+	createAmmoPortal(0xF3F3F3, {x:75, y:25, z:-70}, 5, textureObjects[3]);
+
+	createBox(5, {x: 75, y: 17, z: -70}, 0x00FF00, textureObjects[1]);
+
 
 	animate(0);
 }
@@ -355,15 +358,6 @@ function checkPositions() {
             if (brickPosition.y() < -5 && brickPosition.y() > -11 && brickPosition.x() < 27.5 && brickPosition.x() > 10.5) {
                 let force = new Ammo.btVector3(0.02, 0, 0);
                 object.userData.physicsBody.applyCentralImpulse(force);
-            }
-        }
-
-		if (object.name == "brick" && !object.done) {
-            let brickPosition = object.userData.physicsBody.getWorldTransform().getOrigin();
-            if (brickPosition.y() < -15.5 && brickPosition.x() > 24) {
-                object.visible = false;
-                object.done = true;
-                createParticles({x: brickPosition.x(), y: brickPosition.y() + 0.5, z: brickPosition.z()});
             }
         }
 

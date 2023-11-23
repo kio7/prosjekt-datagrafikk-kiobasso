@@ -252,7 +252,6 @@ export function updateThree(deltaTime) {
 	line.geometry.computeBoundingBox();
 	line.geometry.computeBoundingSphere();
 
-
 	//Oppdater trackball-kontrollen:
 	ri.controls.update();
 }

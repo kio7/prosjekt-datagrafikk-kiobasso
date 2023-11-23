@@ -11,11 +11,12 @@ import {
     COLLISION_GROUP_PENDULUM,
     COLLISION_GROUP_WALL,
     COLLISION_GROUP_PLANE,
-    COLLISION_GROUP_FAN
+    COLLISION_GROUP_FAN,
+    COLLISION_GROUP_PORTAL,
+    COLLISION_GROUP_BOX
 } from './myAmmoHelper.js';
-
-import { ri } from "./script.js";
 import { createParticles } from './threeParticles.js';
+import { ri } from './script.js';
 
 
 export function createAmmoWall(mass, size, num, position) {
@@ -57,6 +58,58 @@ export function createAmmoWall(mass, size, num, position) {
             mesh.name = "brick"
             mesh.castShadow = true;
             mesh.receiveShadow = true;
+            
+            let toggle = false
+            mesh.collisionResponse = (mesh1) => {
+                if (mesh1.name === "portal" && toggle === false) {
+                    // Particles first portal
+                    createParticles({x: mesh.position.x, y: mesh.position.y + 0.5, z: mesh.position.z});
+                    
+                    // Move to second portal
+                    // Add new Mesh
+                    let material = mesh.material
+
+                    let newMesh = new THREE.Mesh(
+                        new THREE.BoxGeometry( brickDepth, brickHeight, brickLengthCurrent ),
+                        material
+                    );
+                    
+                    // newMesh.position.set(mesh.position.x + 49, mesh.position.y + 42, mesh.position.z - 100)
+                    newMesh.position.set(75, 24, -70)
+                    newMesh.rotation.set(mesh.rotation.x, mesh.rotation.y, mesh.rotation.z)
+                    newMesh.castShadow = true;
+                    newMesh.receiveShadow = true;
+                    newMesh.name = "newBrick"
+
+
+                    let shape = new Ammo.btBoxShape(new Ammo.btVector3(brickDepth*0.5, brickHeight*0.5, brickLengthCurrent*0.5));
+                    let rigidBody = createAmmoRigidBody(shape, newMesh, 0.0, 0.9, newMesh.position, brickMassCurrent);
+                    rigidBody.setLinearVelocity(mesh.userData.physicsBody.getLinearVelocity());
+                    newMesh.userData.physicsBody = rigidBody;
+
+                    phy.ammoPhysicsWorld.addRigidBody(
+                        rigidBody,
+                        COLLISION_GROUP_WALL,
+                        COLLISION_GROUP_WALL |
+                        COLLISION_GROUP_PENDULUM |
+                        COLLISION_GROUP_PLANE |
+                        COLLISION_GROUP_FAN |
+                        COLLISION_GROUP_PORTAL |
+                        COLLISION_GROUP_BOX
+                    );
+
+                    addMeshToScene(newMesh);
+                    phy.rigidBodies.push(newMesh);
+                    rigidBody.threeMesh = newMesh;
+                    // Remove the old Mesh
+                    ri.scene.remove(mesh);
+                    
+                    // Particles second portal
+                    createParticles({x: newMesh.position.x, y: newMesh.position.y + 0.5, z: newMesh.position.z});
+                    toggle = true;
+                }
+            }
+
             addMeshToScene(mesh);
             
             let boxShape = new Ammo.btBoxShape(new Ammo.btVector3(brickDepth*0.5, brickHeight*0.5, brickLengthCurrent*0.5));
@@ -67,7 +120,11 @@ export function createAmmoWall(mass, size, num, position) {
             phy.ammoPhysicsWorld.addRigidBody(
                 brickRigidBody,
                 COLLISION_GROUP_WALL,
-                COLLISION_GROUP_WALL | COLLISION_GROUP_PENDULUM | COLLISION_GROUP_PLANE | COLLISION_GROUP_FAN
+                COLLISION_GROUP_WALL |
+                COLLISION_GROUP_PENDULUM |
+                COLLISION_GROUP_PLANE |
+                COLLISION_GROUP_FAN |
+                COLLISION_GROUP_PORTAL
             );
             phy.rigidBodies.push(mesh);
             brickRigidBody.threeMesh = mesh;
