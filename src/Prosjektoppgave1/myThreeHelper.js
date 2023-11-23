@@ -4,6 +4,7 @@ import {applyImpulse, moveRigidBody} from "./myAmmoHelper.js";
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 import {ri} from "./script.js";
 import {gsap} from "gsap";
+import {CustomEase} from "gsap/CustomEase";
 import { cameraCoordinates as cc } from "./cameraCoord.js";
 
 export function createThreeScene() {
@@ -30,9 +31,11 @@ export function createThreeScene() {
 
 	// Kamera, utgangsposisjon:
 	ri.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
-	ri.camera.position.x = cc.init.c[0].x;
-	ri.camera.position.y = cc.init.c[0].y;
-	ri.camera.position.z = cc.init.c[0].z;
+	ri.camera.position.x = cc.init[0].x;
+	ri.camera.position.y = cc.init[0].y;
+	ri.camera.position.z = cc.init[0].z;
+	// console.log(cc.init[0].x, cc.init[0].y, cc.init[0].z);
+	// console.log(ri.camera.position);
 
 	// Set up camera timeline
 	// ri.cameraTimeline = gsap.timeline();
@@ -56,34 +59,84 @@ export function createThreeScene() {
 	// Controls:
 	ri.controls = new OrbitControls(ri.camera, ri.renderer.domElement);
 	ri.controls.addEventListener( 'change', renderScene);
+	ri.controls.target.x = cc.init[0].tx;
+	ri.controls.target.y = cc.init[0].ty;
+	ri.controls.target.z = cc.init[0].tz;
 }
 
-export function createCameraTimeline(cameraPositions = [{ x: 290, y: 90, z: 80 }], duration = 4) {
+export function createCameraTimeline(cameraPositions) {
+	cameraTimeline(cameraPositions);
+	controlsTimeline(cameraPositions);
+};
+
+function cameraTimeline(cameraPositions) {
 	
-	if (ri.cameraTimeline != undefined) {ri.cameraTimeline.kill();}
+	if (ri.cameraTimeline.camt != undefined) {ri.cameraTimeline.camt.kill();}
 	if (!ri.timelineToggle) {return;};
-	ri.cameraTimeline = gsap.timeline();
+	ri.cameraTimeline.camt = gsap.timeline();
+	gsap.registerPlugin(CustomEase);
+
 	cameraPositions.forEach((position, index) => {
-		ri.cameraTimeline.to(ri.camera.position, {
-		duration: duration, // Duration of the animation in seconds
-		x: position.x,
-		y: position.y,
-		z: position.z,
-		ease: 'power1.inOut', // Easing function
-		onStart: () => {
-			// This function will be called when the animation starts for each position
-			console.log(`Animating to camera position ${index + 1}`);
-		},
-		onComplete: () => {
-			// This function will be called when the animation completes for each position
-			console.log(`Animation to camera position ${index + 1} complete`);
-		},
+			ri.cameraTimeline.camt.to(ri.camera.position, {
+			duration: position.d, // Duration of the animation in seconds
+			x: position.x,
+			y: position.y,
+			z: position.z,
+			ease: CustomEase.create("custom", "M0,0 C0.321,0.114 0.472,0.455 0.496,0.496 0.574,0.63 0.731,0.93 1,1"), // Easing function
+			onStart: () => {
+				// This function will be called when the animation starts for each position
+				console.log(`Animating to camera position ${index + 1}`);
+			},
+			onUpdate: () => {
+				// ri.camera.lookAt(ri.controls.target);
+				// ri.controls.update();
+			},
+			onComplete: () => {
+				// This function will be called when the animation completes for each position
+				console.log(`Animation to camera position ${index + 1} complete`);
+			},
 		});
 	});
 
 	// Start the camera positions timeline
-	ri.cameraTimeline.play();
+	ri.cameraTimeline.camt.play();
 }
+function controlsTimeline(cameraPositions) {
+	
+	if (ri.cameraTimeline.cont != undefined) {ri.cameraTimeline.cont.kill();}
+	if (!ri.timelineToggle) {return;};
+	ri.cameraTimeline.cont = gsap.timeline();
+	gsap.registerPlugin(CustomEase);
+
+	cameraPositions.forEach((position, index) => {
+			ri.cameraTimeline.cont.to(ri.controls.target, {
+			duration: position.d, // Duration of the animation in seconds
+			x: position.tx,
+			y: position.ty,
+			z: position.tz,
+			ease: CustomEase.create("custom", "M0,0 C0.453,0.131 0.418,0.818 1,0.986 "), // Easing function
+			onStart: () => {
+				// This function will be called when the animation starts for each position
+				console.log(`Animating to camera position ${index + 1}`);
+			},
+			onUpdate: () => {
+				ri.camera.lookAt(ri.controls.target);
+				ri.controls.update();
+			},
+			onComplete: () => {
+				// This function will be called when the animation completes for each position
+				console.log(`Animation to camera position ${index + 1} complete`);
+			},
+		});
+	});
+
+	// Start the camera positions timeline
+	ri.cameraTimeline.cont.play();
+}
+
+
+
+
 
 
 export function playAudioOnce(audioFile, setVolume=0.5, pitch=1) {
@@ -214,6 +267,8 @@ export function getRigidBodyFromMesh(meshName) {
 
 export function printCameraPosition() {
     const cameraPosition = ri.camera.position;
-    const coordinatesText = `Camera Position: x: ${cameraPosition.x.toFixed(2)}, y: ${cameraPosition.y.toFixed(2)}, z: ${cameraPosition.z.toFixed(2)}`;
+    const coordinatesText = 
+		`Camera Position: x: ${cameraPosition.x.toFixed(2)}, y: ${cameraPosition.y.toFixed(2)}, z: ${cameraPosition.z.toFixed(2)}` +
+		` | Control Target: x: ${ri.controls.target.x.toFixed(2)}, y: ${ri.controls.target.y.toFixed(2)}, z: ${ri.controls.target.z.toFixed(2)}`;
     document.getElementById('coordinatesText').textContent = coordinatesText;
 }

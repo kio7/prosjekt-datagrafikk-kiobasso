@@ -45,8 +45,11 @@ export const ri = {
 	scene: undefined,
 	renderer: undefined,
 	camera: undefined,
-	cameraTimeline: undefined,
-	timelineToggle: false,
+	cameraTimeline: {
+		camt: undefined,
+		cont: undefined,
+	},
+	timelineToggle: true,
 	clock: undefined,
 	controls: undefined,
 	lilGui: undefined,
@@ -84,6 +87,9 @@ export function main() {
 
 	// three/ammo-objekter:
 	addAmmoSceneObjects();
+
+	createCameraTimeline(cc.pano)
+
 }
 
 
@@ -91,7 +97,7 @@ function loadScreenElements() {
 	// Setter opp container for GUI
 	const guiContainer = document.createElement('div');
 	guiContainer.className = 'gui-container';
-	guiContainer.classList.add("hide");
+	// guiContainer.classList.add("hide");
 	document.body.appendChild(guiContainer);
 
 	//Setter opp fps-counter:
@@ -144,11 +150,11 @@ function loadScreenElements() {
 		const startButtonContainer = document.getElementById("startButtonContainer");
 		const guiContainer = document.querySelector(".gui-container");
 		startButtonContainer.classList.toggle("hide");
-		guiContainer.classList.toggle("hide");
+		// guiContainer.classList.toggle("hide");
 		// Kill cameramovemnt
-		ri.cameraTimeline.kill();
+		// ri.cameraTimeline.kill();
 		// Load new movement
-		createCameraTimeline(cc.canon.c, cc.canon.d);
+		createCameraTimeline(cc.canon);
 	}
 
 }
@@ -173,7 +179,7 @@ function addAmmoSceneObjects() {
 	textureObjects[2] = textureLoader.load('textures/wood.jpg');
 
 	loadingManager.onStart = (url, itemsLoaded, itemsTotal) => {
-		console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+		// console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
 	};
 	loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
 		let element = ( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' )
@@ -183,10 +189,10 @@ function addAmmoSceneObjects() {
 		createDiv.innerHTML = element
 		loadingBox.appendChild(createDiv)
 		
-		console.log( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+		// console.log( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
 	};
 	loadingManager.onError = (url) => {
-		console.log( 'There was an error loading ' + url );
+		// console.log( 'There was an error loading ' + url );
 	};
 	
 	loadingManager.onLoad = () => {
@@ -201,8 +207,7 @@ function addAmmoSceneObjects() {
 		const loadingScreen =  document.querySelector(".loadingScreen")
 		loadingScreen.classList.toggle('hide')
 
-		createCameraTimeline(cc.pano.c, cc.pano.d)
-		console.log( 'Loading complete!');
+		// console.log( 'Loading complete!');
 		createScene(textureObjects);
 	}
 
