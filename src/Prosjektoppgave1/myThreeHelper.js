@@ -204,8 +204,8 @@ export function handleKeys(delta) {
 	// Gir impuls til kula i kanonen:
 	const activator = ri.scene.getObjectByName("marble");
 	const startMessage = document.querySelector(".start-message");
-	if (ri.currentlyPressedKeys['Space'] && ri.gameIsStarted) {
-		startMessage.classList.toggle("hide")
+	if (ri.currentlyPressedKeys['Space'] && ri.gameIsStarted && ri.activator === false) {
+		startMessage.classList.toggle("hide")	
 		createParticles({x: 18, y: 0.5, z: -12}, "canon_particles");
 		ri.activator = true
 		createCameraTimeline(cc.canon_fire)
