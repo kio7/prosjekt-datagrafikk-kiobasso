@@ -36,10 +36,10 @@ import { createThreeSun } from './threeSun.js';
 import { createAmmoPendulum} from './threeAmmoPendulum.js';
 import { createAmmoWall } from './threeAmmoWall.js';
 import { createAmmoFan } from './threeAmmoFan.js';
-import { createParticles } from './threeParticles.js';
 import { createFunnelBox } from './threeAmmoFunnelBox.js';
 import { createAmmoPortals as createAmmoPortal } from './threeAmmoPortals.js';
 import { createBox } from './threeAmmeBox.js';
+import { createVideo } from './threeVideo.js';
 
 //Globale variabler:
 //MERK: Denne brukes også i myThreeHelper:
@@ -53,12 +53,11 @@ export const ri = {
 		camt: undefined,
 		cont: undefined,
 	},
-	timelineToggle: false,
+	timelineToggle: true,
 	clock: undefined,
 	controls: undefined,
 	lilGui: undefined,
 	stats: undefined,
-	loadingManager: undefined,
 	activator: false,
 	numForceApplied: 0,
 	models: {},
@@ -185,14 +184,6 @@ function handleKeyDown(event) {
 
 function addAmmoSceneObjects() {
 	const loadingManager = new THREE.LoadingManager();
-	ri.loadingManager = loadingManager;
-	const textureLoader = new THREE.TextureLoader(loadingManager);
-	const textureObjects = [];
-	textureObjects[0] = textureLoader.load('textures/galaxy.jpeg');
-	textureObjects[1] = textureLoader.load('textures/glass.jpg');
-	textureObjects[2] = textureLoader.load('textures/wood.jpg');
-	textureObjects[3] = textureLoader.load('textures/milky_way_illustration.jpeg');
-
 	loadingManager.onStart = (url, itemsLoaded, itemsTotal) => {
 		// console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
 	};
@@ -232,6 +223,12 @@ function addAmmoSceneObjects() {
 		// button: {url: 'models/button.glb', position: {x:26, y:-18, z:30}, scale: {x:7.5, y:7.5, z:7.5}, rotation: {x:0, y:0, z:0}},
 	};
 
+	const textureLoader = new THREE.TextureLoader(loadingManager);
+	const textureObjects = [];
+	textureObjects[0] = textureLoader.load('textures/galaxy.jpeg');
+	textureObjects[1] = textureLoader.load('textures/glass.jpg');
+	textureObjects[2] = textureLoader.load('textures/wood.jpg');
+	textureObjects[3] = textureLoader.load('textures/milky_way_illustration.jpeg');
 
 	const gltfLoader = new GLTFLoader(loadingManager);
 	for (const model of Object.values(ri.models)) {
@@ -339,6 +336,13 @@ function animate(currentTime, myThreeScene, myAmmoPhysicsWorld) {
 		for (const mixer of ri.animationMixers) {
 			mixer.update(deltaTime);
 		}
+	}
+	
+	if (ri.camera.position.y > 500 && !ri.videoPlayeing) {
+		createVideo(800, {x: 0, y: -750, z: 0}, {x: -Math.PI/2, y: 0, z: Math.PI/2});
+		ri.videoPlayeing = true;
+		const video = document.getElementById('video');
+		video.play();
 	}
 
 	//Oppdaterer grafikken:

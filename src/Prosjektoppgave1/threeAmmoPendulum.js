@@ -48,7 +48,6 @@ export function createAmmoPendulum (
     let i = false;
     ballMesh.collisionResponse = (mesh1) => {
         if (mesh1.name === "brick" && i === false) {
-            console.log("Wrecking ball")
             createCameraTimeline(cc.wall)
             i = true
         }

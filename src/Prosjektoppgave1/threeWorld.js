@@ -7,7 +7,7 @@ export function createWorld(textureObject) {
         new THREE.MeshBasicMaterial({
             map: textureObject,
             side: THREE.BackSide,
-            transparent: true,
+            transparent: false,
             opacity: 0.7,
         })
         )

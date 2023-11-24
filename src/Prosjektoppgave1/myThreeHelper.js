@@ -35,8 +35,6 @@ export function createThreeScene() {
 	ri.camera.position.x = cc.init[0].x;
 	ri.camera.position.y = cc.init[0].y;
 	ri.camera.position.z = cc.init[0].z;
-	// console.log(cc.init[0].x, cc.init[0].y, cc.init[0].z);
-	// console.log(ri.camera.position);
 
 	// Set up camera timeline
 	// ri.cameraTimeline = gsap.timeline();
@@ -87,7 +85,6 @@ function cameraTimeline(cameraPositions) {
 			ease: "power1.inOut", // Easing function
 			onStart: () => {
 				// This function will be called when the animation starts for each position
-				// console.log(`Animating to camera position ${index + 1}`);
 			},
 			onUpdate: () => {
 				// ri.camera.lookAt(ri.controls.target);
@@ -95,7 +92,6 @@ function cameraTimeline(cameraPositions) {
 			},
 			onComplete: () => {
 				// This function will be called when the animation completes for each position
-				// console.log(`Animation to camera position ${index + 1} complete`);
 			},
 		});
 	});
@@ -120,7 +116,6 @@ function controlsTimeline(cameraPositions) {
 			ease: "power1.inOut", // Easing function
 			onStart: () => {
 				// This function will be called when the animation starts for each position
-				// console.log(`Animating to camera position ${index + 1}`);
 			},
 			onUpdate: () => {
 				ri.camera.lookAt(ri.controls.target);
@@ -128,7 +123,6 @@ function controlsTimeline(cameraPositions) {
 			},
 			onComplete: () => {
 				// This function will be called when the animation completes for each position
-				// console.log(`Animation to camera position ${index + 1} complete`);
 			},
 		});
 	});
@@ -219,7 +213,6 @@ export function handleKeys(delta) {
 			ri.cameraTimeline.camt.kill();
 			ri.cameraTimeline.cont.kill();
 		};
-		console.log(ri.timelineToggle);
 	}
 }
 

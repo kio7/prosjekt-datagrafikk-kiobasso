@@ -95,11 +95,10 @@ export function traverseModel(mesh, modelVertices=[], scaleFactor) {
 				tmpVertices[i + 1] = tmpVertices[i + 1] * mesh.scale.y;
 				tmpVertices[i + 2] = tmpVertices[i + 2] * mesh.scale.z;
 			}
-			// console.log('** ' + mesh.type + ' Geometry' + ' [' + String(mesh.scale.x) + ',' + String(mesh.scale.y) + ',' + String(mesh.scale.z) + ']');
-			// console.log('mesh.scale: ' + mesh.scale.x + ', ' + mesh.scale.y + ', ' + mesh.scale.z);
 
 			modelVertices.push(...tmpVertices);
 		} else {
+			// Fra Werner sin kode.
 			console.log('** ' + mesh.type + ' ****' + ' [' + String(mesh.scale.x) + ',' + String(mesh.scale.y) + ',' + String(mesh.scale.z) + ']');
 		}
 	}
