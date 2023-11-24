@@ -82,7 +82,8 @@ function cameraTimeline(cameraPositions) {
 			x: position.x,
 			y: position.y,
 			z: position.z,
-			ease: CustomEase.create("custom", "M0,0 C0.321,0.114 0.472,0.455 0.496,0.496 0.574,0.63 0.731,0.93 1,1"), // Easing function
+			// ease: CustomEase.create("custom", "M0,0 C0.321,0.114 0.472,0.455 0.496,0.496 0.574,0.63 0.731,0.93 1,1"), // Easing function
+			ease: "power1.inOut", // Easing function
 			onStart: () => {
 				// This function will be called when the animation starts for each position
 				// console.log(`Animating to camera position ${index + 1}`);
@@ -114,7 +115,8 @@ function controlsTimeline(cameraPositions) {
 			x: position.tx,
 			y: position.ty,
 			z: position.tz,
-			ease: CustomEase.create("custom", "M0,0 C0.453,0.131 0.418,0.818 1,0.986 "), // Easing function
+			// ease: CustomEase.create("custom", "M0,0 C0.453,0.131 0.418,0.818 1,0.986 "), // Easing function
+			ease: "power1.inOut", // Easing function
 			onStart: () => {
 				// This function will be called when the animation starts for each position
 				// console.log(`Animating to camera position ${index + 1}`);
@@ -278,6 +280,6 @@ export function printCameraPosition() {
     const cameraPosition = ri.camera.position;
     const coordinatesText = 
 		`Camera Position: x: ${cameraPosition.x.toFixed(2)}, y: ${cameraPosition.y.toFixed(2)}, z: ${cameraPosition.z.toFixed(2)}` +
-		` | Control Target: x: ${ri.controls.target.x.toFixed(2)}, y: ${ri.controls.target.y.toFixed(2)}, z: ${ri.controls.target.z.toFixed(2)}`;
+		` | Control Target: tx: ${ri.controls.target.x.toFixed(2)}, ty: ${ri.controls.target.y.toFixed(2)}, tz: ${ri.controls.target.z.toFixed(2)}`;
     document.getElementById('coordinatesText').textContent = coordinatesText;
 }

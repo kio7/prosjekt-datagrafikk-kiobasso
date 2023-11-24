@@ -40,7 +40,7 @@ export function createAmmoFunnel(
 
     
     let shape = generateTriangleShape(funnelMesh, false);
-    let rigidBody = createAmmoRigidBody(shape, funnelMesh, 0.1, 0.2, position, mass);
+    let rigidBody = createAmmoRigidBody(shape, funnelMesh, 0.1, 0.9, position, mass);
     funnelMesh.userData.physicsBody = rigidBody;
     phy.ammoPhysicsWorld.addRigidBody(
         rigidBody,

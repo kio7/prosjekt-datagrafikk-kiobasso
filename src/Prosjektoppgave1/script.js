@@ -280,7 +280,7 @@ function createScene(textureObjects) {
 	createAmmoXZPlane(10, 10, {x:0, y:0, z:0}, textureObjects[1], 0x96f1ff);
 	
 	// Funnel
-	createAmmoFunnel(0, 0x00F3F3, {x:4, y:7.3, z:0}, 3.2, 0.4, 2.1, textureObjects[1]);
+	createAmmoFunnel(0, 0x00F3F3, {x:4, y:7.3, z:0}, 2.9, 0.4, 2.5, textureObjects[1]);
 	
 	// Rails
 	createRails({x:-4, y:0.2, z:15}, Math.PI/2);

@@ -165,6 +165,30 @@ function checkCollisions(deltaTime) {
 							if (typeof threeMesh1.collisionResponse === 'function')
 								threeMesh1.collisionResponse(threeMesh0);
 						}
+
+						// WreckingBall treffer vegg
+						if (
+						(threeMesh0.name === 'WreckingBall' && threeMesh1.name === 'brick') ||
+						(threeMesh1.name === 'WreckingBall' && threeMesh0.name === 'brick')
+						) {
+							if (typeof threeMesh0.collisionResponse === 'function')
+								threeMesh0.collisionResponse(threeMesh1);
+							if (typeof threeMesh1.collisionResponse === 'function')
+								threeMesh1.collisionResponse(threeMesh0);
+						}
+
+						// Brick treffer portal
+						if (
+						(threeMesh0.name === 'brick' && threeMesh1.name === 'portal') ||
+						(threeMesh1.name === 'brick' && threeMesh0.name === 'portal')
+						) {
+
+							if (typeof threeMesh0.collisionResponse === 'function')
+								threeMesh0.collisionResponse(threeMesh1);
+							if (typeof threeMesh1.collisionResponse === 'function')
+								threeMesh1.collisionResponse(threeMesh0);
+						}
+	
 					}
 				}
 			}

@@ -61,6 +61,7 @@ export function createAmmoWall(mass, size, num, position) {
             
             let toggle = false
             mesh.collisionResponse = (mesh1) => {
+                
                 if (mesh1.name === "portal" && toggle === false) {
                     // Particles first portal
                     createParticles({x: mesh.position.x, y: mesh.position.y + 0.5, z: mesh.position.z});
