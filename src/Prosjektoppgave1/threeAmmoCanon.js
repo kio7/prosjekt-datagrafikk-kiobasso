@@ -18,7 +18,7 @@ export function createAmmoCanon(position = {x:0, y:0, z:0}, rotateY = Math.PI/4)
     createAmmoCanonMesh(canonGroupMesh, compoundShape ,segments)
     
     canonGroupMesh.rotateY(rotateY);
-    canonGroupMesh.rotateZ(Math.PI/6);
+    canonGroupMesh.rotateZ(Math.PI/8);
 
     canonGroupMesh.name = 'canon';
 

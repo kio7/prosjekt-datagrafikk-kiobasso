@@ -165,6 +165,7 @@ function loadScreenElements() {
 		startButtonContainer.classList.toggle("hide");
 		guiContainer.classList.toggle("hide");
 		startMessage.classList.toggle("hide")
+		ri.gameIsStarted = true;
 		startButton.remove()
 		// Load new movement
 		createCameraTimeline(cc.canon);
@@ -280,7 +281,7 @@ function createScene(textureObjects) {
 	createAmmoXZPlane(10, 10, {x:0, y:0, z:0}, textureObjects[1], 0x96f1ff);
 	
 	// Funnel
-	createAmmoFunnel(0, 0x00F3F3, {x:4, y:7.3, z:0}, 2.9, 0.4, 2.5, textureObjects[1]);
+	createAmmoFunnel(0, 0x00F3F3, {x:4, y:7.6, z:0}, 2.9, 0.4, 2.5, textureObjects[1]);
 	
 	// Rails
 	createRails({x:-4, y:0.2, z:15}, Math.PI/2);
@@ -324,9 +325,9 @@ function animate(currentTime, myThreeScene, myAmmoPhysicsWorld) {
 	ri.stats.begin();
 	
 	// Dersom sann, kula sendes ut fra kanon:
-	if (ri.activator == true && ri.numForceApplied < 12) {
+	if (ri.activator == true && ri.numForceApplied < 1) {
 		const activator = ri.scene.getObjectByName("marble");
-		activator.userData.physicsBody.applyCentralImpulse(new Ammo.btVector3(-1.5, 2.1, 1.5));
+		activator.userData.physicsBody.applyCentralImpulse(new Ammo.btVector3(-10, 34, 10));
 		ri.numForceApplied += 1;
 	}
 	// Sjekker om bricks skal flyttes:
@@ -367,6 +368,19 @@ function checkPositions() {
             object.material.needsUpdate = true;
             object.time += 1;
             if (object.time > 100) {
+                ri.scene.remove(object);
+            }
+        }
+
+
+		if (object.name == "canon_particles") {
+            object.material.opacity -= 0.02;
+			object.position.x -= 0.04;
+            object.position.y += 0.08;
+			object.position.z += 0.04;
+            object.material.needsUpdate = true;
+            object.time += 1;
+            if (object.time > 30) {
                 ri.scene.remove(object);
             }
         }

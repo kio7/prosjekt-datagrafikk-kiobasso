@@ -207,18 +207,18 @@ export function moveRigidBody(movableMesh, direction) {
 	motionState.setWorldTransform(transform);
 }
 
-export function applyImpulse(rigidBody, force=IMPULSE_FORCE, direction = {x:0, y:1, z:0}) {
-	if (!rigidBody)
-		return;
-	rigidBody.activate(true);
-	let impulseVector = new Ammo.btVector3(direction.x * force , direction.y * force , direction.z * force );
-	rigidBody.applyCentralImpulse(impulseVector);
-}
+// export function applyImpulse(rigidBody, force=IMPULSE_FORCE, direction = {x:0, y:1, z:0}) {
+// 	if (!rigidBody)
+// 		return;
+// 	rigidBody.activate(true);
+// 	let impulseVector = new Ammo.btVector3(direction.x * force , direction.y * force , direction.z * force );
+// 	rigidBody.applyCentralImpulse(impulseVector);
+// }
 
-export function applyForce(rigidBody, force=IMPULSE_FORCE, direction = {x:0, y:1, z:0}) {
-	if (!rigidBody)
-		return;
-	rigidBody.activate(true);
-	let forceVector = new Ammo.btVector3(direction.x * force , direction.y * force , direction.z * force );
-	rigidBody.applyCentralForce(forceVector);
-}
+// export function applyForce(rigidBody, force=IMPULSE_FORCE, direction = {x:0, y:1, z:0}) {
+// 	if (!rigidBody)
+// 		return;
+// 	rigidBody.activate(true);
+// 	let forceVector = new Ammo.btVector3(direction.x * force , direction.y * force , direction.z * force );
+// 	rigidBody.applyCentralForce(forceVector);
+// }
