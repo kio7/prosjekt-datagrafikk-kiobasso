@@ -59,32 +59,32 @@ export function createFunnelBox(
     addToCompound(compoundShape, Right1Mesh, shape);
 
     // Middle boxes
-    let Left2Geometry = new THREE.BoxGeometry(width, 0.5, depth*0.25, 1, 1);
+    let Left2Geometry = new THREE.BoxGeometry(width*1.05, 0.5, depth*0.25, 1, 1);
     let Left2Mesh = new THREE.Mesh(Left2Geometry, material);
     Left2Mesh.renderOrder = 1;
     Left2Mesh.receiveShadow = true;
     Left2Mesh.position.x = 5.75;
-    Left2Mesh.position.y = 0.43;
-    Left2Mesh.position.z = -6.4;
+    Left2Mesh.position.y = 0.32;
+    Left2Mesh.position.z = -6.17;
     Left2Mesh.rotation.y = Math.PI/2;
     Left2Mesh.rotation.z = Math.PI/7;
 
     funnelBoxGroupMesh.add(Left2Mesh);
-    shape = new Ammo.btBoxShape(new Ammo.btVector3(width*0.5, 0.5, depth*0.125));
+    shape = new Ammo.btBoxShape(new Ammo.btVector3(width/2*1.05, 0.5, depth*0.125));
     addToCompound(compoundShape, Left2Mesh, shape);
 
-    let Right2Geometry = new THREE.BoxGeometry(width, 0.5, depth*0.25, 1, 1);
+    let Right2Geometry = new THREE.BoxGeometry(width*1.05, 0.5, depth*0.25, 1, 1);
     let Right2Mesh = new THREE.Mesh(Right2Geometry, material);
     Right2Mesh.renderOrder = 1;
     Right2Mesh.receiveShadow = true;
     Right2Mesh.position.x = 5.75;
-    Right2Mesh.position.y = 0.43;
-    Right2Mesh.position.z = 6.4;
+    Right2Mesh.position.y = 0.32;
+    Right2Mesh.position.z = 6.17;
     Right2Mesh.rotation.y = Math.PI/2;
     Right2Mesh.rotation.z = -Math.PI/7;
 
     funnelBoxGroupMesh.add(Right2Mesh);
-    shape = new Ammo.btBoxShape(new Ammo.btVector3(width*0.5, 0.5, depth*0.125));
+    shape = new Ammo.btBoxShape(new Ammo.btVector3(width/2*1.05, 0.5, depth*0.125));
     addToCompound(compoundShape, Right2Mesh, shape);
 
     // Far box/wall
