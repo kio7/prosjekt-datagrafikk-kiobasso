@@ -28,8 +28,8 @@ export function createAmmoPendulum (
     metalness = 0.5
 ) {
     // Ball
-    const ballPosition = {x: position.x -12, y: position.y - 12.9, z: position.z}
-    const ballRadius = 1.5;
+    const ballPosition = {x: position.x - 19, y: position.y - 29, z: position.z}
+    const ballRadius = 3.4;
 
     let ballMesh = new THREE.Mesh(
         new THREE.SphereGeometry(ballRadius, 32, 32),
@@ -55,7 +55,7 @@ export function createAmmoPendulum (
     }
 
 
-        addMeshToScene(ballMesh);
+    addMeshToScene(ballMesh);
     
     let sphereShape = new Ammo.btSphereShape(ballRadius);
     let sphereRigidBody = createAmmoRigidBody(sphereShape, ballMesh, 0.7, 0.1, ballPosition, mass);
@@ -103,7 +103,7 @@ export function createAmmoPendulum (
     addMeshToScene(line);
 
     const hingePivotA = new Ammo.btVector3(0, 0, 0);
-    const hingePivotB = new Ammo.btVector3(16, 4, 0);
+    const hingePivotB = new Ammo.btVector3(29.5, 9.0, 0);
     const hingeAxis = new Ammo.btVector3(0, 0, 1);
     const hingeConstraint = new Ammo.btHingeConstraint(anchorRigidBody, sphereRigidBody, hingePivotA, hingePivotB, hingeAxis, hingeAxis, true);
     phy.ammoPhysicsWorld.addConstraint(hingeConstraint);

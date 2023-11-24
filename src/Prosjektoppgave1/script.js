@@ -53,7 +53,7 @@ export const ri = {
 		camt: undefined,
 		cont: undefined,
 	},
-	timelineToggle: true,
+	timelineToggle: false,
 	clock: undefined,
 	controls: undefined,
 	lilGui: undefined,
@@ -227,7 +227,7 @@ function addAmmoSceneObjects() {
 
 	ri.models = {
 		fan: {url: 'models/rgb_fan.glb', position: {x:10, y:-8, z:30}, scale: {x:20, y:20, z:20}, rotation: {x:0, y:0, z:Math.PI/2}},
-		spaceBunny: {url: 'models/space_bunny.glb', position: {x:3.85, y:23.9, z:29.2}, scale: {x:2, y:2, z:2}, rotation: {x:0, y:-Math.PI/1.3, z:0}},
+		spaceBunny: {url: 'models/space_bunny.glb', position: {x:7.85, y:40.45, z:29.2}, scale: {x:2, y:2, z:2}, rotation: {x:0, y:-Math.PI/1.3, z:0}},
 		// button: {url: 'models/button.glb', position: {x:26, y:-18, z:30}, scale: {x:7.5, y:7.5, z:7.5}, rotation: {x:0, y:0, z:0}},
 	};
 
@@ -292,7 +292,7 @@ function createScene(textureObjects) {
 	createAmmoXZPlane(0.5, 2.0, {x:0.25, y:0.5, z:30}, textureObjects[1], 0x00ff00, {x: 0, y:0, z:0}, 0.0); // Stopping block
 
 	// Pendulum
-	createAmmoPendulum(5, 0xFEFEFE, {x:4, y:23.5, z:30}, 0.5, 0.5);
+	createAmmoPendulum(5, 0xFEFEFE, {x:8, y:40, z:30}, 0.5, 0.5);
 	
 	// Wall/Bricks
 	createAmmoWall(0.3, 2.75, 8, {x:8, y:5.5, z:31});
