@@ -4,7 +4,7 @@ import * as THREE from 'three';
 import { addMeshToScene } from './myThreeHelper';
 
 // Step 4: Define the firework explosion effect
-export function createParticles(position) {
+export function createParticles(position, name="particles") {
     const material = new THREE.PointsMaterial({
         size: 0.15,
         vertexColors: true,
@@ -30,7 +30,7 @@ export function createParticles(position) {
     geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
     geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
     const mesh = new THREE.Points(geometry, material);
-    mesh.name = "particles";
+    mesh.name = name;
     mesh.position.set(position.x, position.y, position.z);
     mesh.time = 0;
     addMeshToScene(mesh);
