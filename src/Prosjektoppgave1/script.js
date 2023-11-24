@@ -1,6 +1,5 @@
 import './style.css';
 import * as THREE from "three";
-import Stats from 'stats.js';
 
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import * as SkeletonUtils from 'three/examples/jsm/utils/SkeletonUtils.js';
@@ -15,6 +14,8 @@ import {
 } from "./myThreeHelper.js";
 
 import { cameraCoordinates as cc} from './cameraCoord.js';
+
+import { loadScreenElements } from './screenElements.js';
 
 import {
 	phy,
@@ -62,7 +63,22 @@ export const ri = {
 	numForceApplied: 0,
 	models: {},
 	animationMixers: [],
+	soundOn: true,
 };
+
+export const colors = {
+	red: 0xFF0000,
+	blue: 0x0000FF,
+	green: 0x00FF00,
+	yellow: 0xFFFF00,
+	purple: 0x800080,
+	orange: 0xFFA500,
+	pink: 0xFFC0CB,
+	brown: 0xA52A2A,
+	cyan: 0x00FFFF,
+	magenta: 0xFF00FF,
+	silver: 0xC0C0C0,
+  };
 
 export const XZPLANE_SIDELENGTH = 500;
 
@@ -93,83 +109,6 @@ export function main() {
 
 	createCameraTimeline(cc.pano)
 
-}
-
-
-function loadScreenElements() {
-	// Setter opp container for GUI
-	const guiContainer = document.createElement('div');
-	guiContainer.className = 'gui-container';
-	guiContainer.classList.add("hide");
-	document.body.appendChild(guiContainer);
-
-	//Setter opp fps-counter:
-    ri.stats = new Stats();
-	ri.stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
-	const statsDOM = ri.stats.dom;
-	statsDOM.style.top = "";
-	statsDOM.style.bottom = "0px";
-
-	// Legger fpscounter til i gui-container:
-	guiContainer.appendChild(ri.stats.dom);
-
-	// Create a div element to display the coordinates on the canvas
-    const coordinatesDiv = document.createElement('div');
-	coordinatesDiv.id = 'coordinatesText';
-	coordinatesDiv.className = 'coordinatesText';
-    guiContainer.appendChild(coordinatesDiv);
-
-	// Create settingsbutton and add to gui-container:
-	const settingsButton = document.createElement("button");
-	settingsButton.className = "settings";
-	settingsButton.id = "settingsTray";
-	settingsButton.innerHTML = "SETTINGS";
-	guiContainer.appendChild(settingsButton);
-	let settingsButtonEvent = document.getElementById("settingsTray");	
-	settingsButtonEvent.addEventListener("click", animateButton);
-
-	// Toggles settings tray:
-	function animateButton() {
-		const animatedDiv = document.querySelector(".lil-gui");
-		animatedDiv.classList.toggle("open");		
-	}
-
-	// Create playerMessage
-	const startMessage = document.createElement("div");
-	startMessage.className = "start-message";
-	startMessage.innerHTML = "PRESS SPACE TO BEGIN"
-	startMessage.classList.toggle("hide");
-	document.body.appendChild(startMessage);
-
-	// Create startbutton and startbutton container:
-	const startButtonContainer = document.createElement("div");
-	startButtonContainer.className = "startButtonContainer";
-	startButtonContainer.id = "startButtonContainer";
-	document.body.appendChild(startButtonContainer);
-
-	const startButton = document.createElement("button");
-	startButton.className = "startButton";
-	startButton.id = "startButton";
-	startButton.innerHTML = "START!";
-	startButtonContainer.appendChild(startButton);
-
-	let startButtonElement = document.getElementById("startButton");
-	startButtonElement.addEventListener("click", startButtonEvent);
-
-
-	function startButtonEvent() {
-		const startButtonContainer = document.getElementById("startButtonContainer");
-		const startButton = document.querySelector(".startButton")
-		const guiContainer = document.querySelector(".gui-container");
-		startButtonContainer.classList.toggle("hide");
-		guiContainer.classList.toggle("hide");
-		startMessage.classList.toggle("hide")
-		ri.gameIsStarted = true;
-		startButton.remove()
-		// Load new movement
-		createCameraTimeline(cc.canon);
-	}
-	
 }
 
 
@@ -267,46 +206,46 @@ function createScene(textureObjects) {
 	createWorld(textureObjects[0]);
 	
 	// Canon
-	createAmmoCanon({x:18, y:0, z:-12});
-	createAmmoMarble(0.2, 2, 0xF9F9F9, {x:18, y:0.2, z:-12}, 0.5, 0.5, "marble"); // Canonball
-	createAmmoXZPlane(5, 5, {x:18, y:0, z:-12}, textureObjects[1], 0x96f1ff);
+	createAmmoCanon({x:18, y:0, z:-12}, Math.PI/4, Math.PI/8, colors.cyan);
+	createAmmoMarble(0.2, 2, colors.red, {x:18, y:0.2, z:-12}, 0.0, 0.0, "marble"); // Canonball
+	createAmmoXZPlane(5, 5, {x:18, y:0, z:-12}, textureObjects[1], colors.red);
 
 	// Seesaw
-	createAmmoSeeSaw(5, {x:0, y:0, z:0});
-	createBucket({x:4, y:5, z:0});
-	createCounterWeight({x:-4, y:5, z:0});
-	createAmmoXZPlane(10, 10, {x:0, y:0, z:0}, textureObjects[1], 0x96f1ff);
+	createAmmoSeeSaw(5, {x:0, y:0, z:0}, colors.yellow, colors.magenta);
+	createBucket({x:4, y:5, z:0}, 0.0, 0.0, colors.red);
+	createCounterWeight({x:-4, y:5, z:0}, 0.0, 0.0, colors.green);
+	createAmmoXZPlane(10, 10, {x:0, y:0, z:0}, textureObjects[1], colors.orange);
 	
 	// Funnel
-	createAmmoFunnel(0, 0x00F3F3, {x:4, y:7.6, z:0}, 2.9, 0.4, 2.5, textureObjects[1]);
+	createAmmoFunnel(0, colors.orange, {x:4, y:7.6, z:0}, 2.9, 0.4, 2.5, textureObjects[1]);
 	
 	// Rails
-	createRails({x:-4, y:0.2, z:15}, Math.PI/2);
-	createAmmoMarble(0.58, 3.0, 0xFEFEFE, {x:-5, y:6, z:-1}, 0.1, 0.9, "railMarble"); // Rolling ball
+	createRails({x:-4, y:0.2, z:15}, Math.PI/2, colors.silver);
+	createAmmoMarble(0.58, 3.0, colors.cyan, {x:-5, y:6, z:-1}, 0.0, 0.0, "railMarble"); // Rolling ball
 	
 	// Dominos
 	createAmmoDomino({x:-3, y:0, z:16}, 0.5, 7, textureObjects[2]);
-	createAmmoXZPlane(15, 25, {x:-3, y:0, z:25}, textureObjects[1], 0x96f1ff, {x: 0, y:0, z:0}, 5.0);
-	createAmmoXZPlane(0.5, 2.0, {x:0.25, y:0.5, z:30}, textureObjects[1], 0x00ff00, {x: 0, y:0, z:0}, 0.0); // Stopping block
+	createAmmoXZPlane(15, 25, {x:-3, y:0, z:25}, textureObjects[1], colors.purple, {x: 0, y:0, z:0}, 5.0);
+	createAmmoXZPlane(0.5, 2.0, {x:0.25, y:0.5, z:30}, textureObjects[1], colors.yellow, {x: 0, y:0, z:0}, 0.0); // Stopping block
 
 	// Pendulum
-	createAmmoPendulum(5, 0xFEFEFE, {x:8, y:40, z:30}, 0.5, 0.5);
+	createAmmoPendulum(5, colors.yellow, {x:8, y:40, z:30}, 0.0, 0.0);
 	
 	// Wall/Bricks
 	createAmmoWall(0.3, 2.75, 8, {x:8, y:5.5, z:31});
-	createAmmoXZPlane(5, 20, {x:8, y:5.5, z:30}, textureObjects[1], 0x96f1ff, {x: 0, y:0, z:0}, 0.1);
+	createAmmoXZPlane(5, 20, {x:8, y:5.5, z:30}, textureObjects[1], colors.green, {x: 0, y:0, z:0}, 0.1);
 	
 	// Fan
 	createAmmoFan({x:8, y:-7, z:30}, {x:0, y:0, z:Math.PI/2}, {x:2, y:2, z:2}, textureObjects[1]);
 
 	// FunnelBox
-	createFunnelBox(10, 10, textureObjects[1], 0x96f1ff, {x:20, y:-7, z:30}, {x:0, y:0, z:0});
+	createFunnelBox(10, 10, textureObjects[1], colors.cyan, {x:20, y:-7, z:30}, {x:0, y:0, z:0});
 
 	// Portals
 	createAmmoPortal(0xF3F3F3, {x:26, y:-18, z:30}, 5, textureObjects[3]);
 	createAmmoPortal(0xF3F3F3, {x:75, y:25, z:-70}, 5, textureObjects[3]);
 
-	createBox(5, {x: 75, y: 17, z: -70}, 0x00FF00, textureObjects[1]);
+	createBox(5, {x: 75, y: 17, z: -70}, colors.orange, textureObjects[1]);
 
 
 	animate(0);
@@ -338,10 +277,11 @@ function animate(currentTime, myThreeScene, myAmmoPhysicsWorld) {
 		}
 	}
 	
-	if (ri.camera.position.y > 500 && !ri.videoPlayeing) {
-		createVideo(800, {x: 0, y: -750, z: 0}, {x: -Math.PI/2, y: 0, z: Math.PI/2});
+	if (ri.camera.position.y > 350 && !ri.videoPlayeing) {
+		createVideo(670, {x: 0, y: -750, z: 0}, {x: -Math.PI/2, y: 0, z: Math.PI/2});
 		ri.videoPlayeing = true;
 		const video = document.getElementById('video');
+		ri.sound.stop()
 		video.play();
 	}
 

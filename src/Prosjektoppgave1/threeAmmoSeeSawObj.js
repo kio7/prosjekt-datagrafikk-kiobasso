@@ -11,18 +11,22 @@ import {
     COLLISION_GROUP_FUNNEL
     } from "./myAmmoHelper.js";
 
-export function createBucket(position = {x:4 ,y:2, z:0}) {
+export function createBucket(position = {x:4 ,y:2, z:0}, roughness = 0.5, metalness = 0.5, color) {
 
     const segments = 50;
     const radius = 0.5;
     const height = 1;
     const bottomThickness = 0.1;
-    const bucketColor = 0xF3F3F3;
+    const bucketColor = color;
 
     // THREE
     let bucketGroupMesh = new THREE.Group();
     
-    let bucketMaterial = new THREE.MeshStandardMaterial({color: bucketColor});
+    let bucketMaterial = new THREE.MeshStandardMaterial({
+        color: bucketColor,
+        roughness: roughness,
+        metalness: metalness
+    });
     let bottomGeometry = new THREE.CylinderGeometry(radius, radius, bottomThickness, segments);
     let bottomMesh = new THREE.Mesh( bottomGeometry, bucketMaterial );
     bottomMesh.receiveShadow = true;
@@ -43,7 +47,11 @@ export function createBucket(position = {x:4 ,y:2, z:0}) {
         // THREE
         let sideMesh = new THREE.Mesh(
             new THREE.BoxGeometry((2 * (Math.PI * radius) / segments) * 1.1, 1, 0.1, 1, 1),
-            new THREE.MeshStandardMaterial({color: bucketColor})
+            new THREE.MeshStandardMaterial({
+                color: bucketColor,
+                roughness: roughness,
+                metalness: metalness
+            })
         );
         sideMesh.position.set(x, radius, z);
         sideMesh.rotation.y = Math.PI/2 - angle;
@@ -79,14 +87,18 @@ export function createBucket(position = {x:4 ,y:2, z:0}) {
 }
 
 
-export function createCounterWeight(position = {x:-4 ,y:2, z:0}) {
+export function createCounterWeight(position = {x:-4 ,y:2, z:0}, roughness = 0.5, metalness = 0.5, color) {
 
 
     // THREE
     // CounterWeight
     let counterWeightMesh = new THREE.Mesh(
         new THREE.BoxGeometry(1, 1, 1, 1, 1),
-        new THREE.MeshStandardMaterial({color: 0xF3F3F3})
+        new THREE.MeshStandardMaterial({
+            color: color,
+            roughness: roughness,
+            metalness: metalness
+        })
     );
     counterWeightMesh.name = 'counterWeight';
     counterWeightMesh.castShadow = true;

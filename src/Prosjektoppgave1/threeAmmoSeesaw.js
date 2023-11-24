@@ -11,9 +11,14 @@ import {
 } from "./myAmmoHelper.js";
 
 
-export function createAmmoSeeSaw ( sessawHeight = 4, position = {x:0, y:0, z:0}) {
-    const rigidBodyPlank = createPlank(sessawHeight, position);
-    const rigidBodyAnchor = createAnchor(sessawHeight, position);
+export function createAmmoSeeSaw ( 
+    sessawHeight = 4, 
+    position = {x:0, y:0, z:0},
+    plankColor,
+    standColor
+    ) {
+    const rigidBodyPlank = createPlank(sessawHeight, position, plankColor);
+    const rigidBodyAnchor = createAnchor(sessawHeight, position, standColor);
 
     const anchorPivot = new Ammo.btVector3(0, 0.5 * sessawHeight, 0);
     const anchorAxis = new Ammo.btVector3(0, 0, 1);
@@ -41,9 +46,8 @@ export function createAmmoSeeSaw ( sessawHeight = 4, position = {x:0, y:0, z:0})
     phy.ammoPhysicsWorld.addConstraint(hingeConstraint, false)
 }
 
-function createPlank(sessawHeight, position) {
+function createPlank(sessawHeight, position, color) {
     const mass = 10;
-    const color = 0x00FF00;
     const width=10, height=0.2, depth=1;
     const plankPosition = {x:position.x, y: position.y + sessawHeight, z: position.z};
     //THREE
@@ -85,7 +89,7 @@ function createPlank(sessawHeight, position) {
     
 };
 
-function createAnchor(sessawHeight, position) {
+function createAnchor(sessawHeight, position, color) {
     const radius = 0.2;
     const anchorPosition = {x: position.x, y:position.y + (0.5 * sessawHeight), z: position.z};
     const mass = 0
@@ -93,7 +97,7 @@ function createAnchor(sessawHeight, position) {
     // THREE
     const mesh = new THREE.Mesh(
         new THREE.CylinderGeometry(radius, radius, 1 * sessawHeight, 32, 32),
-        new THREE.MeshStandardMaterial({color: 0xFF0000})
+        new THREE.MeshStandardMaterial({color: color})
     );
     mesh.name = 'anchor';
     mesh.position.set(position.x, position.y, position.z);

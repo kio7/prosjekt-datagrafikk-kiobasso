@@ -40,20 +40,20 @@ export function createThreeScene() {
 	// ri.cameraTimeline = gsap.timeline();
 
 	// Audio
-	const listener = new THREE.AudioListener();
-	ri.camera.add( listener );
-	const sound = new THREE.Audio( listener );
-	const audioLoader = new THREE.AudioLoader();
-	audioLoader.load( './sounds/wandering.mp3', function( buffer ) {
-		sound.setBuffer( buffer );
-		sound.setLoop( true );
-		sound.setVolume( 0.5 );
-		sound.play()
+	ri.listener = new THREE.AudioListener();
+	ri.camera.add( ri.listener );
+	ri.sound = new THREE.Audio( ri.listener );
+	ri.audioLoader = new THREE.AudioLoader();
+	ri.audioLoader.load( './sounds/wandering.mp3', function( buffer ) {
+		ri.sound.setBuffer( buffer );
+		ri.sound.setLoop( true );
+		ri.sound.setVolume( 0.5 );
+		ri.sound.play()
 		});
 
 	const soundFolder = ri.lilGui.addFolder({title: 'Sound', open: false});
-	soundFolder.add(sound, 'play').name("Play");
-	soundFolder.add(sound, 'pause').name("Pause");
+	soundFolder.add(ri.sound, 'play').name("Play");
+	soundFolder.add(ri.sound, 'pause').name("Pause");
 
 	// Controls:
 	ri.controls = new OrbitControls(ri.camera, ri.renderer.domElement);
@@ -132,6 +132,7 @@ function controlsTimeline(cameraPositions) {
 }
 
 export function playAudioOnce(audioFile, setVolume=0.5, pitch=1) {
+	if (ri.soundOn === false) {return;}
 	const listener = new THREE.AudioListener();
 	ri.camera.add( listener );
 	const sound = new THREE.Audio( listener );
@@ -274,6 +275,6 @@ export function printCameraPosition() {
     const cameraPosition = ri.camera.position;
     const coordinatesText = 
 		`Camera Position: x: ${cameraPosition.x.toFixed(2)}, y: ${cameraPosition.y.toFixed(2)}, z: ${cameraPosition.z.toFixed(2)}` +
-		` | Control Target: tx: ${ri.controls.target.x.toFixed(2)}, ty: ${ri.controls.target.y.toFixed(2)}, tz: ${ri.controls.target.z.toFixed(2)}`;
+		`,  tx: ${ri.controls.target.x.toFixed(2)}, ty: ${ri.controls.target.y.toFixed(2)}, tz: ${ri.controls.target.z.toFixed(2)}`;
     document.getElementById('coordinatesText').textContent = coordinatesText;
 }
