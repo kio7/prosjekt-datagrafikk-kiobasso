@@ -32,6 +32,7 @@ footer, header, hgroup, menu, nav, section {
 }
 body {
 	line-height: 1;
+    overflow: hidden;
 }
 ol, ul {
 	list-style: none;
@@ -64,13 +65,6 @@ table {
 
 .lil-gui.open {
     right: 0;
-}
-
-.settings {
-    display: inline-block;
-    position: fixed;
-    top: 1rem;
-    left: 1rem;
 }
 
 .coordinatesText {
@@ -147,25 +141,8 @@ table {
     border: 1px solid #090554;
 }
 
-.startButtonContainer {
-    position: fixed;
-    top: 0;
-    left: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    /* border: 5px solid #090554; */
-}
-.startButtonContainer .hide {
-    opacity: 0;
-    pointer-events: none;
-}
 
 .startButton {
-    margin-top: 15rem;
     width: 10rem;
     height: 3rem;
     background: #090554;
@@ -174,6 +151,7 @@ table {
     font-family: Arial, Helvetica, sans-serif;
     border: 2px solid #00F300;
     border-radius: 5px;
+    margin-bottom: 1rem;
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.8);
     transition: background 0.5s ease-in-out;
 }
@@ -205,6 +183,18 @@ table {
     transition: opacity 1.5s ease-in-out;
 }
 
+.gui-container {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    /* flex-direction: column; */
+}
+.gui-container.hide {
+    display: none;
+}
+
 .settings {
     width: 5rem;
     height: 2rem;
@@ -212,6 +202,7 @@ table {
     color: #00F300;
     font-size: 0.8rem;
     font-family: Arial, Helvetica, sans-serif;
+    margin-bottom: 0.5rem;
     border: 2px solid #00F300;
     border-radius: 5px;
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.8);
@@ -228,13 +219,55 @@ table {
     border: 2px solid #00F300;
 }
 
-.gui-container {
-    display: block;
+
+.startButtonContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    /* border: 5px solid #090554; */
 }
 .gui-container.hide {
     display: none;
 }
 
+
+.startButtonContainer .hide {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.startButtonBorder {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    border: 2px solid #00F300;
+    border-radius: 10px;
+    background-color: #090554;
+}
+
+.checkbox {
+    width: 2rem;
+    height: 2rem;
+    margin-bottom: 1rem;
+    accent-color: #00F300;
+}
+
+.checkbox-label {
+    font-size: 1rem;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #00F300;
+}
+
+/* Konrad  */
 .progressbar-container {
     display: flex;
     flex-direction: row;

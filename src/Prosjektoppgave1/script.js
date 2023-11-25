@@ -1,4 +1,4 @@
-import './style.css';
+// import './style.css';
 import * as THREE from "three";
 
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -45,26 +45,28 @@ import { createVideo } from './threeVideo.js';
 //Globale variabler:
 //MERK: Denne brukes også i myThreeHelper:
 export const ri = {
-	currentlyPressedKeys: [],
-	gameIsStarted: false,
-	scene: undefined,
-	renderer: undefined,
+	activator: false,
+	animationMixers: [],
 	camera: undefined,
 	cameraTimeline: {
 		camt: undefined,
 		cont: undefined,
 	},
-	timelineToggle: true,
 	clock: undefined,
 	controls: undefined,
-	lilGui: undefined,
-	stats: undefined,
-	activator: false,
-	numForceApplied: 0,
+	currentlyPressedKeys: [],
+	gameIsStarted: false,
 	models: {},
-	animationMixers: [],
-	soundOn: true,
+	lilGui: undefined,
+	musicIsOn: true,
+	numForceApplied: 0,
 	progressBarCount: 0,
+	soundEffectsIsOn: true,
+	renderer: undefined,
+	scene: undefined,
+	stats: undefined,
+	speed: 1.0,
+	timelineToggle: true,
 };
 
 export const colors = {
@@ -255,7 +257,7 @@ function animate(currentTime, myThreeScene, myAmmoPhysicsWorld) {
 	window.requestAnimationFrame((currentTime) => {
 		animate(currentTime, myThreeScene, myAmmoPhysicsWorld);
 	});
-	let deltaTime = ri.clock.getDelta();
+	let deltaTime = ri.clock.getDelta() * ri.speed;
 
 	ri.stats.begin();
 	
@@ -267,6 +269,19 @@ function animate(currentTime, myThreeScene, myAmmoPhysicsWorld) {
 	}
 	// Sjekker om bricks skal flyttes:
 	checkPositions();
+
+	// Sjekker for true/false i ri for lyd:
+	if (!ri.musicIsOn) {
+		ri.sound.stop()
+		const videoSound = document.getElementById("video");
+		videoSound.muted = true;
+	} 
+	if (ri.musicIsOn && !ri.sound.isPlaying) {
+		ri.sound.play()
+		const videoSound = document.getElementById("video");
+		videoSound.muted = false;
+	}
+
 
 	// Oppdaterer animasjoner:
 	if (ri.animationMixers.length>0) {

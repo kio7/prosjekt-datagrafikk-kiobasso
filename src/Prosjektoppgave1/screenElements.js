@@ -47,10 +47,22 @@ export function loadScreenElements() {
 		animatedDiv.classList.toggle("open");		
 	}
 
+	// create resetbutton and add to gui-container:
+	const resetButton = document.createElement("button");
+	resetButton.className = "settings";
+	resetButton.id = "resetButton";
+	resetButton.innerHTML = "RESET";
+	// add onclick that loads an href to the page:
+	resetButton.onclick = function() {
+		window.location.href = "rg.html";
+	}
+	guiContainer.appendChild(resetButton);
+	
+
 	// Create playerMessage
 	const startMessage = document.createElement("div");
 	startMessage.className = "start-message";
-	startMessage.innerHTML = "PRESS SPACE TO BEGIN"
+	startMessage.innerHTML = "PRESS 'S' TO SHOOT!"
 	startMessage.classList.toggle("hide");
 	document.body.appendChild(startMessage);
 
@@ -60,11 +72,17 @@ export function loadScreenElements() {
 	startButtonContainer.id = "startButtonContainer";
 	document.body.appendChild(startButtonContainer);
 
+	// Create startbutton and startbutton container:
+	const startButtonBorder = document.createElement("div");
+	startButtonBorder.className = "startButtonBorder";
+	startButtonBorder.id = "startButtonBorder";
+	startButtonContainer.appendChild(startButtonBorder);
+
 	const startButton = document.createElement("button");
 	startButton.className = "startButton";
 	startButton.id = "startButton";
 	startButton.innerHTML = "START!";
-	startButtonContainer.appendChild(startButton);
+	startButtonBorder.appendChild(startButton);
 
 	let startButtonElement = document.getElementById("startButton");
 	startButtonElement.addEventListener("click", startButtonEvent);
@@ -83,45 +101,65 @@ export function loadScreenElements() {
     }
 
     // Create checkboxes for sound and camera movement:
+	const soundCheckboxLabel = document.createElement("label");
+	soundCheckboxLabel.htmlFor = "soundCheckbox";
+	soundCheckboxLabel.className = "checkbox-label";
+	soundCheckboxLabel.innerHTML = "Music";
+	startButtonBorder.appendChild(soundCheckboxLabel);
+
 	const soundCheckbox = document.createElement("input");
 	soundCheckbox.type = "checkbox";
 	soundCheckbox.id = "soundCheckbox";
 	soundCheckbox.checked = true;
-	soundCheckbox.className = "soundCheckbox";
-	startButtonContainer.appendChild(soundCheckbox);
+	soundCheckbox.className = "checkbox";
+	startButtonBorder.appendChild(soundCheckbox);
 	
-	const soundCheckboxLabel = document.createElement("label");
-	soundCheckboxLabel.htmlFor = "soundCheckbox";
-	soundCheckboxLabel.className = "soundCheckboxLabel";
-	soundCheckboxLabel.innerHTML = "Sound";
-	startButtonContainer.appendChild(soundCheckboxLabel);
 
     soundCheckbox.addEventListener("change", function() {
         const soundCheckbox = document.getElementById("soundCheckbox");
-        const videoSound = document.getElementById("video");
         if (soundCheckbox.checked === true) {
-            ri.sound.play()
-            ri.soundOn = true;
-            videoSound.muted = false;
+            ri.musicIsOn = true;
         } else {
-            ri.soundOn = false;
-            ri.sound.stop()
-            videoSound.muted = true;
+            ri.musicIsOn = false;
         }
         });
+
+	const soundEffectsCheckboxLabel = document.createElement("label");
+	soundEffectsCheckboxLabel.htmlFor = "soundEffectsCheckbox";
+	soundEffectsCheckboxLabel.className = "checkbox-label";
+	soundEffectsCheckboxLabel.innerHTML = "Effects";
+	startButtonBorder.appendChild(soundEffectsCheckboxLabel);
+
+	const soundEffectsCheckbox = document.createElement("input");
+	soundEffectsCheckbox.type = "checkbox";
+	soundEffectsCheckbox.id = "soundEffectsCheckbox";
+	soundEffectsCheckbox.checked = true;
+	soundEffectsCheckbox.className = "checkbox";
+	startButtonBorder.appendChild(soundEffectsCheckbox);
+	
+
+    soundEffectsCheckbox.addEventListener("change", function() {
+        const soundEffectsCheckbox = document.getElementById("soundEffectsCheckbox");
+        if (soundEffectsCheckbox.checked === true) {
+            ri.soundEffectsIsOn = true;
+        } else {
+            ri.soundEffectsIsOn = false;
+        }
+        });
+
+	const cameraMovementCheckboxLabel = document.createElement("label");
+	cameraMovementCheckboxLabel.htmlFor = "cameraMovementCheckbox";
+	cameraMovementCheckboxLabel.className = "checkbox-label";
+	cameraMovementCheckboxLabel.innerHTML = "AutoCamera";
+	startButtonBorder.appendChild(cameraMovementCheckboxLabel);
 
 	const cameraMovementCheckbox = document.createElement("input");
 	cameraMovementCheckbox.type = "checkbox";
 	cameraMovementCheckbox.id = "cameraMovementCheckbox";
 	cameraMovementCheckbox.checked = true;
-	cameraMovementCheckbox.className = "cameraMovementCheckbox";
-	startButtonContainer.appendChild(cameraMovementCheckbox);
+	cameraMovementCheckbox.className = "checkbox";
+	startButtonBorder.appendChild(cameraMovementCheckbox);
 
-	const cameraMovementCheckboxLabel = document.createElement("label");
-	cameraMovementCheckboxLabel.htmlFor = "cameraMovementCheckbox";
-	cameraMovementCheckboxLabel.className = "cameraMovementCheckboxLabel";
-	cameraMovementCheckboxLabel.innerHTML = "Camera movement";
-	startButtonContainer.appendChild(cameraMovementCheckboxLabel);
     
     cameraMovementCheckbox.addEventListener("change", function() {
         const cameraMovementCheckbox = document.getElementById("cameraMovementCheckbox");
