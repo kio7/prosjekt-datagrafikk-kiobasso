@@ -110,7 +110,7 @@ export function loadScreenElements() {
 	const soundCheckbox = document.createElement("input");
 	soundCheckbox.type = "checkbox";
 	soundCheckbox.id = "soundCheckbox";
-	soundCheckbox.checked = true;
+	soundCheckbox.checked = false;
 	soundCheckbox.className = "checkbox";
 	startButtonBorder.appendChild(soundCheckbox);
 	

@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { addMeshToScene } from './myThreeHelper.js';
+import { addMeshToScene, playAudioOnce } from './myThreeHelper.js';
 import { createAmmoRigidBody, phy } from './myAmmoHelper.js';
 
 import { COLLISION_GROUP_PORTAL, COLLISION_GROUP_WALL } from './myAmmoHelper.js';
@@ -30,12 +30,24 @@ export function createAmmoPortals(
 
 
     // Physical portal for collision detection
+    // Three
     const mass = 0;
     geometry = new THREE.CylinderGeometry(radius, radius, 0.1, 100);
     material = new THREE.MeshBasicMaterial({ color: 0x000000 });
     let physicalPortalMesh = new THREE.Mesh(geometry, material);
     physicalPortalMesh.visible = false;
     physicalPortalMesh.name = "physical_portal";
+    
+    let i = false;
+    physicalPortalMesh.collisionResponse = (mesh1) => {
+        if (mesh1.name === "brick" && !i) {
+            playAudioOnce('./sounds/distorted_laser.mp3', 0.5, 1);
+            i = true;
+
+        }
+    }
+
+    // Ammo
     let shape = new Ammo.btCylinderShape(new Ammo.btVector3(radius, 0.1, radius));
     let rigidBody = createAmmoRigidBody(shape, physicalPortalMesh, 0.0, 0.0, position, mass);
     physicalPortalMesh.userData.physicsBody = rigidBody;

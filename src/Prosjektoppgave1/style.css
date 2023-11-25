@@ -56,13 +56,15 @@ table {
     display: block;
 } */
 
+.lil-gui {
+    background-color: rgba(20, 20, 20, 0.4) !important;
+}
 .lil-gui.root {
     position: fixed;
-    bottom: 0;
+    /* bottom: 0; */
     right: -100%;
     transition: right 0.8s ease-in-out;
 }
-
 .lil-gui.open {
     right: 0;
 }
@@ -338,3 +340,4 @@ table {
     border-radius: 15px;
     transition: opacity 1.5s ease-in-out
 }
+

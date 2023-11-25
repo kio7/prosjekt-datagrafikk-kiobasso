@@ -58,7 +58,7 @@ export const ri = {
 	gameIsStarted: false,
 	models: {},
 	lilGui: undefined,
-	musicIsOn: true,
+	musicIsOn: false,
 	numForceApplied: 0,
 	progressBarCount: 0,
 	soundEffectsIsOn: true,
@@ -273,15 +273,14 @@ function animate(currentTime, myThreeScene, myAmmoPhysicsWorld) {
 	// Sjekker for true/false i ri for lyd:
 	if (!ri.musicIsOn) {
 		ri.sound.stop()
-		const videoSound = document.getElementById("video");
-		videoSound.muted = true;
+		// const videoSound = document.getElementById("video");
+		// videoSound.muted = true;
 	} 
 	if (ri.musicIsOn && !ri.sound.isPlaying) {
+		// const videoSound = document.getElementById("video");
+		// videoSound.muted = false;
 		ri.sound.play()
-		const videoSound = document.getElementById("video");
-		videoSound.muted = false;
 	}
-
 
 	// Oppdaterer animasjoner:
 	if (ri.animationMixers.length>0) {
