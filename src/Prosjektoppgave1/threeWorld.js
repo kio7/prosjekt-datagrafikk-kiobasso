@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import {addMeshToScene} from "./myThreeHelper.js";
 
+
 export function createWorld(textureObject) {
     const world = new THREE.Mesh(
         new THREE.SphereGeometry(1000, 64, 64),
@@ -10,7 +11,7 @@ export function createWorld(textureObject) {
             transparent: false,
             opacity: 0.7,
         })
-        )
+    )
     world.name = "world";
     addMeshToScene(world);
 }

@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { addMeshToScene } from './myThreeHelper';
-import { addToCompound, generateTriangleShape } from './triangleMeshHelpers';
+import { addToCompound } from './triangleMeshHelpers';
 import { createAmmoRigidBody, phy } from './myAmmoHelper';
 
 import { 

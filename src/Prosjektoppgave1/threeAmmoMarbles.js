@@ -5,10 +5,6 @@ import {createAmmoRigidBody, phy} from "./myAmmoHelper.js";
 import { createCameraTimeline } from "./myThreeHelper";
 import { cameraCoordinates as cc } from "./cameraCoord";
 
-
-
-
-
 import {
 	COLLISION_GROUP_PLANE, 
 	COLLISION_GROUP_SPHERE, 
@@ -20,7 +16,6 @@ import {
 	COLLISION_GROUP_CANON
 } from "./myAmmoHelper.js"
 
-export let sphereCount = 0;
 
 export function createAmmoMarble(
 	radius = 0.2, 
@@ -89,14 +84,11 @@ export function createAmmoMarble(
 		COLLISION_GROUP_DOMINO |
 		COLLISION_GROUP_FUNNEL |
 		COLLISION_GROUP_CANON |
-		COLLISION_GROUP_SEESAWOBJ
-		
-		);
+		COLLISION_GROUP_SEESAWOBJ	
+	);
 
 	addMeshToScene(mesh);
 	phy.rigidBodies.push(mesh);
 	rigidBody.threeMesh = mesh;
 	rigidBody.setActivationState(4); //DISABLE_DEACTIVATION
-
-	sphereCount++;
 }

@@ -92,16 +92,6 @@ function cameraTimeline(cameraPositions) {
 			z: position.z,
 			// ease: CustomEase.create("custom", "M0,0 C0.321,0.114 0.472,0.455 0.496,0.496 0.574,0.63 0.731,0.93 1,1"), // Easing function
 			ease: "power1.inOut", // Easing function
-			onStart: () => {
-				// This function will be called when the animation starts for each position
-			},
-			onUpdate: () => {
-				// ri.camera.lookAt(ri.controls.target);
-				// ri.controls.update();
-			},
-			onComplete: () => {
-				// This function will be called when the animation completes for each position
-			},
 		});
 	});
 
@@ -123,16 +113,10 @@ function controlsTimeline(cameraPositions) {
 			z: position.tz,
 			// ease: CustomEase.create("custom", "M0,0 C0.453,0.131 0.418,0.818 1,0.986 "), // Easing function
 			ease: "power1.inOut", // Easing function
-			onStart: () => {
-				// This function will be called when the animation starts for each position
-			},
 			onUpdate: () => {
 				ri.camera.lookAt(ri.controls.target);
 				ri.controls.update();
-			},
-			onComplete: () => {
-				// This function will be called when the animation completes for each position
-			},
+			}
 		});
 	});
 
@@ -206,7 +190,6 @@ export function handleKeys(delta) {
 	printCameraPosition();
 	
 	// Gir impuls til kula i kanonen:
-	const activator = ri.scene.getObjectByName("marble");
 	const startMessage = document.querySelector(".start-message");
 	if (ri.currentlyPressedKeys['KeyS'] && ri.gameIsStarted && ri.activator === false) {
 		startMessage.classList.toggle("hide")	
@@ -230,7 +213,6 @@ export function onWindowResize() {
 	ri.camera.aspect = window.innerWidth / window.innerHeight;
 	ri.camera.updateProjectionMatrix();
 	ri.renderer.setSize(window.innerWidth, window.innerHeight);
-	// ri.controls.handleResize();
 	renderScene();
 }
 

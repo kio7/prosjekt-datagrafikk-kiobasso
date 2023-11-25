@@ -18,7 +18,6 @@ import { cameraCoordinates as cc} from './cameraCoord.js';
 import { loadScreenElements } from './screenElements.js';
 
 import {
-	phy,
 	createAmmoWorld,
 	updatePhysics
 } from "./myAmmoHelper.js";
@@ -38,8 +37,8 @@ import { createAmmoPendulum} from './threeAmmoPendulum.js';
 import { createAmmoWall } from './threeAmmoWall.js';
 import { createAmmoFan } from './threeAmmoFan.js';
 import { createFunnelBox } from './threeAmmoFunnelBox.js';
-import { createAmmoPortals as createAmmoPortal } from './threeAmmoPortals.js';
-import { createBox } from './threeAmmeBox.js';
+import { createAmmoPortals } from './threeAmmoPortals.js';
+import { createBox } from './threeAmmoBox.js';
 import { createVideo } from './threeVideo.js';
 
 //Globale variabler:
@@ -126,9 +125,7 @@ function handleKeyDown(event) {
 
 function addAmmoSceneObjects() {
 	const loadingManager = new THREE.LoadingManager();
-	loadingManager.onStart = (url, itemsLoaded, itemsTotal) => {
-		// console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
-	};
+
 	loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
 		let element = ( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' )
 		const loadingBox = document.querySelector(".loadingBox")
@@ -136,11 +133,6 @@ function addAmmoSceneObjects() {
 		createDiv.className = "filnavn"
 		createDiv.innerHTML = element
 		loadingBox.appendChild(createDiv)
-		
-		// console.log( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
-	};
-	loadingManager.onError = (url) => {
-		// console.log( 'There was an error loading ' + url );
 	};
 	
 	loadingManager.onLoad = () => {
@@ -202,7 +194,7 @@ function createScene(textureObjects) {
 		}
 	});
 	
-	
+	// Sun and World
 	createThreeSun();
 	createWorld(textureObjects[0]);
 	
@@ -243,9 +235,10 @@ function createScene(textureObjects) {
 	createFunnelBox(10, 10, textureObjects[1], colors.cyan, {x:20, y:-7, z:30}, {x:0, y:0, z:0});
 
 	// Portals
-	createAmmoPortal(0xF3F3F3, {x:26, y:-18, z:30}, 5, textureObjects[3]);
-	createAmmoPortal(0xF3F3F3, {x:75, y:25, z:-70}, 5, textureObjects[3]);
+	createAmmoPortals(0xF3F3F3, {x:26, y:-18, z:30}, 5, textureObjects[3]);
+	createAmmoPortals(0xF3F3F3, {x:75, y:25, z:-70}, 5, textureObjects[3]);
 
+	// Box
 	createBox(5, {x: 75, y: 17, z: -70}, colors.orange, textureObjects[1]);
 
 

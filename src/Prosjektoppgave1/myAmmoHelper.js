@@ -195,30 +195,3 @@ function checkCollisions(deltaTime) {
 		}
 	}
 }
-
-
-
-export function moveRigidBody(movableMesh, direction) {
-	let transform = new Ammo.btTransform();
-	let motionState = movableMesh.userData.physicsBody.getMotionState();
-	motionState.getWorldTransform(transform);
-	let position = transform.getOrigin();
-	transform.setOrigin(new Ammo.btVector3(position.x() + direction.x, position.y() + direction.y, position.z() + direction.z));
-	motionState.setWorldTransform(transform);
-}
-
-// export function applyImpulse(rigidBody, force=IMPULSE_FORCE, direction = {x:0, y:1, z:0}) {
-// 	if (!rigidBody)
-// 		return;
-// 	rigidBody.activate(true);
-// 	let impulseVector = new Ammo.btVector3(direction.x * force , direction.y * force , direction.z * force );
-// 	rigidBody.applyCentralImpulse(impulseVector);
-// }
-
-// export function applyForce(rigidBody, force=IMPULSE_FORCE, direction = {x:0, y:1, z:0}) {
-// 	if (!rigidBody)
-// 		return;
-// 	rigidBody.activate(true);
-// 	let forceVector = new Ammo.btVector3(direction.x * force , direction.y * force , direction.z * force );
-// 	rigidBody.applyCentralForce(forceVector);
-// }
