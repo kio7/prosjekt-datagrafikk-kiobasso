@@ -4,7 +4,7 @@ Den har blitt endret til å passe vårt prosjekt.
 */
 
 import * as THREE from 'three';
-import { addMeshToScene } from './myThreeHelper';
+import { addMeshToScene, playAudioOnce } from './myThreeHelper';
 import { createAmmoRigidBody, phy } from './myAmmoHelper.js';
 
 import {
