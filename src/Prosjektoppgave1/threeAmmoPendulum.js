@@ -18,6 +18,7 @@ import {
 } from "./myAmmoHelper.js";
 
 import {cameraCoordinates as cc} from "./cameraCoord.js";
+import { addProgressBar } from "./screenElements.js";
 
 
 export function createAmmoPendulum (
@@ -51,6 +52,8 @@ export function createAmmoPendulum (
             createCameraTimeline(cc.wall)
             playAudioOnce('./sounds/bricks-falling.mp3', 0.5, 1);
             i = true
+
+            addProgressBar();
         }
     }
 

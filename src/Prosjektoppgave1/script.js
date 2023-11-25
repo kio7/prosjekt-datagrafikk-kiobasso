@@ -56,16 +56,17 @@ export const ri = {
 	controls: undefined,
 	currentlyPressedKeys: [],
 	gameIsStarted: false,
+	models: {},
+	lilGui: undefined,
+	musicIsOn: true,
+	numForceApplied: 0,
+	progressBarCount: 0,
 	soundEffectsIsOn: true,
+	renderer: undefined,
 	scene: undefined,
 	stats: undefined,
-	musicIsOn: true,
 	speed: 1.0,
-	renderer: undefined,
 	timelineToggle: true,
-	lilGui: undefined,
-	models: {},
-	numForceApplied: 0,
 };
 
 export const colors = {
@@ -154,14 +155,12 @@ function addAmmoSceneObjects() {
 		const loadingScreen =  document.querySelector(".loadingScreen")
 		loadingScreen.classList.toggle('hide')
 
-		// console.log( 'Loading complete!');
 		createScene(textureObjects);
 	}
 
 	ri.models = {
 		fan: {url: 'models/rgb_fan.glb', position: {x:10, y:-8, z:30}, scale: {x:20, y:20, z:20}, rotation: {x:0, y:0, z:Math.PI/2}},
 		spaceBunny: {url: 'models/space_bunny.glb', position: {x:7.85, y:40.45, z:29.2}, scale: {x:2, y:2, z:2}, rotation: {x:0, y:-Math.PI/1.3, z:0}},
-		// button: {url: 'models/button.glb', position: {x:26, y:-18, z:30}, scale: {x:7.5, y:7.5, z:7.5}, rotation: {x:0, y:0, z:0}},
 	};
 
 	const textureLoader = new THREE.TextureLoader(loadingManager);
@@ -292,12 +291,15 @@ function animate(currentTime, myThreeScene, myAmmoPhysicsWorld) {
 		}
 	}
 	
+	// Legger til video når kameraet er på riktig posisjon:
 	if (ri.camera.position.y > 350 && !ri.videoPlayeing) {
 		createVideo(670, {x: 0, y: -750, z: 0}, {x: -Math.PI/2, y: 0, z: Math.PI/2});
 		ri.videoPlayeing = true;
 		const video = document.getElementById('video');
 		ri.sound.stop()
 		video.play();
+		document.getElementById("progressbar-text").classList.toggle("hide");
+		document.getElementById("progressbar-wrapper").classList.toggle("hide");
 	}
 
 	//Oppdaterer grafikken:
@@ -311,8 +313,10 @@ function animate(currentTime, myThreeScene, myAmmoPhysicsWorld) {
 	ri.stats.end();
 }
 
+// Helping function for animate()
 function checkPositions() {
 	ri.scene.children.forEach((object) => {
+		// Flytter bricks:
         if (object.name == "brick") {
             let brickPosition = object.userData.physicsBody.getWorldTransform().getOrigin();
             if (brickPosition.y() < -5 && brickPosition.y() > -11 && brickPosition.x() < 27.5 && brickPosition.x() > 10.5) {
@@ -321,6 +325,7 @@ function checkPositions() {
             }
         }
 
+		// Animer partikler for portalene:
 		if (object.name == "particles") {
             object.material.opacity -= 0.005;
             object.position.y -= 0.04;
@@ -331,7 +336,7 @@ function checkPositions() {
             }
         }
 
-
+		// Animer partikler fra kanon:
 		if (object.name == "canon_particles") {
             object.material.opacity -= 0.02;
 			object.position.x -= 0.04;
@@ -343,5 +348,9 @@ function checkPositions() {
                 ri.scene.remove(object);
             }
         }
+
+		if (object.name == "visual_portal") {
+			object.rotation.y -= 0.01;
+		}
     });
 }

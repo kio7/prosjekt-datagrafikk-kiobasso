@@ -179,8 +179,8 @@ function checkCollisions(deltaTime) {
 
 						// Brick treffer portal
 						if (
-						(threeMesh0.name === 'brick' && threeMesh1.name === 'portal') ||
-						(threeMesh1.name === 'brick' && threeMesh0.name === 'portal')
+						(threeMesh0.name === 'brick' && threeMesh1.name === 'physical_portal') ||
+						(threeMesh1.name === 'brick' && threeMesh0.name === 'physical_portal')
 						) {
 
 							if (typeof threeMesh0.collisionResponse === 'function')

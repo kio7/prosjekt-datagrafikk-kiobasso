@@ -1,3 +1,8 @@
+/*
+Koden for progressBar er inspisert av koden fra dette eksempelet: https://codepen.io/alvarotrigo/pen/XWemVEj
+*/
+
+
 import {ri} from './script.js'
 import { createCameraTimeline } from './myThreeHelper';
 import { cameraCoordinates as cc } from './cameraCoord.js';
@@ -164,6 +169,24 @@ export function loadScreenElements() {
             ri.timelineToggle = false;
         }
         });
+
+	const video = document.createElement("video");
+	video.id = "video";
+	video.playsInline = true;
+	video.loop = true;
+	video.src = "./sounds/video.mp4";
+	video.style.display = "none";
+	document.body.appendChild(video);
 }
 
+export function addProgressBar() {
+	const progressBarWrapper = document.createElement("div");
+	progressBarWrapper.className = "progressbar-wrapper";
+	progressBarWrapper.id = "progressbar-wrapper";
+	document.body.appendChild(progressBarWrapper);
 
+	const progressBar = document.createElement("span");
+	progressBar.className = "progressbar";
+	progressBar.id = "progressbar";
+	progressBarWrapper.appendChild(progressBar);
+}

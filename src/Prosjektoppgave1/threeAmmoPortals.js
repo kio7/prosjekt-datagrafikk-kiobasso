@@ -10,8 +10,7 @@ export function createAmmoPortals(
     radius=1,
     textureObject,
 ) {
-    const mass = 0;
-
+    // Visual portal
     let geometry = new THREE.CylinderGeometry(radius, radius, 0.1, 100);
 
     let material = new THREE.MeshPhongMaterial({ 
@@ -26,18 +25,27 @@ export function createAmmoPortals(
     let portalMesh = new THREE.Mesh(geometry, material);
 
     portalMesh.position.set(position.x, position.y, position.z);
-    portalMesh.name = "portal";
+    portalMesh.name = "visual_portal";
+    addMeshToScene(portalMesh);
 
+
+    // Physical portal for collision detection
+    const mass = 0;
+    geometry = new THREE.CylinderGeometry(radius, radius, 0.1, 100);
+    material = new THREE.MeshBasicMaterial({ color: 0x000000 });
+    let physicalPortalMesh = new THREE.Mesh(geometry, material);
+    physicalPortalMesh.visible = false;
+    physicalPortalMesh.name = "physical_portal";
     let shape = new Ammo.btCylinderShape(new Ammo.btVector3(radius, 0.1, radius));
-    let rigidBody = createAmmoRigidBody(shape, portalMesh, 0.0, 0.0, position, mass);
-    portalMesh.userData.physicsBody = rigidBody;
+    let rigidBody = createAmmoRigidBody(shape, physicalPortalMesh, 0.0, 0.0, position, mass);
+    physicalPortalMesh.userData.physicsBody = rigidBody;
     phy.ammoPhysicsWorld.addRigidBody(
         rigidBody,
         COLLISION_GROUP_PORTAL,
         COLLISION_GROUP_WALL
     );
 
-    addMeshToScene(portalMesh);
-    phy.rigidBodies.push(portalMesh);
-    rigidBody.threeMesh = portalMesh;
+    addMeshToScene(physicalPortalMesh);
+    phy.rigidBodies.push(physicalPortalMesh);
+    rigidBody.threeMesh = physicalPortalMesh;
 }
