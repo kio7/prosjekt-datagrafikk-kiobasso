@@ -328,5 +328,9 @@ function checkPositions() {
                 ri.scene.remove(object);
             }
         }
+
+		if (object.name == "visual_portal") {
+			object.rotation.y -= 0.01;
+		}
     });
 }
