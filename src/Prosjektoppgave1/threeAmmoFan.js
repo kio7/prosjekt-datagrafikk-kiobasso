@@ -7,8 +7,6 @@ import {
     COLLISION_GROUP_WALL
 } from "./myAmmoHelper.js";
 
-import { ri } from "./script.js";
-
 
 export function createAmmoFan(
     position,

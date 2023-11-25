@@ -19,13 +19,11 @@ class CustomSinCurve extends THREE.Curve {
 
 export function createRails(position={x:0, y:0, z:0}, rotation=0, color=0x00ff00) {
     const mass = 0;
-    // const position = {x:-15, y:0.5, z:0};
 
     // AMMO-container
     let compoundShape = new Ammo.btCompoundShape();
     // THREE-container
     let railGroupMesh = new THREE.Group();
-    // railGroupMesh.position.set(position.x, position.y, position.z);
     railGroupMesh.rotateY(rotation);
     railGroupMesh.name = "rails";
 
@@ -43,7 +41,6 @@ export function createRails(position={x:0, y:0, z:0}, rotation=0, color=0x00ff00
     addMeshToScene(railGroupMesh);
     phy.rigidBodies.push(railGroupMesh);
     rigidRailBody.threeMesh = railGroupMesh;
-
 }
 
 

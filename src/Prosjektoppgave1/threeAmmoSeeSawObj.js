@@ -4,8 +4,7 @@ import {createAmmoRigidBody, phy} from "./myAmmoHelper.js";
 import {addToCompound} from "./triangleMeshHelpers.js";
 import {
     COLLISION_GROUP_SEESAW, 
-    COLLISION_GROUP_RAILS, 
-    COLLISION_GROUP_PLANE, 
+    COLLISION_GROUP_PLANE,
     COLLISION_GROUP_SPHERE,
     COLLISION_GROUP_SEESAWOBJ,
     COLLISION_GROUP_FUNNEL
@@ -15,7 +14,6 @@ export function createBucket(position = {x:4 ,y:2, z:0}, roughness = 0.5, metaln
 
     const segments = 50;
     const radius = 0.5;
-    const height = 1;
     const bottomThickness = 0.1;
     const bucketColor = color;
 
@@ -88,10 +86,7 @@ export function createBucket(position = {x:4 ,y:2, z:0}, roughness = 0.5, metaln
 
 
 export function createCounterWeight(position = {x:-4 ,y:2, z:0}, roughness = 0.5, metalness = 0.5, color) {
-
-
     // THREE
-    // CounterWeight
     let counterWeightMesh = new THREE.Mesh(
         new THREE.BoxGeometry(1, 1, 1, 1, 1),
         new THREE.MeshStandardMaterial({
@@ -103,7 +98,6 @@ export function createCounterWeight(position = {x:-4 ,y:2, z:0}, roughness = 0.5
     counterWeightMesh.name = 'counterWeight';
     counterWeightMesh.castShadow = true;
     counterWeightMesh.receiveShadow = true;
-
 
     // AMMO
     let shape = new Ammo.btBoxShape(new Ammo.btVector3(0.5, 0.5, 0.5));
@@ -122,6 +116,4 @@ export function createCounterWeight(position = {x:-4 ,y:2, z:0}, roughness = 0.5
     addMeshToScene(counterWeightMesh);
     phy.rigidBodies.push(counterWeightMesh);
     rigidBody.threeMesh = counterWeightMesh;
-
-
 }

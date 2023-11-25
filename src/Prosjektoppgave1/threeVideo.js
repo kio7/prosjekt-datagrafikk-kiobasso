@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import { addMeshToScene } from './myThreeHelper';
 
-export function createVideo(scale = 10, position = { x: 0, y: 0, z: 0 }, rotation = { x: 0, y: 0, z: 0 }) {
+
+export function createVideo(scale = 10, position = {x:0, y:0, z:0}, rotation = {x:0, y:0, z:0}) {
     const video = document.getElementById('video');
 
     const videoTexture = new THREE.VideoTexture(video);

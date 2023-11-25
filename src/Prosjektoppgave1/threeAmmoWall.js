@@ -111,10 +111,10 @@ export function createAmmoWall(mass, size, num, position) {
                     const progressBar = document.getElementById("progressbar");
                     if (ri.progressBarCount < 100) {
                         if (ri.progressBarCount > 10) {
-                            progressBar.style.width = (ri.progressBarCount + 3.125) + "%";
+                            progressBar.style.width = (ri.progressBarCount + 5.0) + "%";
                             progressBar.innerHTML = progressBar.style.width;
                         }
-                        ri.progressBarCount += 3.125;
+                        ri.progressBarCount += 5.0;
                     }
                     if (ri.progressBarCount === 100) {
                         const text = document.createElement("div");

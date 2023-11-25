@@ -20,8 +20,6 @@ export function createAmmoXZPlane(
     position.y -= 0.25;
 
 	// THREE:
-	// let geometry = new THREE.PlaneGeometry( width, depth, 1, 1 );
-	// geometry.rotateX( Math.PI / 2 );
 	let geometry = new THREE.BoxGeometry(width, 0.5, depth, 1, 1);
 
 	let material = new THREE.MeshPhongMaterial( { 
@@ -35,7 +33,6 @@ export function createAmmoXZPlane(
 	let mesh = new THREE.Mesh(geometry, material);
     mesh.renderOrder = 1;
 	mesh.receiveShadow = true;
-    // mesh.castShadow = true;
 	mesh.rotation.x = rotation.x;
 	mesh.rotation.y = rotation.y;
 	mesh.rotation.z = rotation.z;

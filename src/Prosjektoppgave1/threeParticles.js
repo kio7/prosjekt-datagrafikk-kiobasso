@@ -1,10 +1,9 @@
-
-// Step 1: Import necessary libraries and modules
 import * as THREE from 'three';
 import { addMeshToScene } from './myThreeHelper';
 
-// Step 4: Define the firework explosion effect
+
 export function createParticles(position, name="particles") {
+    // Three
     const material = new THREE.PointsMaterial({
         size: 0.15,
         vertexColors: true,
@@ -17,6 +16,7 @@ export function createParticles(position, name="particles") {
     let colors = [];
     let color = new THREE.Color();
     let z,y,x;
+    
     for (let i = 0; i < 50; i++) {
         x = THREE.MathUtils.randFloatSpread(range);
         y = THREE.MathUtils.randFloat(0, 2);
