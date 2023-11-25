@@ -75,7 +75,6 @@ export function createAmmoWall(mass, size, num, position) {
                         material
                     );
                     
-                    // newMesh.position.set(mesh.position.x + 49, mesh.position.y + 42, mesh.position.z - 100)
                     newMesh.position.set(75, 24, -70)
                     newMesh.rotation.set(mesh.rotation.x, mesh.rotation.y, mesh.rotation.z)
                     newMesh.castShadow = true;
@@ -108,6 +107,23 @@ export function createAmmoWall(mass, size, num, position) {
                     // Particles second portal
                     createParticles({x: newMesh.position.x, y: newMesh.position.y + 0.5, z: newMesh.position.z});
                     toggle = true;
+
+                    const progressBar = document.getElementById("progressbar");
+                    if (ri.progressBarCount < 100) {
+                        if (ri.progressBarCount > 10) {
+                            progressBar.style.width = (ri.progressBarCount + 3.125) + "%";
+                            progressBar.innerHTML = progressBar.style.width;
+                        }
+                        ri.progressBarCount += 3.125;
+                    }
+                    if (ri.progressBarCount === 100) {
+                        const text = document.createElement("div");
+                        text.id = "progressbar-text";
+                        text.className = "progressbar-text";
+                        text.innerHTML = "WE ARE READY!";
+                        document.body.appendChild(text);
+                        ri.progressBarCount += 1.0; // To avoid this if statement to run again
+                    }
                 }
             }
 

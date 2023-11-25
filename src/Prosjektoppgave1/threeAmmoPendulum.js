@@ -18,6 +18,7 @@ import {
 } from "./myAmmoHelper.js";
 
 import {cameraCoordinates as cc} from "./cameraCoord.js";
+import { addProgressBar } from "./screenElements.js";
 
 
 export function createAmmoPendulum (
@@ -50,6 +51,8 @@ export function createAmmoPendulum (
         if (mesh1.name === "brick" && i === false) {
             createCameraTimeline(cc.wall)
             i = true
+
+            addProgressBar();
         }
     }
 
