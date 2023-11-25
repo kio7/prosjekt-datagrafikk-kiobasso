@@ -27,6 +27,10 @@ export function createThreeScene() {
 	// lil-gui kontroller:
 	ri.lilGui = new GUI();
 
+	// lil-gui speed slider:
+	const speedFolder = ri.lilGui.addFolder('Speed');
+	speedFolder.add(ri, 'speed').min(0.1).max(5).step(0.1).name("Speed");
+
 	// Sceneobjekter
 	addLights();
 
@@ -48,12 +52,13 @@ export function createThreeScene() {
 		ri.sound.setBuffer( buffer );
 		ri.sound.setLoop( true );
 		ri.sound.setVolume( 0.5 );
-		ri.sound.play()
+		// Play is activated in script.js/animate()
+		// ri.sound.play()
 		});
 
-	const soundFolder = ri.lilGui.addFolder({title: 'Sound', open: false});
-	soundFolder.add(ri.sound, 'play').name("Play");
-	soundFolder.add(ri.sound, 'pause').name("Pause");
+	const soundFolder = ri.lilGui.addFolder('Sound');
+	soundFolder.add(ri, 'musicIsOn').name("Music").listen();
+	soundFolder.add(ri, 'soundEffectsIsOn').name("Effects").listen();
 
 	// Controls:
 	ri.controls = new OrbitControls(ri.camera, ri.renderer.domElement);
@@ -61,6 +66,10 @@ export function createThreeScene() {
 	ri.controls.target.x = cc.init[0].tx;
 	ri.controls.target.y = cc.init[0].ty;
 	ri.controls.target.z = cc.init[0].tz;
+
+	// RI-controls for timeline-toggle:
+	const timelineFolder = ri.lilGui.addFolder('Kamera');
+	timelineFolder.add(ri, 'timelineToggle').name("Timeline").listen();
 }
 
 export function createCameraTimeline(cameraPositions) {
@@ -77,7 +86,7 @@ function cameraTimeline(cameraPositions) {
 
 	cameraPositions.forEach((position, index) => {
 			ri.cameraTimeline.camt.to(ri.camera.position, {
-			duration: position.d, // Duration of the animation in seconds
+			duration: position.d / ri.speed, // Duration of the animation in seconds
 			x: position.x,
 			y: position.y,
 			z: position.z,
@@ -108,7 +117,7 @@ function controlsTimeline(cameraPositions) {
 
 	cameraPositions.forEach((position, index) => {
 			ri.cameraTimeline.cont.to(ri.controls.target, {
-			duration: position.d, // Duration of the animation in seconds
+			duration: position.d / ri.speed, // Duration of the animation in seconds
 			x: position.tx,
 			y: position.ty,
 			z: position.tz,
@@ -132,7 +141,7 @@ function controlsTimeline(cameraPositions) {
 }
 
 export function playAudioOnce(audioFile, setVolume=0.5, pitch=1) {
-	if (ri.soundOn === false) {return;}
+	if (ri.soundEffectsIsOn === false) {return;}
 	const listener = new THREE.AudioListener();
 	ri.camera.add( listener );
 	const sound = new THREE.Audio( listener );
@@ -152,7 +161,7 @@ export function addLights() {
 	ambientLight1.visible = true;
 	ri.scene.add(ambientLight1);
 
-	const ambientFolder = ri.lilGui.addFolder({title: 'Ambient Light', open: false});
+	const ambientFolder = ri.lilGui.addFolder( 'Ambient Light' );
 	ambientFolder.add(ambientLight1, 'visible').name("On/Off");
 	ambientFolder.add(ambientLight1, 'intensity').min(0).max(1).step(0.01).name("Intensity");
 	ambientFolder.addColor(ambientLight1, 'color').name("Color");
