@@ -49,6 +49,7 @@ export function createAmmoPendulum (
     ballMesh.collisionResponse = (mesh1) => {
         if (mesh1.name === "brick" && i === false) {
             createCameraTimeline(cc.wall)
+            playAudioOnce('./sounds/bricks-falling.mp3', 0.5, 1);
             i = true
         }
     }

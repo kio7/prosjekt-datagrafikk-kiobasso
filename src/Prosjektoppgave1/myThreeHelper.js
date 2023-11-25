@@ -212,6 +212,7 @@ export function handleKeys(delta) {
 		startMessage.classList.toggle("hide")	
 		createParticles({x: 18, y: 0.5, z: -12}, "canon_particles");
 		ri.activator = true
+		playAudioOnce('./sounds/canon.mp3', 0.5, 1);
 		createCameraTimeline(cc.canon_fire)
 	}	
 
