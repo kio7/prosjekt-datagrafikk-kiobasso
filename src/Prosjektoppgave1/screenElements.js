@@ -57,7 +57,7 @@ export function loadScreenElements() {
 	// Create playerMessage
 	const startMessage = document.createElement("div");
 	startMessage.className = "start-message";
-	startMessage.innerHTML = "PRESS SPACE TO BEGIN"
+	startMessage.innerHTML = "PRESS 'S' TO SHOOT!"
 	startMessage.classList.toggle("hide");
 	document.body.appendChild(startMessage);
 
