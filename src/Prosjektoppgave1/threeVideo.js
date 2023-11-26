@@ -1,3 +1,7 @@
+/*
+Denne koden lager et plan som har en video som tekstur. Videoen lastes med hjelp av html i screenElements.js.
+*/
+
 import * as THREE from 'three';
 import { addMeshToScene } from './myThreeHelper';
 
@@ -12,7 +16,7 @@ export function createVideo(scale = 10, position = {x:0, y:0, z:0}, rotation = {
 
     const mesh = new THREE.Mesh(
         new THREE.PlaneGeometry(2, 2),
-        new THREE.MeshBasicMaterial({ map: videoTexture, side: THREE.FrontSide, toneMapped: false})
+        new THREE.MeshBasicMaterial({ map: videoTexture, side: THREE.FrontSide})
     );
 
     mesh.position.set(position.x, position.y, position.z);

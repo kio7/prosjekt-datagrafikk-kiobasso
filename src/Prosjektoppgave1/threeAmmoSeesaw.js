@@ -1,3 +1,8 @@
+/*
+Denne koden lager en dumpehuske. Den er laget med en sylinder og en box. I tillegg er det lagt til en hingeConstraint mellom de to.
+*/
+
+
 import * as THREE from "three";
 import {addMeshToScene} from "./myThreeHelper.js";
 import {createAmmoRigidBody, phy} from "./myAmmoHelper.js";
@@ -46,21 +51,22 @@ export function createAmmoSeeSaw (
     phy.ammoPhysicsWorld.addConstraint(hingeConstraint, false)
 }
 
+
 function createPlank(sessawHeight, position, color) {
     const mass = 10;
     const width=10, height=0.2, depth=1;
     const plankPosition = {x:position.x, y: position.y + sessawHeight, z: position.z};
-    //THREE
+    // Three
     const mesh = new THREE.Mesh(
         new THREE.BoxGeometry(width, height, depth, 1, 1),
-        new THREE.MeshStandardMaterial({color: color}));
+        new THREE.MeshStandardMaterial({color: color})
+    );
 
     mesh.name = 'plank'
-    // mesh.position.set(position.x, position.y, position.z);
     mesh.castShadow = true;
     mesh.receiveShadow = true;
 
-    // AMMO
+    // Ammo
     const mesh_width = mesh.geometry.parameters.width;
 	const mesh_height = mesh.geometry.parameters.height;
 	const mesh_depth = mesh.geometry.parameters.depth;
@@ -79,15 +85,15 @@ function createPlank(sessawHeight, position, color) {
         COLLISION_GROUP_RAILS | 
         COLLISION_GROUP_SEESAWOBJ |
         COLLISION_GROUP_SPHERE
-        );
+    );
 
     addMeshToScene(mesh);
     phy.rigidBodies.push(mesh);
     rigidBody.threeMesh = mesh;
 
-    return rigidBody;
-    
+    return rigidBody;    
 };
+
 
 function createAnchor(sessawHeight, position, color) {
     const radius = 0.2;
@@ -115,7 +121,7 @@ function createAnchor(sessawHeight, position, color) {
         COLLISION_GROUP_SEESAW | 
         COLLISION_GROUP_SEESAWOBJ |
         COLLISION_GROUP_PLANE | 
-        COLLISION_GROUP_SPHERE 
+        COLLISION_GROUP_SPHERE
     );
 
     addMeshToScene(mesh);

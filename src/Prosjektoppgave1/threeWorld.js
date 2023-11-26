@@ -1,3 +1,7 @@
+/*
+Denne koden lager bakgrunnen. Det er en kule med en tekstur på.
+*/
+
 import * as THREE from "three";
 import {addMeshToScene} from "./myThreeHelper.js";
 
@@ -9,7 +13,6 @@ export function createWorld(textureObject) {
             map: textureObject,
             side: THREE.BackSide,
             transparent: false,
-            opacity: 0.7,
         })
     )
     world.name = "world";

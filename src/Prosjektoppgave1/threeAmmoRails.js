@@ -1,3 +1,8 @@
+/* 
+Denne koden lager et pair skinner som er laget med en path og tubeGeometry.
+*/
+
+
 import * as THREE from "three";
 import {addMeshToScene} from "./myThreeHelper.js";
 import {createAmmoRigidBody, phy} from "./myAmmoHelper.js";
@@ -17,6 +22,7 @@ class CustomSinCurve extends THREE.Curve {
 	}
 }
 
+
 export function createRails(position={x:0, y:0, z:0}, rotation=0, color=0x00ff00) {
     const mass = 0;
 
@@ -27,12 +33,13 @@ export function createRails(position={x:0, y:0, z:0}, rotation=0, color=0x00ff00
     railGroupMesh.rotateY(rotation);
     railGroupMesh.name = "rails";
 
-    createRailMesh(railGroupMesh, compoundShape, color)
+    // Three
+    createRailMesh(railGroupMesh, compoundShape, color);
     
+    // Ammo
     let rigidRailBody = createAmmoRigidBody(compoundShape, railGroupMesh, 0.4, 0.0, position, mass);
     railGroupMesh.userData.physicsBody = rigidRailBody;
     
-    // Legger til  i physics world:
     phy.ammoPhysicsWorld.addRigidBody(
         rigidRailBody,
         COLLISION_GROUP_RAILS,
@@ -47,20 +54,20 @@ export function createRails(position={x:0, y:0, z:0}, rotation=0, color=0x00ff00
 export function createRailMesh(railGroupMesh, compoundShape, color) {
     const radius = 0.15;
     const tilt = 0.09;
-    const tubularSegments = 160
+    const tubularSegments = 160;
     const radialSegments = 100;
     const railOffset = 0.5;
 
         // THREE - Rail 1
         const railOnePath = new CustomSinCurve(2);
-        const geometry = new THREE.TubeGeometry( railOnePath, tubularSegments, radius, radialSegments, false );
-        const material = new THREE.MeshStandardMaterial( { 
+        const geometry = new THREE.TubeGeometry(railOnePath, tubularSegments, radius, radialSegments, false);
+        const material = new THREE.MeshStandardMaterial({ 
             color: color, 
             side: THREE.DoubleSide,
             roughness: 0.0,
             metalness: 0.0
-         } );
-        const railOneMesh = new THREE.Mesh( geometry, material );
+        });
+        const railOneMesh = new THREE.Mesh(geometry, material);
         railOneMesh.castShadow = true;
         railOneMesh.receiveShadow = true;
         railOneMesh.name = 'rail1';
@@ -76,14 +83,14 @@ export function createRailMesh(railGroupMesh, compoundShape, color) {
 
         // THREE - Rail 2
         const railTwoPath = new CustomSinCurve(2);
-        const geometry2 = new THREE.TubeGeometry( railTwoPath, tubularSegments, radius, radialSegments, false );
-        const material2 = new THREE.MeshStandardMaterial( { 
+        const geometry2 = new THREE.TubeGeometry(railTwoPath, tubularSegments, radius, radialSegments, false);
+        const material2 = new THREE.MeshStandardMaterial({ 
             color: color, 
             side: THREE.DoubleSide,
             roughness: 0.0,
             metalness: 0.0    
-        } );
-        const railTwoMesh = new THREE.Mesh( geometry2, material2 );
+        });
+        const railTwoMesh = new THREE.Mesh(geometry2, material2);
         railTwoMesh.castShadow = true;
         railTwoMesh.receiveShadow = true;
         railTwoMesh.name = 'rail2';

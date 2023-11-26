@@ -1,3 +1,8 @@
+/*
+Denne koden lager en sol. Det er en gul ball.
+*/
+
+
 import * as THREE from 'three';
 import { addMeshToScene } from './myThreeHelper';
 
