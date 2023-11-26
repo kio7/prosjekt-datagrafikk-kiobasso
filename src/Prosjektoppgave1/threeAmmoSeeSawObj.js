@@ -1,5 +1,5 @@
 /*
-Denne koden lager objektene som ligger på dumpehusken. Det er en bøtte og en motvekt.
+Modulen lager objektene som ligger på dumpehusken, en bøtte og en motvekt.
 */
 
 import * as THREE from "three";

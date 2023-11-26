@@ -1,5 +1,5 @@
 /*
-Denne koden lager bakgrunnen. Det er en kule med en tekstur på.
+Modulen lager en ball med tekstur på innsiden. Denne bruker vi til å lage bakgrunnen i scenen.
 */
 
 import * as THREE from "three";

@@ -1,5 +1,5 @@
 /* 
-Denne koden lager 2 portaler, 1 visuell og 1 fysisk for kollisjondeteksjon (ammo).
+Modulen lager 2 portaler, 1 visuell og 1 fysisk for kollisjondeteksjon (ammo).
 */
 
 

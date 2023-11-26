@@ -1,5 +1,5 @@
 /*
-Denne koden lager partikler, de er laged med pointsMaterial.
+Modulen lager partikler.
 Vi har tatt inspirasjon fra Werner sin kode: modul 8, particles1, eksempel 2.
 */
 

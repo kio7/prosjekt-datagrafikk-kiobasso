@@ -1,5 +1,5 @@
 /* 
-Denne koden lager en vegg med en rekke klosser.
+Modulen lager en vegg som består av en rekke klosser.
 
 Koden er inspirert av 
 https://threejs.org/examples/?q=ammo#physics_ammo_rope
