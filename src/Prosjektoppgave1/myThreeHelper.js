@@ -182,6 +182,27 @@ export function addLights() {
 	directionalFolder.add(directionalLight, 'visible').name("On/Off");
 	directionalFolder.add(directionalLight, 'intensity').min(0).max(1).step(0.01).name("Intensity");
 	directionalFolder.addColor(directionalLight, 'color').name("Color");
+
+	// SpotLight for kaninen:
+	const spotLight = new THREE.SpotLight(0xffffff, 1);
+	spotLight.visible = true;
+	spotLight.position.set(2, 40, 30);
+	spotLight.target.position.set(8, 40, 30);
+	spotLight.angle = Math.PI / 4;
+	spotLight.distance = 10;
+	spotLight.castShadow = true;
+	spotLight.shadow.mapSize.width = 25;
+	spotLight.shadow.mapSize.height = 25;
+	spotLight.shadow.camera.near = 0;
+	spotLight.shadow.camera.far = 20;
+	spotLight.shadow.camera.fov = 15;
+	spotLight.shadow.bias = -0.005;  //NB! Viktig for å unngå artefakter pga. "Peter Panning"
+	ri.scene.add(spotLight);
+
+	// Viser lyskilden:
+	const spotLightHelper = new THREE.SpotLightHelper( spotLight );
+	spotLightHelper.visible = false;
+	ri.scene.add(spotLightHelper);
 }
 
 //Sjekker tastaturet:
