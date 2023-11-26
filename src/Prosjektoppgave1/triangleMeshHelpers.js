@@ -1,3 +1,10 @@
+/* 
+Koden er hentet fra Werner Farstad sin kodebase. Modul 7, ammoAdvancedShapes2trianglemesh
+*/
+
+
+
+
 /**
  * Brukes til bevegelige objekter.
  * Kan kollidere med hverandre, men kollisjonsboksen vil være konveks.

@@ -1,3 +1,8 @@
+/* 
+Denne koden lager 2 portaler, 1 visuell og 1 fysisk for kollisjondeteksjon (ammo).
+*/
+
+
 import * as THREE from 'three';
 import { addMeshToScene, playAudioOnce } from './myThreeHelper.js';
 import { createAmmoRigidBody, phy } from './myAmmoHelper.js';
@@ -11,15 +16,13 @@ export function createAmmoPortals(
     textureObject,
 ) {
     // Visual portal
+    // Three
     let geometry = new THREE.CylinderGeometry(radius, radius, 0.1, 100);
 
     let material = new THREE.MeshPhongMaterial({ 
         map: textureObject,
         color:color, 
         side: THREE.DoubleSide,
-        transparent: true,
-        depthWrite: true,
-        opacity: 1.0,
     });
 
     let portalMesh = new THREE.Mesh(geometry, material);
@@ -38,14 +41,14 @@ export function createAmmoPortals(
     physicalPortalMesh.visible = false;
     physicalPortalMesh.name = "physical_portal";
     
+    // Collision detection between portal and brick, for teleport sound.
     let i = false;
     physicalPortalMesh.collisionResponse = (mesh1) => {
         if (mesh1.name === "brick" && !i) {
             playAudioOnce('./sounds/distorted_laser.mp3', 0.5, 1);
             i = true;
-
-        }
-    }
+        };
+    };
 
     // Ammo
     let shape = new Ammo.btCylinderShape(new Ammo.btVector3(radius, 0.1, radius));

@@ -1,16 +1,13 @@
+/*
+Denne koden lager partikler, de er laged med pointsMaterial.
+Vi har tatt inspirasjon fra Werner sin kode: modul 8, particles1, eksempel 2.
+*/
+
 import * as THREE from 'three';
 import { addMeshToScene } from './myThreeHelper';
 
 
 export function createParticles(position, name="particles") {
-    // Three
-    const material = new THREE.PointsMaterial({
-        size: 0.15,
-        vertexColors: true,
-        transparent: true,
-        opacity: 1.0,
-    });
-
     let range = 3;
     let vertices = [];
     let colors = [];
@@ -25,13 +22,17 @@ export function createParticles(position, name="particles") {
         color.setHex(Math.random() * 0xffffff);
         colors.push(color.r, color.g, color.b);
     }
-
+    const material = new THREE.PointsMaterial({
+        size: 0.15,
+        vertexColors: true
+    });
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
     geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+
     const mesh = new THREE.Points(geometry, material);
     mesh.name = name;
     mesh.position.set(position.x, position.y, position.z);
-    mesh.time = 0;
+    mesh.time = 0; // for animation
     addMeshToScene(mesh);
 }
