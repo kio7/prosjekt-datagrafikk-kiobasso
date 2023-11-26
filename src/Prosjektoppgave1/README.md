@@ -2,8 +2,9 @@
 #### Konrad Simsø / Anders Lea Karlskås
 <hr>
 
-#### Link til presentasjon på Youtube:
+#### Link til presentasjon på Youtube og kode på GitHub:
 - https://youtu.be/bk_4BveviNc
+- https://github.com/kio7/prosjekt-datagrafikk-kiobasso
 
 <hr>
 
