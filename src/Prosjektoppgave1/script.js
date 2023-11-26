@@ -1,9 +1,17 @@
-// import './style.css';
-import * as THREE from "three";
+/* 
+Hovedstrukturen i denne filen er hentet fra filer fra faget datamaskingrafikk. Men det meste er 
+tweaket i etterkant og tilpasset egen kode.
 
+
+*/
+
+import * as THREE from "three";
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import * as SkeletonUtils from 'three/examples/jsm/utils/SkeletonUtils.js';
 
+
+// myThreeHelper og myAmmoHelper tar utgangspunkt i filer fra kurset, men
+// begge har mange tillegg.
 import {
 	createThreeScene,
 	createCameraTimeline,
@@ -13,15 +21,18 @@ import {
 	updateThree
 } from "./myThreeHelper.js";
 
-import { cameraCoordinates as cc} from './cameraCoord.js';
-
-import { loadScreenElements } from './screenElements.js';
-
 import {
-	createAmmoWorld,
+	createAmmoWorld, 
 	updatePhysics
 } from "./myAmmoHelper.js";
 
+// Koordinatliste for automatiske kamerabevegelser.
+import { cameraCoordinates as cc} from './cameraCoord.js';
+
+// HTML og Css elementer for GUI.
+import { loadScreenElements } from './screenElements.js';
+
+// Grafiske elementer
 import { createAmmoXZPlane } from './threeAmmoXZPlane.js';
 import { createAmmoSeeSaw } from './threeAmmoSeeSaw.js';
 import { createBucket } from './threeAmmoSeeSawObj.js';	
@@ -35,14 +46,13 @@ import { createWorld } from './threeWorld.js';
 import { createThreeSun } from './threeSun.js';
 import { createAmmoPendulum} from './threeAmmoPendulum.js';
 import { createAmmoWall } from './threeAmmoWall.js';
-import { createAmmoFan } from './threeAmmoFan.js';
 import { createFunnelBox } from './threeAmmoFunnelBox.js';
 import { createAmmoPortals } from './threeAmmoPortals.js';
 import { createBox } from './threeAmmoBox.js';
 import { createVideo } from './threeVideo.js';
 
 //Globale variabler:
-//MERK: Denne brukes også i myThreeHelper:
+//MERK: brukes gjennomgående i flere av prosjektets filer.
 export const ri = {
 	activator: false,
 	animationMixers: [],
@@ -57,6 +67,10 @@ export const ri = {
 	gameIsStarted: false,
 	models: {},
 	lilGui: undefined,
+	models: { // .glb modeller som skal lastes inn:
+		fan: {url: 'models/rgb_fan.glb', position: {x:10, y:-8, z:30}, scale: {x:20, y:20, z:20}, rotation: {x:0, y:0, z:Math.PI/2}},
+		spaceBunny: {url: 'models/space_bunny.glb', position: {x:7.85, y:40.45, z:29.2}, scale: {x:2, y:2, z:2}, rotation: {x:0, y:-Math.PI/1.3, z:0}},
+	},
 	musicIsOn: false,
 	numForceApplied: 0,
 	progressBarCount: 0,
@@ -68,6 +82,7 @@ export const ri = {
 	timelineToggle: true,
 };
 
+// Farger, brukes for det meste her, men er satt til export for å kunne brukes i andre filer:
 export const colors = {
 	red: 0xFF0000,
 	blue: 0x0000FF,
@@ -81,9 +96,6 @@ export const colors = {
 	magenta: 0xFF00FF,
 	silver: 0xC0C0C0,
   };
-
-export const XZPLANE_SIDELENGTH = 500;
-
 
 export function main() {
 
@@ -107,27 +119,26 @@ export function main() {
 	loadScreenElements();
 
 	// three/ammo-objekter:
-	addAmmoSceneObjects();
+	loadModelsAndTextures();
 
+	// Kameraanimasjon for "startskjerm":
 	createCameraTimeline(cc.pano)
 
 }
 
+// Registrerer tastetrykk:
+function handleKeyUp(event) {ri.currentlyPressedKeys[event.code] = false;}
+function handleKeyDown(event) {ri.currentlyPressedKeys[event.code] = true;}
 
-function handleKeyUp(event) {
-	ri.currentlyPressedKeys[event.code] = false;
-}
-
-function handleKeyDown(event) {
-	ri.currentlyPressedKeys[event.code] = true;
-}
-
-
-function addAmmoSceneObjects() {
+// Laster inn teksturer og modeller.
+function loadModelsAndTextures() {
+	// Setter opp loadingmanager:
 	const loadingManager = new THREE.LoadingManager();
 
+	// Legger til tekst til innlastingssidene for hvert element som lastes inn:
 	loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
 		let element = ( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' )
+		// Oppdaterer HTML-elementet som viser fremgang:
 		const loadingBox = document.querySelector(".loadingBox")
 		const createDiv = document.createElement("div")
 		createDiv.className = "filnavn"
@@ -135,43 +146,47 @@ function addAmmoSceneObjects() {
 		loadingBox.appendChild(createDiv)
 	};
 	
-	loadingManager.onLoad = () => {
-		let element = ( 'Loading complete!' )
-		const loadingBox = document.querySelector(".loadingBox")
-		const createDiv = document.createElement("div")
-		createDiv.className = "filnavn"
-		createDiv.innerHTML = element
-		loadingBox.appendChild(createDiv)
-
-
-		const loadingScreen =  document.querySelector(".loadingScreen")
-		loadingScreen.classList.toggle('hide')
-
-		createScene(textureObjects);
-	}
-
-	ri.models = {
-		fan: {url: 'models/rgb_fan.glb', position: {x:10, y:-8, z:30}, scale: {x:20, y:20, z:20}, rotation: {x:0, y:0, z:Math.PI/2}},
-		spaceBunny: {url: 'models/space_bunny.glb', position: {x:7.85, y:40.45, z:29.2}, scale: {x:2, y:2, z:2}, rotation: {x:0, y:-Math.PI/1.3, z:0}},
-	};
-
+	// Laster inn teksturer som er i bruk
 	const textureLoader = new THREE.TextureLoader(loadingManager);
 	const textureObjects = [];
 	textureObjects[0] = textureLoader.load('textures/galaxy.jpeg');
 	textureObjects[1] = textureLoader.load('textures/glass.jpg');
 	textureObjects[2] = textureLoader.load('textures/wood.jpg');
 	textureObjects[3] = textureLoader.load('textures/milky_way_illustration.jpeg');
-
+	
+	// Laster inn modeller og 
 	const gltfLoader = new GLTFLoader(loadingManager);
 	for (const model of Object.values(ri.models)) {
 		gltfLoader.load(model.url, (gltf) => {
 			model.gltf = gltf;
 		});
 	}
+
+	// Alle filer er lastet inn:
+	loadingManager.onLoad = () => {
+		let element = ( 'Loading complete!' )
+		// Oppdaterer HTML-elementet som viser fremgang:
+		const loadingBox = document.querySelector(".loadingBox")
+		const createDiv = document.createElement("div")
+		createDiv.className = "filnavn"
+		createDiv.innerHTML = element
+		loadingBox.appendChild(createDiv)
+
+		// Fjerner loadingScreen:
+		const loadingScreen =  document.querySelector(".loadingScreen")
+		loadingScreen.classList.toggle('hide')
+
+		// Lager scenen:
+		createScene(textureObjects);
+	}
+
+
 }
 
+// Setter opp scenen, legger til modeller og teksturer og setter posisjonering og andre parametere.
 function createScene(textureObjects) {
-	// Add 3d models to scene
+
+	// Legger SpaceBunny og Vifte til scenen:
 	Object.values(ri.models).forEach((model, index) => {
 		const clonedScene = SkeletonUtils.clone(model.gltf.scene);
 		const root = new THREE.Object3D();
@@ -182,6 +197,7 @@ function createScene(textureObjects) {
 		root.rotation.set(model.rotation.x, model.rotation.y, model.rotation.z);
 		ri.scene.add(root);
 
+		// Legger til animasjoner:
 		if (model.gltf.animations[0]) {
 			let mixer = new THREE.AnimationMixer(clonedScene);
 			ri.animationMixers.push(mixer);
@@ -197,47 +213,34 @@ function createScene(textureObjects) {
 	// Sun and World
 	createThreeSun();
 	createWorld(textureObjects[0]);
-	
 	// Canon
 	createAmmoCanon({x:18, y:0, z:-12}, Math.PI/4, Math.PI/8, colors.cyan);
 	createAmmoMarble(0.2, 2, colors.red, {x:18, y:0.2, z:-12}, 0.0, 0.0, "marble"); // Canonball
-	createAmmoXZPlane(5, 5, {x:18, y:0, z:-12}, textureObjects[1], colors.red);
-
+	createAmmoXZPlane(5, 5, {x:18, y:0, z:-12}, textureObjects[1], colors.red)
 	// Seesaw
 	createAmmoSeeSaw(5, {x:0, y:0, z:0}, colors.yellow, colors.magenta);
 	createBucket({x:4, y:5, z:0}, 0.0, 0.0, colors.red);
 	createCounterWeight({x:-4, y:5, z:0}, 0.0, 0.0, colors.green);
 	createAmmoXZPlane(10, 10, {x:0, y:0, z:0}, textureObjects[1], colors.orange);
-	
 	// Funnel
 	createAmmoFunnel(0, colors.orange, {x:4, y:7.6, z:0}, 2.9, 0.4, 2.5, textureObjects[1]);
-	
 	// Rails
 	createRails({x:-4, y:0.2, z:15}, Math.PI/2, colors.silver);
 	createAmmoMarble(0.58, 3.0, colors.cyan, {x:-5, y:6, z:-1}, 0.0, 0.0, "railMarble"); // Rolling ball
-	
 	// Dominos
 	createAmmoDomino({x:-3, y:0, z:16}, 0.5, 7, textureObjects[2]);
 	createAmmoXZPlane(15, 25, {x:-3, y:0, z:25}, textureObjects[1], colors.purple, {x: 0, y:0, z:0}, 5.0);
 	createAmmoXZPlane(0.5, 2.0, {x:0.25, y:0.5, z:30}, textureObjects[1], colors.yellow, {x: 0, y:0, z:0}, 0.0); // Stopping block
-
 	// Pendulum
 	createAmmoPendulum(5, colors.yellow, {x:8, y:40, z:30}, 0.0, 0.0);
-	
 	// Wall/Bricks
 	createAmmoWall(0.3, 2.75, 8, {x:8, y:5.5, z:31});
 	createAmmoXZPlane(5, 20, {x:8, y:5.5, z:30}, textureObjects[1], colors.green, {x: 0, y:0, z:0}, 0.1);
-	
-	// Fan
-	createAmmoFan({x:8, y:-7, z:30}, {x:0, y:0, z:Math.PI/2}, {x:2, y:2, z:2}, textureObjects[1]);
-
 	// FunnelBox
 	createFunnelBox(10, 10, textureObjects[1], colors.cyan, {x:20, y:-7, z:30}, {x:0, y:0, z:0});
-
 	// Portals
 	createAmmoPortals(0xF3F3F3, {x:26, y:-18, z:30}, 5, textureObjects[3]);
 	createAmmoPortals(0xF3F3F3, {x:75, y:25, z:-70}, 5, textureObjects[3]);
-
 	// Box
 	createBox(5, {x: 75, y: 17, z: -70}, colors.orange, textureObjects[1]);
 
@@ -245,35 +248,34 @@ function createScene(textureObjects) {
 	animate(0);
 }
 
-
+// Animasjonsløkke:
 function animate(currentTime, myThreeScene, myAmmoPhysicsWorld) {
 	window.requestAnimationFrame((currentTime) => {
 		animate(currentTime, myThreeScene, myAmmoPhysicsWorld);
 	});
+	// Tid siden siste frame, ri.speed varierer hastigheten på animasjonen:
 	let deltaTime = ri.clock.getDelta() * ri.speed;
 
+	// Oppdaterer fps-counter:
 	ri.stats.begin();
 	
 	// Dersom sann, kula sendes ut fra kanon:
+	// Satt opp slik at den bare kan skytes ut en gang:
 	if (ri.activator == true && ri.numForceApplied < 1) {
 		const activator = ri.scene.getObjectByName("marble");
 		activator.userData.physicsBody.applyCentralImpulse(new Ammo.btVector3(-10, 34, 10));
 		ri.numForceApplied += 1;
 	}
-	// Sjekker om bricks skal flyttes:
-	checkPositions();
+	// Sjekker posisjonen til objekter og utfører handlinger:
+	checkPositionsAndMakeActions();
 
-	// Sjekker for true/false i ri for lyd:
-	if (!ri.musicIsOn) {
-		ri.sound.stop()
-		// const videoSound = document.getElementById("video");
-		// videoSound.muted = true;
-	} 
-	if (ri.musicIsOn && !ri.sound.isPlaying) {
-		// const videoSound = document.getElementById("video");
-		// videoSound.muted = false;
-		ri.sound.play()
-	}
+	// Roterer portalene:
+	const portal = ri.scene.getObjectByName("visual_portal");
+	portal.rotation.y -= 0.02;
+
+	// Slår av og på musikken i bakgrunnen, sjekker for true/false i ri for lyd:
+	if (!ri.musicIsOn) {ri.sound.stop()} 
+	if (ri.musicIsOn && !ri.sound.isPlaying) {ri.sound.play()}
 
 	// Oppdaterer animasjoner:
 	if (ri.animationMixers.length>0) {
@@ -283,13 +285,14 @@ function animate(currentTime, myThreeScene, myAmmoPhysicsWorld) {
 		}
 	}
 	
-	// Legger til video når kameraet er på riktig posisjon:
+	// Legger til sluttvideo når kameraet er på riktig posisjon:
 	if (ri.camera.position.y > 350 && !ri.videoPlayeing) {
 		createVideo(670, {x: 0, y: -750, z: 0}, {x: -Math.PI/2, y: 0, z: Math.PI/2});
 		ri.videoPlayeing = true;
 		const video = document.getElementById('video');
 		ri.sound.stop()
 		video.play();
+		// Fjerner HTML elementer som ikke skal vises under video:
 		document.getElementById("progressbar-text").classList.toggle("hide");
 		document.getElementById("progressbar-wrapper").classList.toggle("hide");
 	}
@@ -305,8 +308,9 @@ function animate(currentTime, myThreeScene, myAmmoPhysicsWorld) {
 	ri.stats.end();
 }
 
-// Helping function for animate()
-function checkPositions() {
+// Hjelpefunksjon for å sjekke posisjonen til objekter,
+// og for å utføre handlinger når de er på gitte posisjoner:
+function checkPositionsAndMakeActions() {
 	ri.scene.children.forEach((object) => {
 		// Flytter bricks:
         if (object.name == "brick") {
@@ -340,9 +344,5 @@ function checkPositions() {
                 ri.scene.remove(object);
             }
         }
-
-		if (object.name == "visual_portal") {
-			object.rotation.y -= 0.01;
-		}
     });
 }

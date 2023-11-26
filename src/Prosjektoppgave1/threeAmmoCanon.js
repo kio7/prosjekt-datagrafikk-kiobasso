@@ -1,9 +1,17 @@
+/*
+Modulen lager en kanon som kan skyte ut kuler.
+*/
+
 import * as THREE from "three";
 import {addMeshToScene} from "./myThreeHelper.js";
 import {createAmmoRigidBody, phy} from "./myAmmoHelper.js";
+import { addToCompound } from "./triangleMeshHelpers.js";
+import {
+    COLLISION_GROUP_SPHERE, 
+    COLLISION_GROUP_CANON
+} from "./myAmmoHelper.js"
 
-import {COLLISION_GROUP_SPHERE, COLLISION_GROUP_CANON} from "./myAmmoHelper.js"
-
+// Hovedfunksjonen som lager kanonen:
 export function createAmmoCanon(position = {x:0, y:0, z:0}, rotateY, rotateZ, color) {
     const mass = 0;
     const canonPosition = {x: position.x, y: position.y + 0.5, z: position.z};
@@ -13,13 +21,12 @@ export function createAmmoCanon(position = {x:0, y:0, z:0}, rotateY, rotateZ, co
     let compoundShape = new Ammo.btCompoundShape();
     // THREE-container
     let canonGroupMesh = new THREE.Group();
-    // Lag cylinder
 
-    createAmmoCanonMesh(canonGroupMesh, compoundShape ,segments, color)
-    
+    // Lag cylinder
+    createAmmoCanonMesh(canonGroupMesh, compoundShape ,segments, color);
+
     canonGroupMesh.rotateY(rotateY);
     canonGroupMesh.rotateZ(rotateZ);
-
     canonGroupMesh.name = 'canon';
 
     // AMMO
@@ -38,6 +45,7 @@ export function createAmmoCanon(position = {x:0, y:0, z:0}, rotateY, rotateZ, co
     rigidCanonBody.threeMesh = canonGroupMesh;    
 }
 
+// Lager kanonen:
 export function createAmmoCanonMesh(canonGroupMesh, compoundShape, segments, color) {
     const radius = 0.3;
 	const elm_width = 0.042;
@@ -45,6 +53,7 @@ export function createAmmoCanonMesh(canonGroupMesh, compoundShape, segments, col
 	const elm_depth = 0.05;
     const theta = (2*Math.PI) / segments;
 
+    // Lager bunnen på kanonen: 
     let activator = new THREE.CylinderGeometry(radius, radius, 0.1, segments);
     let activatorMesh = new THREE.Mesh(
         activator, 
@@ -59,8 +68,8 @@ export function createAmmoCanonMesh(canonGroupMesh, compoundShape, segments, col
     let shape = new Ammo.btCylinderShape(new Ammo.btVector3(radius, 0.1, radius));
     addToCompound(compoundShape, activatorMesh, shape);
 
+    // Lager sylinderen på kanonen:
     for (let i = 0; i < segments; i++) {
-
         // THREE
         let mesh = new THREE.Mesh(
             new THREE.BoxGeometry(elm_width,elm_height,elm_depth, 1, 1),
@@ -73,8 +82,7 @@ export function createAmmoCanonMesh(canonGroupMesh, compoundShape, segments, col
         mesh.castShadow = true;
         mesh.receiveShadow = true;
         
-        // Posisjoner elementet i sirkel:
-
+        // Posisjoner elementer i sirkel:
         const angle = theta * i;
         const x = radius * Math.cos(angle);
         const y = 0;
@@ -89,15 +97,5 @@ export function createAmmoCanonMesh(canonGroupMesh, compoundShape, segments, col
         let shape = new Ammo.btBoxShape(new Ammo.btVector3(elm_width/2,elm_height/2,elm_depth/2));
         addToCompound(compoundShape, mesh, shape);
 
-    } 
-}
-
-// Hentet fra MODUL 7, triangleMeshHelpers.js, linje 29-36
-export function addToCompound(compoundShape, mesh, shape) {
-	let shapeTrans = new Ammo.btTransform();
-	shapeTrans.setIdentity();
-	shapeTrans.setOrigin(new Ammo.btVector3(mesh.position.x,mesh.position.y,mesh.position.z));
-	let quat = mesh.quaternion;
-	shapeTrans.setRotation( new Ammo.btQuaternion(quat.x, quat.y, quat.z, quat.w) );
-	compoundShape.addChildShape(shapeTrans, shape);
-}
+    }; 
+};

@@ -10,7 +10,6 @@ Koden for linjen er basert på kodeeksempelet springGeneric6DofSpringConstraint.
 import * as THREE from "three";
 import {addMeshToScene, createCameraTimeline, playAudioOnce} from "./myThreeHelper.js";
 import {createAmmoRigidBody, phy} from "./myAmmoHelper.js";
-
 import {
     COLLISION_GROUP_PENDULUM,
     COLLISION_GROUP_DOMINO,
@@ -18,20 +17,16 @@ import {
 } from "./myAmmoHelper.js";
 
 import {cameraCoordinates as cc} from "./cameraCoord.js";
-import { addProgressBar } from "./screenElements.js";
+import {addProgressBar} from "./screenElements.js";
 
 
-export function createAmmoPendulum (
-    mass = 1,
-    color = 0xFF0000,
-    position = {x:0, y:0, z:0},
-    roughness = 0.5,
-    metalness = 0.5
-) {
-    // Ball
+export function createAmmoPendulum (mass = 1, color = 0xFF0000, position = {x:0, y:0, z:0}, roughness = 0.5, metalness = 0.5) {
+
+    // WreckingBall
     const ballPosition = {x: position.x - 19, y: position.y - 29, z: position.z}
     const ballRadius = 3.4;
 
+    // THREE:
     let ballMesh = new THREE.Mesh(
         new THREE.SphereGeometry(ballRadius, 32, 32),
         new THREE.MeshStandardMaterial({
@@ -46,53 +41,65 @@ export function createAmmoPendulum (
     ballMesh.name = "WreckingBall";
     ballMesh.position.set(ballPosition.x, ballPosition.y, ballPosition.z);
 
+    // Kollisjonsrespons, lydeffekter:
     let i = false;
     ballMesh.collisionResponse = (mesh1) => {
+        // Kule treffer klossene:
         if (mesh1.name === "brick" && i === false) {
-            createCameraTimeline(cc.wall)
+            createCameraTimeline(cc.wall);
             playAudioOnce('./sounds/bricks-falling.mp3', 0.5, 1);
-            i = true
+            i = true;
 
+            // Legger til progressbar:
             addProgressBar();
-        }
-    }
+        };
+    };
 
-
-    addMeshToScene(ballMesh);
-    
+    // AMMO:
     let sphereShape = new Ammo.btSphereShape(ballRadius);
     let sphereRigidBody = createAmmoRigidBody(sphereShape, ballMesh, 0.7, 0.1, ballPosition, mass);
     ballMesh.userData.physicsBody = sphereRigidBody;
     
+    // Legger til i physics world:
     phy.ammoPhysicsWorld.addRigidBody(
         sphereRigidBody,
         COLLISION_GROUP_PENDULUM,
         COLLISION_GROUP_DOMINO | COLLISION_GROUP_WALL
-    );
+        );
+
+    // Legger til i scene:
+    addMeshToScene(ballMesh);
     phy.rigidBodies.push(ballMesh);
     sphereRigidBody.threeMesh = ballMesh;
     
 
-    // Invisable box for position of mesh, needed for worldCoordinates for the line.
+    // Invisible box for position of mesh, needed for worldCoordinates 
+    // for the line so that hingeConstraint can be added:
+    //THREE:
     let anchorBoxMesh = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshStandardMaterial({color: color}));
     anchorBoxMesh.position.set(position.x, position.y - 0.5, position.z); // Might look redundant, but needed for the line
     anchorBoxMesh.name = "anchorBoxMesh";
-    anchorBoxMesh.castShadow = true;
-    anchorBoxMesh.receiveShadow = true;
     anchorBoxMesh.visible = false;
-    addMeshToScene(anchorBoxMesh);
-
-    let boxShape = new Ammo.btBoxShape(new Ammo.btVector3(anchorBoxMesh.geometry.parameters.width/2, anchorBoxMesh.geometry.parameters.height/2, anchorBoxMesh.geometry.parameters.depth/2));
+    
+    // AMMO:
+    let boxShape = new Ammo.btBoxShape(new Ammo.btVector3(
+        anchorBoxMesh.geometry.parameters.width/2, 
+        anchorBoxMesh.geometry.parameters.height/2, 
+        anchorBoxMesh.geometry.parameters.depth/2
+        ));
     boxShape.setMargin(0.05);
     let anchorRigidBody = createAmmoRigidBody(boxShape, anchorBoxMesh, 0.7, 0.8, position, 0);
     anchorBoxMesh.userData.physicsBody = anchorRigidBody;
 
+    // Legger til i physics world:
     phy.ammoPhysicsWorld.addRigidBody(
         anchorRigidBody,
         COLLISION_GROUP_PENDULUM,
         COLLISION_GROUP_WALL | COLLISION_GROUP_DOMINO
-    );
-
+        );
+    
+    // Legger til i scene:
+    addMeshToScene(anchorBoxMesh);
     anchorRigidBody.threeMesh = anchorBoxMesh;
     
 
@@ -105,6 +112,8 @@ export function createAmmoPendulum (
     line.name = "pendulumLineMesh";
     addMeshToScene(line);
 
+
+    // HingeConstraint
     const hingePivotA = new Ammo.btVector3(0, 0, 0);
     const hingePivotB = new Ammo.btVector3(29.5, 9.0, 0);
     const hingeAxis = new Ammo.btVector3(0, 0, 1);

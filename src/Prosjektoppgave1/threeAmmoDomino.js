@@ -1,3 +1,7 @@
+/*
+Modulen lager dominoer som kan falle over ende.
+*/
+
 import * as THREE from 'three';
 import { addMeshToScene, playAudioOnce } from './myThreeHelper';
 import { createAmmoRigidBody, phy } from './myAmmoHelper';
@@ -8,12 +12,8 @@ import {
     COLLISION_GROUP_PENDULUM
 } from './myAmmoHelper';
 
-export function createAmmoDomino(
-    pos={x:-10, y:0, z:10}, 
-    size=0.51, 
-    dominoCount = 7,
-    textureObject    
-    ) {
+
+export function createAmmoDomino(pos={x:-10, y:0, z:10}, size=0.51, dominoCount = 7, textureObject) {
     let mass=2.5;
     const color=0xFFFFFF; 
 
@@ -22,7 +22,7 @@ export function createAmmoDomino(
         mass = mass + 1.15 * i; // update mass
         pos.z += size - size * 0.2; // update pos
         
-
+        // THREE:
         let mesh = new THREE.Mesh(
             new THREE.BoxGeometry(size, 2*size, size/3),
             new THREE.MeshStandardMaterial({ 
@@ -36,6 +36,7 @@ export function createAmmoDomino(
         mesh.castShadow = true;
         mesh.name = 'domino';
 
+        // Kollisjonsrespons, lydeffekter:
         let j = 0;
         mesh.collisionResponse = (mesh1) => {
             if (j <= 2 && mesh1.name === 'domino') {
@@ -48,14 +49,17 @@ export function createAmmoDomino(
         let width = mesh.geometry.parameters.width;
         let height = mesh.geometry.parameters.height;
         let depth = mesh.geometry.parameters.depth;
+
         let shape = new Ammo.btBoxShape(new Ammo.btVector3(width/2, height/2, depth/2));
         shape.setMargin( 0.1 );
         let rigidBody = createAmmoRigidBody(shape, mesh, 0.7, 0.8, pos, mass);
+        
         if (i === dominoCount - 1 ) {
             rigidBody = createAmmoRigidBody(shape, mesh, 0.7, 0.3, pos, mass);
         }
         mesh.userData.physicsBody = rigidBody;
 
+        // Legger til i physics world:        
         phy.ammoPhysicsWorld.addRigidBody(
             rigidBody,
             COLLISION_GROUP_DOMINO,
@@ -65,10 +69,8 @@ export function createAmmoDomino(
             COLLISION_GROUP_PENDULUM
         );
 
-
         addMeshToScene(mesh);
         phy.rigidBodies.push(mesh);
         rigidBody.threeMesh = mesh;
-        rigidBody.setActivationState(4); //DISABLE_DEACTIVATION
     }
 }

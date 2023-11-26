@@ -1,13 +1,7 @@
-/*
-Koden for progressBar er inspisert av koden fra dette eksempelet: https://codepen.io/alvarotrigo/pen/XWemVEj
-*/
-
-
 import {ri} from './script.js'
 import { createCameraTimeline } from './myThreeHelper';
 import { cameraCoordinates as cc } from './cameraCoord.js';
 import Stats from 'stats.js';
-
 
 export function loadScreenElements() {
 	// Setter opp container for GUI
@@ -54,7 +48,7 @@ export function loadScreenElements() {
 	resetButton.innerHTML = "RESET";
 	// add onclick that loads an href to the page:
 	resetButton.onclick = function() {
-		window.location.href = "rg.html";
+		window.location.href = "index.html";
 	}
 	guiContainer.appendChild(resetButton);
 	
@@ -101,6 +95,7 @@ export function loadScreenElements() {
     }
 
     // Create checkboxes for sound and camera movement:
+	// Music checkbox:
 	const soundCheckboxLabel = document.createElement("label");
 	soundCheckboxLabel.htmlFor = "soundCheckbox";
 	soundCheckboxLabel.className = "checkbox-label";
@@ -114,7 +109,6 @@ export function loadScreenElements() {
 	soundCheckbox.className = "checkbox";
 	startButtonBorder.appendChild(soundCheckbox);
 	
-
     soundCheckbox.addEventListener("change", function() {
         const soundCheckbox = document.getElementById("soundCheckbox");
         if (soundCheckbox.checked === true) {
@@ -124,6 +118,7 @@ export function loadScreenElements() {
         }
         });
 
+	// Sound effects checkbox:
 	const soundEffectsCheckboxLabel = document.createElement("label");
 	soundEffectsCheckboxLabel.htmlFor = "soundEffectsCheckbox";
 	soundEffectsCheckboxLabel.className = "checkbox-label";
@@ -147,6 +142,7 @@ export function loadScreenElements() {
         }
         });
 
+	// Camera movement checkbox:
 	const cameraMovementCheckboxLabel = document.createElement("label");
 	cameraMovementCheckboxLabel.htmlFor = "cameraMovementCheckbox";
 	cameraMovementCheckboxLabel.className = "checkbox-label";
@@ -160,7 +156,6 @@ export function loadScreenElements() {
 	cameraMovementCheckbox.className = "checkbox";
 	startButtonBorder.appendChild(cameraMovementCheckbox);
 
-    
     cameraMovementCheckbox.addEventListener("change", function() {
         const cameraMovementCheckbox = document.getElementById("cameraMovementCheckbox");
         if (cameraMovementCheckbox.checked === true) {
@@ -170,15 +165,18 @@ export function loadScreenElements() {
         }
         });
 
+
+	// Legger til video:
 	const video = document.createElement("video");
 	video.id = "video";
 	video.playsInline = true;
 	video.loop = true;
-	video.src = "./sounds/video.mp4";
+	video.src = "./videos/video.mp4";
 	video.style.display = "none";
 	document.body.appendChild(video);
 }
 
+// Brukes i threeAmmoPendulum.js
 export function addProgressBar() {
 	const progressBarWrapper = document.createElement("div");
 	progressBarWrapper.className = "progressbar-wrapper";

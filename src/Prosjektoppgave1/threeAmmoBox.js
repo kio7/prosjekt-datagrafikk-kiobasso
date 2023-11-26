@@ -1,20 +1,22 @@
+/*
+
+Boksen som tar imot alle klossene på slutten.
+
+*/
+
 import * as THREE from 'three';
 import { addMeshToScene } from './myThreeHelper.js';
 import { createAmmoRigidBody, phy } from './myAmmoHelper.js';
-
+import { addToCompound } from './triangleMeshHelpers.js';
 import {
     COLLISION_GROUP_WALL,
     COLLISION_GROUP_BOX
 } from './myAmmoHelper.js';
-import { addToCompound } from './triangleMeshHelpers.js';
 
-export function createBox(
-    scale = 1,
-    position = {x:0, y:0, z:0},
-    color = 0x00FF00,
-    textureObject,
-) {
+export function createBox(scale = 1, position = {x:0, y:0, z:0}, color = 0x00FF00, textureObject) {
     const mass = 0;
+
+    // Lager gruppe for å kunne legge til flere meshes:
     let boxGroupMesh = new THREE.Group();
     boxGroupMesh.name = 'boxGroup';
     boxGroupMesh.position.set(position.x, position.y, position.z);
@@ -31,7 +33,7 @@ export function createBox(
         opacity: 0.5,
     });
 
-    // Bottom Mesh
+    // Bunnen på boksen
     let mesh = new THREE.Mesh(new THREE.BoxGeometry(scale, 0.1, scale), material);
     mesh.renderOrder = 1;
     mesh.receiveShadow = true;
@@ -41,7 +43,7 @@ export function createBox(
     let shape = new Ammo.btBoxShape(new Ammo.btVector3(scale/2, 0.05, scale/2));
     addToCompound(compoundShape, mesh, shape);
     
-    // Side Meshes
+    // Sidene på boksen
     let copyMesh = mesh.clone();
     copyMesh.position.set(0, 0, scale/2);
     copyMesh.rotation.x = Math.PI/2;

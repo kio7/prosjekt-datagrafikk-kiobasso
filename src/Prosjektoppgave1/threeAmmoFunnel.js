@@ -1,3 +1,7 @@
+/*
+Modulen lager en trakt som kan fange kuler.
+*/
+
 import * as THREE from "three";
 import {addMeshToScene} from "./myThreeHelper.js";
 import {createAmmoRigidBody, phy} from "./myAmmoHelper.js";
@@ -18,19 +22,20 @@ export function createAmmoFunnel(
     height=3,
     textureObject,
     ) {
-    let geometry = new THREE.CylinderGeometry(topRadius, bottomRadius, height, 60, 60, true);
-    
-    // let material = new THREE.MeshStandardMaterial({ 
-    let material = new THREE.MeshPhongMaterial({ 
-        map: textureObject,
-        color:color, 
-        side: THREE.DoubleSide,
-        transparent: true,
-        depthWrite: true,
-        opacity: 0.4,
-    });
-    let funnelMesh = new THREE.Mesh(geometry, material);
-    
+
+    // THREE:
+    let funnelMesh = new THREE.Mesh(
+        new THREE.CylinderGeometry(topRadius, bottomRadius, height, 60, 60, true),
+        new THREE.MeshPhongMaterial({ 
+            map: textureObject,
+            color:color, 
+            side: THREE.DoubleSide,
+            transparent: true,
+            depthWrite: true,
+            opacity: 0.4,
+        })    
+    );
+
     funnelMesh.position.set(position.x, position.y, position.z);
     funnelMesh.userData.tag = "funnel";
     funnelMesh.name = "funnel";
@@ -38,7 +43,7 @@ export function createAmmoFunnel(
     funnelMesh.receiveShadow = true;
     funnelMesh.castShadow = true;
 
-    
+    // AMMO:
     let shape = generateTriangleShape(funnelMesh, false);
     let rigidBody = createAmmoRigidBody(shape, funnelMesh, 0.1, 0.9, position, mass);
     funnelMesh.userData.physicsBody = rigidBody;
@@ -48,7 +53,6 @@ export function createAmmoFunnel(
         COLLISION_GROUP_SPHERE |
         COLLISION_GROUP_SEESAWOBJ
         );
-        
         
     addMeshToScene(funnelMesh);
     phy.rigidBodies.push(funnelMesh);

@@ -3,13 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prosjektoppgave Gruppe 1</title>
+    <title>Startprosjekt, three.js</title>
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-    <h2>RudeG thingy</h2>
-    <a href="rg.html">START GREIA HER!</a>
+
+    <div class="loadingScreen">
+        <div class="heading">Rube Goldberg</div>
+        <hr>
+        <div class="underoverskrift">Prosjektoppgave 1</div>
+        <div class="loadingBox">
+        </div>
+    </div>
 
 
-  </body>
+    <script src="../../../lib/ammo/ammo.js"></script>
+    <script type="module">
+    import {main} from "./script.js";
+		//Ammojs Initialization
+    Ammo().then(async function (AmmoLib) {
+      Ammo = AmmoLib;
+      main();
+    });
+    </script>
+</body>
 </html>

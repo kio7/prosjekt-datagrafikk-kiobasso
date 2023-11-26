@@ -1,8 +1,11 @@
+/*
+modulen lager en traktlignende figur som kan fange opp klossene som faller over ende.
+*/
+
 import * as THREE from 'three';
 import { addMeshToScene } from './myThreeHelper';
 import { addToCompound } from './triangleMeshHelpers';
 import { createAmmoRigidBody, phy } from './myAmmoHelper';
-
 import { 
     COLLISION_GROUP_WALL,
     COLLISION_GROUP_PLANE,
@@ -10,13 +13,14 @@ import {
 
 
 export function createFunnelBox(
-    width = 10,
-    depth = 10,
-    textureObject,
-    color = 0x96f1ff,
-    position = {x:0, y:0, z:0},
-) {
+        width = 10,
+        depth = 10,
+        textureObject,
+        color = 0x96f1ff,
+        position = {x:0, y:0, z:0}) {
+    
     const mass = 0;
+
     let funnelBoxGroupMesh = new THREE.Group();
     funnelBoxGroupMesh.name = 'funnelBoxGroup';
     let compoundShape = new Ammo.btCompoundShape();
@@ -31,7 +35,7 @@ export function createFunnelBox(
         opacity: 0.5,
     });
 
-    // Close boxes
+    // Store flater som lager V-formen på starten av trakten
     let Left1Geometry = new THREE.BoxGeometry(width*1.2, 0.5, depth*1.5, 1, 1);
     let Left1Mesh = new THREE.Mesh(Left1Geometry, material);
     Left1Mesh.renderOrder = 1;
@@ -58,7 +62,7 @@ export function createFunnelBox(
     shape = new Ammo.btBoxShape(new Ammo.btVector3(width*0.6, 0.5, depth*0.75));
     addToCompound(compoundShape, Right1Mesh, shape);
 
-    // Middle boxes
+    // Flatene som ligger nært veggen som også lager hullet i trakten
     let Left2Geometry = new THREE.BoxGeometry(width*1.05, 0.5, depth*0.25, 1, 1);
     let Left2Mesh = new THREE.Mesh(Left2Geometry, material);
     Left2Mesh.renderOrder = 1;
@@ -87,7 +91,7 @@ export function createFunnelBox(
     shape = new Ammo.btBoxShape(new Ammo.btVector3(width/2*1.05, 0.5, depth*0.125));
     addToCompound(compoundShape, Right2Mesh, shape);
 
-    // Far box/wall
+    // Veggen.
     let BackGeometry = new THREE.BoxGeometry(width*0.7, 0.5, depth*2.3, 1, 1);
     let BackMesh = new THREE.Mesh(BackGeometry, material);
     BackMesh.renderOrder = 1;
@@ -105,11 +109,14 @@ export function createFunnelBox(
     let rigidBody = createAmmoRigidBody(compoundShape, funnelBoxGroupMesh, 0.2, 0.1, position, mass);
     funnelBoxGroupMesh.userData.physicsBody = rigidBody;
 
+    // Legger til i physics world:
     phy.ammoPhysicsWorld.addRigidBody(
             rigidBody,
             COLLISION_GROUP_PLANE,
             COLLISION_GROUP_WALL
     );
+
+    // Legger til i scenen:
     addMeshToScene(funnelBoxGroupMesh)
     phy.rigidBodies.push(funnelBoxGroupMesh);
     rigidBody.threeMesh = funnelBoxGroupMesh;
