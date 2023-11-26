@@ -1,5 +1,5 @@
 /* 
-Denne koden lager et pair skinner som er laget med en path og tubeGeometry.
+Modulen lager et par skinner.
 */
 
 

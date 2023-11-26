@@ -1,5 +1,5 @@
 /*
-Denne koden lager en sol. Det er en gul ball.
+Modulen lager en sol.
 */
 
 

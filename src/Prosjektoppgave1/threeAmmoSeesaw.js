@@ -1,5 +1,5 @@
 /*
-Denne koden lager en dumpehuske. Den er laget med en sylinder og en box. I tillegg er det lagt til en hingeConstraint mellom de to.
+Modulen lager en dumpehuske.
 */
 
 

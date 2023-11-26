@@ -1,5 +1,5 @@
 /*
-Denne koden lager et xz-plan med en struktur.
+Modulen lager et xz-plan med en tekstur.
 */
 
 import * as THREE from "three";

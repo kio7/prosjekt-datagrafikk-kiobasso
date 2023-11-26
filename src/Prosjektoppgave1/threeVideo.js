@@ -1,5 +1,5 @@
 /*
-Denne koden lager et plan som har en video som tekstur. Videoen lastes med hjelp av html i screenElements.js.
+Modulen lager et plan som har en video som tekstur. Videoen lastes med hjelp av html i screenElements.js.
 */
 
 import * as THREE from 'three';
