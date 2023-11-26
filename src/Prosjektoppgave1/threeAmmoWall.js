@@ -1,7 +1,8 @@
 /* 
 Denne koden lager en vegg med en rekke klosser.
 
-Koden er inspirert av https://github.com/mrdoob/three.js/blob/master/examples/physics_ammo_rope.html
+Koden er inspirert av 
+https://threejs.org/examples/?q=ammo#physics_ammo_rope
 */
 
 import * as THREE from 'three';
