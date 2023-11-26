@@ -1,10 +1,12 @@
 # Gruppe: Prosjektoppgave1
 #### Konrad Simsø / Anders Lea Karlskås
 <hr>
+
 #### Link til presentasjon på Youtube:
 - https://youtu.be/bk_4BveviNc
 
 <hr>
+
 Informasjon om prosjektet og hva som må installeres for å kjøre det. Alle relevante .js filer ligger i katalogen Prosjektoppgave1 og underkatalogene inneholder assets som trengs.
 
 <hr>
