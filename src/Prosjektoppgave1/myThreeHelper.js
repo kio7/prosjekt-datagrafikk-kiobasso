@@ -1,13 +1,12 @@
 import * as THREE from "three";
-import GUI from "lil-gui";
-// import {applyImpulse, moveRigidBody} from "./myAmmoHelper.js";
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
-import {ri} from "./script.js";
+import GUI from "lil-gui";
 import {gsap} from "gsap";
-import {CustomEase} from "gsap/CustomEase";
 import { createParticles } from "./threeParticles.js";
 import { cameraCoordinates as cc } from "./cameraCoord.js";
+import {ri} from "./script.js";
 
+// Setter opp Three.js med kamera, audio, lys, kontroller, renderer og scene:
 export function createThreeScene() {
 	const canvas = document.createElement('canvas');
 	document.body.appendChild(canvas);
@@ -31,7 +30,7 @@ export function createThreeScene() {
 	const speedFolder = ri.lilGui.addFolder('Speed');
 	speedFolder.add(ri, 'speed').min(0.1).max(5).step(0.1).name("Speed");
 
-	// Sceneobjekter
+	// Lys:
 	addLights();
 
 	// Kamera, utgangsposisjon:
@@ -40,10 +39,7 @@ export function createThreeScene() {
 	ri.camera.position.y = cc.init[0].y;
 	ri.camera.position.z = cc.init[0].z;
 
-	// Set up camera timeline
-	// ri.cameraTimeline = gsap.timeline();
-
-	// Audio
+	// Audio, bakgrunnsmusikk:
 	ri.listener = new THREE.AudioListener();
 	ri.camera.add( ri.listener );
 	ri.sound = new THREE.Audio( ri.listener );
@@ -52,10 +48,9 @@ export function createThreeScene() {
 		ri.sound.setBuffer( buffer );
 		ri.sound.setLoop( true );
 		ri.sound.setVolume( 0.5 );
-		// Play is activated in script.js/animate()
-		// ri.sound.play()
 		});
 
+	// For toggle av musikk i lil-gui:
 	const soundFolder = ri.lilGui.addFolder('Sound');
 	soundFolder.add(ri, 'musicIsOn').name("Music").listen();
 	soundFolder.add(ri, 'soundEffectsIsOn').name("Effects").listen();
@@ -72,17 +67,18 @@ export function createThreeScene() {
 	timelineFolder.add(ri, 'timelineToggle').name("Timeline").listen();
 }
 
+// Setter opp timeline for kamera og kontroller:
 export function createCameraTimeline(cameraPositions) {
 	cameraTimeline(cameraPositions);
 	controlsTimeline(cameraPositions);
 };
 
+// Setter opp timeline for kamera:
 function cameraTimeline(cameraPositions) {
 	
 	if (ri.cameraTimeline.camt != undefined) {ri.cameraTimeline.camt.kill();}
 	if (!ri.timelineToggle) {return;};
 	ri.cameraTimeline.camt = gsap.timeline();
-	gsap.registerPlugin(CustomEase);
 
 	cameraPositions.forEach((position, index) => {
 			ri.cameraTimeline.camt.to(ri.camera.position, {
@@ -90,7 +86,6 @@ function cameraTimeline(cameraPositions) {
 			x: position.x,
 			y: position.y,
 			z: position.z,
-			// ease: CustomEase.create("custom", "M0,0 C0.321,0.114 0.472,0.455 0.496,0.496 0.574,0.63 0.731,0.93 1,1"), // Easing function
 			ease: "power1.inOut", // Easing function
 		});
 	});
@@ -98,12 +93,13 @@ function cameraTimeline(cameraPositions) {
 	// Start the camera positions timeline
 	ri.cameraTimeline.camt.play();
 }
+
+// Setter opp timeline for kontroller:
 function controlsTimeline(cameraPositions) {
 	
 	if (ri.cameraTimeline.cont != undefined) {ri.cameraTimeline.cont.kill();}
 	if (!ri.timelineToggle) {return;};
 	ri.cameraTimeline.cont = gsap.timeline();
-	gsap.registerPlugin(CustomEase);
 
 	cameraPositions.forEach((position, index) => {
 			ri.cameraTimeline.cont.to(ri.controls.target, {
@@ -111,7 +107,6 @@ function controlsTimeline(cameraPositions) {
 			x: position.tx,
 			y: position.ty,
 			z: position.tz,
-			// ease: CustomEase.create("custom", "M0,0 C0.453,0.131 0.418,0.818 1,0.986 "), // Easing function
 			ease: "power1.inOut", // Easing function
 			onUpdate: () => {
 				ri.camera.lookAt(ri.controls.target);
@@ -124,6 +119,7 @@ function controlsTimeline(cameraPositions) {
 	ri.cameraTimeline.cont.play();
 }
 
+// Spiller av lydfil, brukes i forb. med kollisjonslyder:
 export function playAudioOnce(audioFile, setVolume=0.5, pitch=1) {
 	if (ri.soundEffectsIsOn === false) {return;}
 	const listener = new THREE.AudioListener();
@@ -139,17 +135,18 @@ export function playAudioOnce(audioFile, setVolume=0.5, pitch=1) {
 	});
 }
 
+// Lys i scenen:
 export function addLights() {
 	// Ambient:
 	let ambientLight1 = new THREE.AmbientLight(0xffffff, 0.2);
 	ambientLight1.visible = true;
 	ri.scene.add(ambientLight1);
 
+	// Toggler ambient light:
 	const ambientFolder = ri.lilGui.addFolder( 'Ambient Light' );
 	ambientFolder.add(ambientLight1, 'visible').name("On/Off");
 	ambientFolder.add(ambientLight1, 'intensity').min(0).max(1).step(0.01).name("Intensity");
 	ambientFolder.addColor(ambientLight1, 'color').name("Color");
-
 
 	//** RETNINGSORIENTERT LYS (som gir skygge):
 	let directionalLight = new THREE.DirectionalLight(0xffffff, 1);
@@ -177,7 +174,7 @@ export function addLights() {
 	directionalLightCameraHelper.visible = false;
 	ri.scene.add(directionalLightCameraHelper);
 
-	// lil-gui:
+	// Toggle directional light:
 	const directionalFolder = ri.lilGui.addFolder( 'Directional Light' );
 	directionalFolder.add(directionalLight, 'visible').name("On/Off");
 	directionalFolder.add(directionalLight, 'intensity').min(0).max(1).step(0.01).name("Intensity");
@@ -207,9 +204,6 @@ export function addLights() {
 
 //Sjekker tastaturet:
 export function handleKeys(delta) {
-
-	printCameraPosition();
-	
 	// Gir impuls til kula i kanonen:
 	const startMessage = document.querySelector(".start-message");
 	if (ri.currentlyPressedKeys['KeyS'] && ri.gameIsStarted && ri.activator === false) {
@@ -220,7 +214,7 @@ export function handleKeys(delta) {
 		createCameraTimeline(cc.canon_fire)
 	}	
 
-
+	// Hurtigtast for å toggle kamera av/på
 	if (ri.currentlyPressedKeys['KeyK']) {
 		ri.timelineToggle = !ri.timelineToggle;
 		ri.currentlyPressedKeys['KeyK'] = false;
@@ -231,6 +225,8 @@ export function handleKeys(delta) {
 	}
 }
 
+// Sørger for å sett ny størrelse på renderer 
+// og kamera når vinduet endrer størrelse:
 export function onWindowResize() {
 	ri.camera.aspect = window.innerWidth / window.innerHeight;
 	ri.camera.updateProjectionMatrix();
@@ -238,56 +234,11 @@ export function onWindowResize() {
 	renderScene();
 }
 
-export function updateThree(deltaTime) {
-	// Endre linje posisjon:
-	const lineMeshStartPoint = ri.scene.getObjectByName("anchorBoxMesh");
-	const lineMeshEndPoint = ri.scene.getObjectByName("WreckingBall");
-	const line = ri.scene.getObjectByName("pendulumLineMesh");
-
-	const lineVertexPositions = line.geometry.attributes.position.array;
-
-	const lineStartPos = new THREE.Vector3();
-	lineMeshStartPoint.getWorldPosition(lineStartPos);
-	lineVertexPositions[0] = lineStartPos.x;
-	lineVertexPositions[1] = lineStartPos.y;
-	lineVertexPositions[2] = lineStartPos.z;
-
-	const lineEndPos = new THREE.Vector3();
-	lineMeshEndPoint.getWorldPosition(lineEndPos);
-	lineVertexPositions[3] = lineEndPos.x;
-	lineVertexPositions[4] = lineEndPos.y;
-	lineVertexPositions[5] = lineEndPos.z;
-	
-	line.geometry.attributes.position.needsUpdate = true;
-	line.geometry.computeBoundingBox();
-	line.geometry.computeBoundingSphere();
-
-	//Oppdater trackball-kontrollen:
-	ri.controls.update();
-}
-
 export function addMeshToScene(mesh) {
 	ri.scene.add(mesh);
 }
 
-export function renderScene()
-{
+export function renderScene() {
 	ri.renderer.render(ri.scene, ri.camera);
 }
 
-export function getRigidBodyFromMesh(meshName) {
-	const mesh = ri.scene.getObjectByName(meshName);
-	if (mesh)
-		return mesh.userData.physicsBody;
-	else
-		return null;
-}
-
-
-export function printCameraPosition() {
-    const cameraPosition = ri.camera.position;
-    const coordinatesText = 
-		`Camera Position: x: ${cameraPosition.x.toFixed(2)}, y: ${cameraPosition.y.toFixed(2)}, z: ${cameraPosition.z.toFixed(2)}` +
-		`,  tx: ${ri.controls.target.x.toFixed(2)}, ty: ${ri.controls.target.y.toFixed(2)}, tz: ${ri.controls.target.z.toFixed(2)}`;
-    document.getElementById('coordinatesText').textContent = coordinatesText;
-}

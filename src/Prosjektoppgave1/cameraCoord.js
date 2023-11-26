@@ -1,13 +1,14 @@
+/*
+Inneholder koordinater for kameraet i de forskjellige scenene.
+*/
+
 export const cameraCoordinates = {
     init: [
         {x: 3.58, y: 40.35, z: 26.68, tx: 7.21, ty: 40.62, tz: 29.54, d: 0}
-        // {x: 2.52, y: 15.91, z: -18.96, tx: 11.86, ty: 2.96, tz: -2.56, d: 0}
         ],
     pano: [
         { x: -51.69, y: 10.48, z: -27.42, tx: 8.23, ty: 11.32, tz: 15.67, d: 25 },
         { x: 91.39, y: 36.99, z: -22.20, tx: 10.33, ty: 5.65, tz: 17.10, d: 75 },
-        // { x: 180, y: 108, z: -151, tx: 92, ty: 41, tz: 19, d: 25 },
-        // { x: -185, y: 59, z: 216, tx: -7, ty: 48, tz: 88, d: 56 },
         ],
     canon: [
         {x: 22.60, y: 6.03, z: -22.03, tx: 17.38, ty: 5.72, tz: -12.28, d: 3}
@@ -33,12 +34,5 @@ export const cameraCoordinates = {
         { x: 619.93, y: 850.68, z: -31.45, tx: 227.19, ty: -84.19, tz: -17.52, d: 25 }, // roof
         { x: 741.57, y: 90.57, z: -631.98, tx: 357.37, ty: -290.56, tz: -291.93, d: 25 }, // roof
         { x: 237.29, y: 254.93, z: 150.12, tx: 132.89, ty: -131.94, tz: 108.99, d: 25 }, // roof
-        ],
-    // portal1: [
-    // ],
-    // portal2: [
-    //     ],
-    // ngguu: [
-    //     ],
-
+        ]
 }

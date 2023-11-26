@@ -9,16 +9,13 @@ import * as THREE from "three";
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import * as SkeletonUtils from 'three/examples/jsm/utils/SkeletonUtils.js';
 
-
-// myThreeHelper og myAmmoHelper tar utgangspunkt i filer fra kurset, men
-// begge har mange tillegg.
+// myThreeHelper og myAmmoHelper tar utgangspunkt i filer fra kurset, men begge har mange tillegg.
 import {
 	createThreeScene,
 	createCameraTimeline,
 	handleKeys,
 	onWindowResize,
-	renderScene,
-	updateThree
+	renderScene
 } from "./myThreeHelper.js";
 
 import {
@@ -30,7 +27,7 @@ import {
 import { cameraCoordinates as cc} from './cameraCoord.js';
 
 // HTML og Css elementer for GUI.
-import { loadScreenElements } from './screenElements.js';
+import { loadScreenElements, printCameraPosition } from './screenElements.js';
 
 // Grafiske elementer
 import { createAmmoXZPlane } from './threeAmmoXZPlane.js';
@@ -44,7 +41,7 @@ import { createAmmoFunnel } from './threeAmmoFunnel.js';
 import { createAmmoDomino } from './threeAmmoDomino.js';
 import { createWorld } from './threeWorld.js';
 import { createThreeSun } from './threeSun.js';
-import { createAmmoPendulum} from './threeAmmoPendulum.js';
+import { createAmmoPendulum, updateLineForWreckingBall } from './threeAmmoPendulum.js';
 import { createAmmoWall } from './threeAmmoWall.js';
 import { createFunnelBox } from './threeAmmoFunnelBox.js';
 import { createAmmoPortals } from './threeAmmoPortals.js';
@@ -297,10 +294,14 @@ function animate(currentTime, myThreeScene, myAmmoPhysicsWorld) {
 		document.getElementById("progressbar-wrapper").classList.toggle("hide");
 	}
 
-	//Oppdaterer grafikken:
-	updateThree(deltaTime);
+	// Oppdaterer "tauet" til wrecking ball
+	updateLineForWreckingBall();
+	// Oppdaterer kontrolls:
+	ri.controls.update();
 	//Oppdaterer fysikken:
 	updatePhysics(deltaTime);
+	// Oppdaterer coords kameraposisjon i GUI:
+	printCameraPosition();
 	//Sjekker input:
 	handleKeys(deltaTime);
 	//Tegner scenen med gitt kamera:

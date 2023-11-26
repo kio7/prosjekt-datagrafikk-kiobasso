@@ -146,7 +146,7 @@ export function loadScreenElements() {
 	const cameraMovementCheckboxLabel = document.createElement("label");
 	cameraMovementCheckboxLabel.htmlFor = "cameraMovementCheckbox";
 	cameraMovementCheckboxLabel.className = "checkbox-label";
-	cameraMovementCheckboxLabel.innerHTML = "AutoCamera";
+	cameraMovementCheckboxLabel.innerHTML = "AutoCamera [K]";
 	startButtonBorder.appendChild(cameraMovementCheckboxLabel);
 
 	const cameraMovementCheckbox = document.createElement("input");
@@ -187,4 +187,13 @@ export function addProgressBar() {
 	progressBar.className = "progressbar";
 	progressBar.id = "progressbar";
 	progressBarWrapper.appendChild(progressBar);
+}
+
+// Oppdaterer koordinater for kamera i GUI:
+export function printCameraPosition() {
+    const cameraPosition = ri.camera.position;
+    const coordinatesText = 
+		`Camera Position: x: ${cameraPosition.x.toFixed(2)}, y: ${cameraPosition.y.toFixed(2)}, z: ${cameraPosition.z.toFixed(2)}` +
+		`,  tx: ${ri.controls.target.x.toFixed(2)}, ty: ${ri.controls.target.y.toFixed(2)}, tz: ${ri.controls.target.z.toFixed(2)}`;
+    document.getElementById('coordinatesText').textContent = coordinatesText;
 }

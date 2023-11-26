@@ -1,11 +1,9 @@
 /*
-
-Domino sound effect: Sound Effect by Leobathro from Pixabay
-
-
+Hjelpefunksjoner for Ammo og ammoverdenen
+Oppsett av kollisjonsdeteksjon, hentet fra Werner Farstads modul 7, ammoConstraints.
 */
 
-
+// Kollisjonsgrupper:
 export const COLLISION_GROUP_PLANE = 1;
 export const COLLISION_GROUP_SPHERE = 2;
 export const COLLISION_GROUP_CANON = 4;
@@ -20,15 +18,14 @@ export const COLLISION_GROUP_FAN = 1024;
 export const COLLISION_GROUP_PORTAL = 2048;
 export const COLLISION_GROUP_BOX = 4096;
 
-
-export const IMPULSE_FORCE = 20;
-
+// Ammo-verden, globale variabler:
 export let phy = {
 	rigidBodies: [],
 	checkCollisions: true,
 	transform: undefined
 }
 
+// Setter opp Ammo-verden:
 export function createAmmoWorld() {
 	phy.transform = new Ammo.btTransform(); // Hjelpeobjekt.
 	
@@ -42,6 +39,7 @@ export function createAmmoWorld() {
 	phy.ammoPhysicsWorld.setGravity(new Ammo.btVector3(0, -9.80665, 0));
 }
 
+// Lager rigidbody for et THREEobjekt:
 export function createAmmoRigidBody(shape, threeMesh, restitution=0.7, friction=0.8, position={x:0, y:50, z:0}, mass=1, setLocalScaling=false) {
 
 	let transform = new Ammo.btTransform();
@@ -68,6 +66,7 @@ export function createAmmoRigidBody(shape, threeMesh, restitution=0.7, friction=
 	return rigidBody;
 }
 
+// Oppdaterer Ammo-verden:
 export function updatePhysics(deltaTime) {
 	// Step physics world:
 	phy.ammoPhysicsWorld.stepSimulation(deltaTime, 10);
@@ -88,9 +87,10 @@ export function updatePhysics(deltaTime) {
 	// Kollisjonsdeteksjon:
 	if (phy.checkCollisions)
 		checkCollisions(deltaTime);
-}
+};
 
-// Finner alle manifolds, gjennomløper og gjør noe dersom kollison mellom kulene:
+// Finner alle manifolds, gjennomløper og gjør noe dersom kollison mellom objekter:
+// 
 function checkCollisions(deltaTime) {
 	// Finner alle mulige kollisjonspunkter/kontaktpunkter (broad phase):
 	let numManifolds = phy.ammoPhysicsWorld.getDispatcher().getNumManifolds();

@@ -18,6 +18,7 @@ import {
 
 import {cameraCoordinates as cc} from "./cameraCoord.js";
 import {addProgressBar} from "./screenElements.js";
+import {ri} from "./script.js";
 
 
 export function createAmmoPendulum (mass = 1, color = 0xFF0000, position = {x:0, y:0, z:0}, roughness = 0.5, metalness = 0.5) {
@@ -120,3 +121,28 @@ export function createAmmoPendulum (mass = 1, color = 0xFF0000, position = {x:0,
     const hingeConstraint = new Ammo.btHingeConstraint(anchorRigidBody, sphereRigidBody, hingePivotA, hingePivotB, hingeAxis, hingeAxis, true);
     phy.ammoPhysicsWorld.addConstraint(hingeConstraint);
 }
+
+export function updateLineForWreckingBall() {
+    // Endre linje posisjon:
+    const lineMeshStartPoint = ri.scene.getObjectByName("anchorBoxMesh");
+    const lineMeshEndPoint = ri.scene.getObjectByName("WreckingBall");
+    const line = ri.scene.getObjectByName("pendulumLineMesh");
+
+    const lineVertexPositions = line.geometry.attributes.position.array;
+
+    const lineStartPos = new THREE.Vector3();
+    lineMeshStartPoint.getWorldPosition(lineStartPos);
+    lineVertexPositions[0] = lineStartPos.x;
+    lineVertexPositions[1] = lineStartPos.y;
+    lineVertexPositions[2] = lineStartPos.z;
+
+    const lineEndPos = new THREE.Vector3();
+    lineMeshEndPoint.getWorldPosition(lineEndPos);
+    lineVertexPositions[3] = lineEndPos.x;
+    lineVertexPositions[4] = lineEndPos.y;
+    lineVertexPositions[5] = lineEndPos.z;
+
+    line.geometry.attributes.position.needsUpdate = true;
+    line.geometry.computeBoundingBox();
+    line.geometry.computeBoundingSphere();
+};
