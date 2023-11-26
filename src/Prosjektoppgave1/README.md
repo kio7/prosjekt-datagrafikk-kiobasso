@@ -36,10 +36,10 @@ All kode er selvskrevet med noen få unntak. Vi har naturligvis brukt kodebasen 
 - Koden for linjen ("tauet") er basert på kodeeksempelet springGeneric6DofSpringConstraint.js i modul 7 (Werner Farstad).
 
 #### Progressbar 
-Denne koden er hentet fra https://codepen.io/alvarotrigo/pen/XWemVEj og justert til vårt eget behov. Stort sett kun CSS-delen er mer eller mindre uendret med unntak av bredde/høyde/farge etc.
+- Denne koden er hentet fra https://codepen.io/alvarotrigo/pen/XWemVEj og justert til vårt eget behov. Stort sett kun CSS-delen er mer eller mindre uendret med unntak av bredde/høyde/farge etc.
 
 #### Klosseveggen (threeAmmoWall.js)
-Denne koden er tungt inspirert av https://threejs.org/examples/?q=ammo#physics_ammo_rope og tilpasset vårt eget behov. Tauet fra threejs.org har vi ikke tatt med med erstattet det med et enklere eksempel fra kursets kode i modul 7, ammoConstraints.
+- Denne koden er tungt inspirert av https://threejs.org/examples/?q=ammo#physics_ammo_rope og tilpasset vårt eget behov. Tauet fra threejs.org har vi ikke tatt med med erstattet det med et enklere eksempel fra kursets kode i modul 7, ammoConstraints.
 
 
 #### Lyder og musikk
@@ -49,4 +49,5 @@ Denne koden er tungt inspirert av https://threejs.org/examples/?q=ammo#physics_a
 #### 3D modeller
 - Hentet fra SktechFab 
 - https://sketchfab.com/3d-models/space-bunny-68ed23b0ff774a14a5d7eb0bb932c31e
+
 <hr>
